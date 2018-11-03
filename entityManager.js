@@ -17,7 +17,7 @@ with suitable 'data' and 'methods'.
 
 
 // Tell jslint not to complain about my use of underscore prefixes (nomen),
-// my flattening of some indentation (white), or my use of incr/decr ops 
+// my flattening of some indentation (white), or my use of incr/decr ops
 // (plusplus).
 //
 /*jslint nomen: true, white: true, plusplus: true*/
@@ -62,23 +62,18 @@ generateMap : function(){
 },
 
 
-
-toggleRocks: function() {
-    this._bShowRocks = !this._bShowRocks;
-},
-
 update: function(du) {
 
     var a = Math.floor(Math.random()*(3-1+1)+1);            //  Range of numbers that give u different platform
     var b = Math.floor(Math.random()*(520-250+1)+290);      // Range of y value
-    
+
     //Check if to push new platform or not
     for(var entity in this._platforms){
         if(this._platforms[entity].getX() < 20 && !this._platforms[entity].getTouchingEdge()){
             this._platforms[entity].setTouchingEdge();
-            this._platforms.push(new Platform(a,b));  
-        }                   
-    } 
+            this._platforms.push(new Platform(a,b));
+        }
+    }
 
     for (var c = 0; c < this._categories.length; ++c) {
 
@@ -88,11 +83,11 @@ update: function(du) {
         while (i < aCategory.length) {
 
             var status = aCategory[i].update(du);
-            
+
             if (status === this.KILL_ME_NOW) {
                 // remove the dead guy, and shuffle the others down to
                 // prevent a confusing gap from appearing in the array
-                
+
                 aCategory.splice(i,1);
             }
             else {
@@ -100,8 +95,8 @@ update: function(du) {
             }
         }
     }
-    
-    
+
+
 
 },
 
@@ -113,7 +108,7 @@ render: function(ctx) {
 
         var aCategory = this._categories[c];
 
-        if (!this._bShowRocks && 
+        if (!this._bShowRocks &&
             aCategory == this._rocks)
             continue;
 
@@ -131,4 +126,3 @@ render: function(ctx) {
 
 // Some deferred setup which needs the object to have been created first
 entityManager.deferredSetup();
-
