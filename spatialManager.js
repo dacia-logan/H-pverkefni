@@ -99,7 +99,8 @@ render: function(ctx) {
     ctx.strokeStyle = "red";
     for (var ID in this._entities) {
         var e = this._entities[ID];
-        util.strokeBox(ctx, e.y, e.y, e.getWidth(), e.getHeight());
+        console.log(e.y, e.x);
+        util.strokeBox(ctx, e.getPos().posX, e.getPos().posY, e.getWidth(), e.getHeight());
     }
     ctx.strokeStyle = oldStyle;
 }
