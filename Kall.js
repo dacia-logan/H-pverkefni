@@ -28,9 +28,10 @@ Kall.prototype.update = function(du){
     
     spatialManager.unregister(this);
 
-
+//Check for hit entity, if its hit it checks which side it is on and acts accordingly,
+// resets or is on the platform.
     if(spatialManager.isHit(this.cx, this.cy, this.width, this.height)){
-        if(this.cy < spatialManager.isHit(this.cx, this.cy, this.width, this.height).getPos().posY
+        if(this.cy+this.height/2 < spatialManager.isHit(this.cx, this.cy, this.width, this.height).getPos().posY
            && this.cx+this.width >= spatialManager.isHit(this.cx, this.cy, this.width, this.height).getPos().posX 
            && this.cx <= spatialManager.isHit(this.cx, this.cy, this.width, this.height).getPos().posX+spatialManager.isHit(this.cx, this.cy, this.width, this.height).getWidth())
             
