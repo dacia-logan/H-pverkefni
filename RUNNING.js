@@ -157,7 +157,8 @@ function requestPreloads() {
     var requiredImages = {
         leftPlat : "images/grassCliffLeft.png",
         midPlat : "images/grassMid.png",
-        rightPlat : "images/grassCliffRight.png"
+        rightPlat : "images/grassCliffRight.png",
+
         
     };
 
@@ -168,10 +169,10 @@ var g_sprites = {};
 
 function preloadDone() {
 
-    
     g_sprites.leftPlat = new Sprite(g_images.leftPlat);
     g_sprites.midPlat = new Sprite(g_images.midPlat);
     g_sprites.rightPlat = new Sprite(g_images.rightPlat);
+
     entityManager.init();
     init();
 

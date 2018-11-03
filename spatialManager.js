@@ -59,7 +59,6 @@ findEntityInRange: function(posX, posY, radius) {
 
     // TODO: YOUR STUFF HERE!
 
-    
     var shortest = Number.MAX_SAFE_INTEGER;
     
     for(var entity in this._entities){
@@ -74,6 +73,8 @@ findEntityInRange: function(posX, posY, radius) {
             }
         }   
 },
+
+
 
 render: function(ctx) {
     var oldStyle = ctx.strokeStyle;

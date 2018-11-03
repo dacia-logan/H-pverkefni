@@ -71,9 +71,13 @@ Entity.prototype.kill = function () {
 };
 
 Entity.prototype.findHitEntity = function () {
+    
     var pos = this.getPos();
+    var w = this.getWidth();
+    var h = this.getHeight();
+
     return spatialManager.findEntityInRange(
-        pos.posX, pos.posY, this.getRadius()
+        pos.posX, pos.posY, this.radius()
     );
 };
 
@@ -81,6 +85,7 @@ Entity.prototype.findHitEntity = function () {
 Entity.prototype.isColliding = function () {
     return this.findHitEntity();
 };
+
 
 Entity.prototype.wrapPosition = function () {
     this.cx = util.wrapRange(this.cx, 0, g_canvas.width);
