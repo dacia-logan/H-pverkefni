@@ -18,19 +18,20 @@ function Kall(descr) {
 
 Kall.prototype = new Entity();
 
-Kall.prototype.KEY_JUMP = 'W'.charCodeAt(0);
-
+Kall.prototype.KEY_W = 'W'.charCodeAt(0);
+Kall.prototype.KEY_A = 'A'.charCodeAt(0);
+Kall.prototype.KEY_S = 'S'.charCodeAt(0);
+Kall.prototype.KEY_D = 'D'.charCodeAt(0);
 
 
 Kall.prototype.update = function(du){
     
     spatialManager.unregister(this);
 
-    this.cy+=2;
 
     if(spatialManager.isHit(this.cx, this.cy, this.width, this.height)){
-        if(this.cy+this.height-2 < spatialManager.isHit(this.cx, this.cy, this.width, this.height).getPos().posY
-           && this.cx >= spatialManager.isHit(this.cx, this.cy, this.width, this.height).getPos().posX 
+        if(this.cy < spatialManager.isHit(this.cx, this.cy, this.width, this.height).getPos().posY
+           && this.cx+this.width >= spatialManager.isHit(this.cx, this.cy, this.width, this.height).getPos().posX 
            && this.cx <= spatialManager.isHit(this.cx, this.cy, this.width, this.height).getPos().posX+spatialManager.isHit(this.cx, this.cy, this.width, this.height).getWidth())
             
            this.cy = spatialManager.isHit(this.cx, this.cy, this.width, this.height).getPos().posY-this.height;
@@ -38,8 +39,17 @@ Kall.prototype.update = function(du){
         else this.cy =200;
     }
 
-    if(eatKey(this.KEY_JUMP)){
-        this.cy-=30
+    if(keys[this.KEY_W]){
+        this.cy-=1
+    }
+    if(keys[this.KEY_S]){
+        this.cy+=1
+    }
+    if(keys[this.KEY_A]){
+        this.cx-=1
+    }
+    if(keys[this.KEY_D]){
+        this.cx+=1
     }
     spatialManager.register(this);
 };

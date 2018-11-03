@@ -58,7 +58,7 @@ init: function() {
 
 generateMap : function(){
     this._platforms.push(new Platform(1,500));
-    //this._dummies.push(new Kall());
+    this._dummies.push(new Kall());
 },
 
 
