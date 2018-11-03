@@ -8,7 +8,7 @@ function Platform(descr, cy) {
 
 
     this.cx = canvas.width;             // position of the images 
-    this.vx = 1;                        // vel
+    this.vx = 5;                        // vel
 
     this.size=70;                       // Width and height of each individual parts of the platform
     
@@ -70,6 +70,8 @@ Platform.prototype.update = function(du){
      
 };
 
+
+
 Platform.prototype.drawPlat = function(ctx){
     
 
@@ -82,7 +84,7 @@ Platform.prototype.drawPlat = function(ctx){
 
 Platform.prototype.render = function(ctx){
 
-    this.drawPlat(ctx);
+         this.drawPlat(ctx);
 }
   
   

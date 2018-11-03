@@ -37,25 +37,31 @@ Kall.prototype.update = function(du){
             
            this.cy = spatialManager.isHit(this.cx, this.cy, this.width, this.height).getPos().posY-this.height;
 
-        else this.cy =200;
+        else {
+                this.cy =100;
+                this.cx =500;
+        }
     }
 
-    if(keys[this.KEY_W]){
-        this.cy-=1
-    }
-    if(keys[this.KEY_S]){
-        this.cy+=1
-    }
-    if(keys[this.KEY_A]){
-        this.cx-=1
-    }
-    if(keys[this.KEY_D]){
-        this.cx+=1
-    }
+    this.handleKeys();
+    
     spatialManager.register(this);
 };
 
-
+Kall.prototype.handleKeys = function(){
+    if(keys[this.KEY_W]){
+        this.cy-=2
+    }
+    if(keys[this.KEY_S]){
+        this.cy+=2
+    }
+    if(keys[this.KEY_A]){
+        this.cx-=2
+    }
+    if(keys[this.KEY_D]){
+        this.cx+=2
+    }
+}
 
 Kall.prototype.render = function(ctx){
     
