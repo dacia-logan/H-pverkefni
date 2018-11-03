@@ -5,31 +5,40 @@ function Platform(descr, cy) {
 
     this.cy = cy;
 
-    this.vx = canvas.width;             // position of the images 
 
-    this.size=70;      // pixel size of image, y and x
+
+    this.cx = canvas.width;             // position of the images 
+    this.vx = 4;                        // vel
+
+    this.size=70;                       // Width and height of each individual parts of the platform
     
-    this.isTouchingEdge=true;
+    
+    this.isTouchingEdge=false;
     
     if(descr===1){
             this.midNr=5;  
+            this.width = 70*6;
+
     }
    
     if(descr===2){
             this.midNr=6;  
+            this.width = 70*7;
     }
 
     if(descr===3){
             this.midNr=7;  
+            this.width = 70*8;
         }
 
+        this.height = 70;           
 };
 
 Platform.prototype = new Entity();
 
 
-Platform.prototype.getVx = function(){
-    return this.vx;
+Platform.prototype.getX = function(){
+    return this.cx;
 };
 
 Platform.prototype.getLength = function(){
@@ -40,28 +49,32 @@ Platform.prototype.setTouchingEdge = function(){
     this.isTouchingEdge = !this.isTouchingEdge;
 };
 
-Platform.prototype.getTouching = function(){
+Platform.prototype.getTouchingEdge = function(){
     return this.isTouchingEdge;
 }
 Platform.prototype.update = function(du){
-    
-    if(this.vx <= -(this.size*this.midNr*2)){
-        this.kill();
+   
+    if(this.cx <= -(this.size*(this.midNr+1))){
+        this.kill()
     }
-    
-    this.vx-=4*du;
-
+    spatialManager.unregister(this);
     if(this._isDeadNow){
         return entityManager.KILL_ME_NOW;
     }
+
+    
+    this.cx-=this.vx*du;
+
+    spatialManager.register(this);
+     
 };
 
 Platform.prototype.drawPlat = function(ctx){
-    g_sprites.leftPlat.drawAtAndEnlarge(ctx, this.vx, this.cy, this.size, this.size);
+    g_sprites.leftPlat.drawAtAndEnlarge(ctx, this.cx, this.cy, this.size, this.size);
     for(var j = 1; j<=this.midNr-1; j++){
-            g_sprites.midPlat.drawAtAndEnlarge(ctx, this.vx+this.size*j, this.cy, this.size, this.size); 
+            g_sprites.midPlat.drawAtAndEnlarge(ctx, this.cx+this.size*j, this.cy, this.size, this.size); 
     }
-    g_sprites.rightPlat.drawAtAndEnlarge(ctx, this.vx+this.size*(this.midNr), this.cy, this.size, this.size); 
+    g_sprites.rightPlat.drawAtAndEnlarge(ctx, this.cx+this.size*(this.midNr), this.cy, this.size, this.size); 
 };
 
 Platform.prototype.render = function(ctx){

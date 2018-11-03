@@ -34,7 +34,6 @@ _entities : [],
 getNewSpatialID : function() {
 
     // TODO: YOUR STUFF HERE!
-    
     return this._nextSpatialID++;
 
 },
@@ -81,7 +80,7 @@ render: function(ctx) {
     ctx.strokeStyle = "red";
     for (var ID in this._entities) {
         var e = this._entities[ID];
-        util.strokeCircle(ctx, e.cx, e.cy, e.getRadius());
+        util.strokeBox(ctx, e.cx, e.cy, e.getWidth(), e.getHeight());
     }
     ctx.strokeStyle = oldStyle;
 }

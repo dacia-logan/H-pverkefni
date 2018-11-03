@@ -80,11 +80,11 @@ toggleRocks: function() {
 
 update: function(du) {
 
-    var a = Math.floor(Math.random()*(3-1+1)+1);
-    var b = Math.floor(Math.random()*(520-290+1)+290);
+    var a = Math.floor(Math.random()*(3-1+1)+1);            //  Range of numbers that give u different platform
+    var b = Math.floor(Math.random()*(520-290+1)+290);      // Range of y value
     
     for(var entity in this._platforms){
-        if(this._platforms[entity].getVx() < 0 && this._platforms[entity].getTouching()){
+        if(this._platforms[entity].getX() < 0 && !this._platforms[entity].getTouchingEdge()){
             this._platforms[entity].setTouchingEdge();
             this._platforms.push(new Platform(a,b));      
         }                   

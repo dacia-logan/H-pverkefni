@@ -88,10 +88,17 @@ clearCanvas: function (ctx) {
 
 },
 
-fillCircle: function (ctx, x, y, r) {
+strokeCircle: function (ctx, x, y, r) {
     ctx.beginPath();
     ctx.arc(x, y, r, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.stroke();
+},
+
+strokeBox : function(ctx, cx, cy, w, h){
+    var oldStyle = ctx.fillStyle;
+    ctx.fillStyle = "red";
+    ctx.strokeRect(cx, cy, w, h);
+    ctx.fillStyle = oldStyle;
 },
 
 fillBox: function (ctx, x, y, w, h, style) {

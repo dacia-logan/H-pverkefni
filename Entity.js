@@ -54,8 +54,12 @@ Entity.prototype.getPos = function () {
     return {posX : this.cx, posY : this.cy};
 };
 
-Entity.prototype.getRadius = function () {
-    return 0;
+Entity.prototype.getWidth = function () {
+    return this.width;
+};
+
+Entity.prototype.getHeight = function () {
+    return this.height;
 };
 
 Entity.prototype.getSpatialID = function () {
