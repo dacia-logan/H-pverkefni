@@ -7,8 +7,8 @@ function Kall(descr) {
     this.sprite = this.sprite || g_sprites.platLeft;
     
     // Set normal drawing scale, and warp state off
-    this.cx = 500;
-    this.cy = 200;
+    this.x = 500;
+    this.y = 200;
 
     
     this.width=15;
@@ -30,16 +30,16 @@ Kall.prototype.update = function(du){
 
 //Check for hit entity, if its hit it checks which side it is on and acts accordingly,
 // resets or is on the platform.
-    if(spatialManager.isHit(this.cx, this.cy, this.width, this.height)){
-        if(this.cy+this.height/2 < spatialManager.isHit(this.cx, this.cy, this.width, this.height).getPos().posY
-           && this.cx+this.width >= spatialManager.isHit(this.cx, this.cy, this.width, this.height).getPos().posX 
-           && this.cx <= spatialManager.isHit(this.cx, this.cy, this.width, this.height).getPos().posX+spatialManager.isHit(this.cx, this.cy, this.width, this.height).getWidth())
+    if(spatialManager.isHit(this.x, this.y, this.width, this.height)){
+        if(this.y+this.height/2 < spatialManager.isHit(this.x, this.y, this.width, this.height).getPos().posY
+           && this.x+this.width >= spatialManager.isHit(this.x, this.y, this.width, this.height).getPos().posX 
+           && this.x <= spatialManager.isHit(this.x, this.y, this.width, this.height).getPos().posX+spatialManager.isHit(this.x, this.y, this.width, this.height).getWidth())
             
-           this.cy = spatialManager.isHit(this.cx, this.cy, this.width, this.height).getPos().posY-this.height;
+           this.y = spatialManager.isHit(this.x, this.y, this.width, this.height).getPos().posY-this.height;
 
         else {
-                this.cy =100;
-                this.cx =500;
+                this.y =100;
+                this.x =500;
         }
     }
 
@@ -50,22 +50,22 @@ Kall.prototype.update = function(du){
 
 Kall.prototype.handleKeys = function(){
     if(keys[this.KEY_W]){
-        this.cy-=2
+        this.y-=2
     }
     if(keys[this.KEY_S]){
-        this.cy+=2
+        this.y+=2
     }
     if(keys[this.KEY_A]){
-        this.cx-=2
+        this.x-=2
     }
     if(keys[this.KEY_D]){
-        this.cx+=2
+        this.x+=2
     }
 }
 
 Kall.prototype.render = function(ctx){
     
-    util.fillBox(ctx, this.cx, this.cy, this.width, this.height);
+    util.fillBox(ctx, this.x, this.y, this.width, this.height, "Black");
     
 };
 
