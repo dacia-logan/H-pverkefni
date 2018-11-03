@@ -28,7 +28,7 @@ var entityManager = {
 // "PRIVATE" DATA
 
 _platforms : [],
-_bullets : [],
+_dummies : [],
 
 
 // "PRIVATE" METHODS
@@ -46,30 +46,19 @@ KILL_ME_NOW : -1,
 // i.e. thing which need `this` to be defined.
 //
 deferredSetup : function () {
-    this._categories = [this._platforms];
+    this._categories = [this._platforms, this._dummies];
 },
 
 init: function() {
    this.generateMap();
 },
 
-fireBullet: function(cx, cy, velX, velY, rotation) {
-    this._bullets.push(new Bullet({
-        cx   : cx,
-        cy   : cy,
-        velX : velX,
-        velY : velY,
-
-        rotation : rotation
-    }));
-},
-
-
 
 
 
 generateMap : function(){
     this._platforms.push(new Platform(1,500));
+    //this._dummies.push(new Kall());
 },
 
 

@@ -23,6 +23,7 @@ function handleMouse(evt) {
     var button = evt.buttons === undefined ? evt.which : evt.buttons;
     if (!button) return;
     console.log(spatialManager._entities);
+      
 }
 
 // Handle "down" and "move" events the same way.

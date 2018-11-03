@@ -33,7 +33,7 @@ _entities : [],
 
 getNewSpatialID : function() {
 
-    // TODO: YOUR STUFF HERE!
+    // TODO: YOUR STUFF HERE!z
     return this._nextSpatialID++;
 
 },
@@ -74,6 +74,24 @@ findEntityInRange: function(posX, posY, radius) {
         }   
 },
 
+//Returns the entity that it is overlapping with
+//
+//Uses AABB to determine it
+isHit: function(posX, posY, w, h){
+    for(var entity in this._entities){
+
+        var eposX = this._entities[entity].getPos().posX;           //entity's pos
+        var eposY = this._entities[entity].getPos().posY;
+        var eW = this._entities[entity].getWidth();           
+        var eH = this._entities[entity].getHeight();
+        
+       if (posX <= eposX + eW &&                
+           eposX <= posX + w &&
+           posY <= eposY +eH &&
+           eposY <= posY + h)
+         return this._entities[entity];
+        }
+},
 
 
 render: function(ctx) {

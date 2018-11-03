@@ -8,7 +8,7 @@ function Platform(descr, cy) {
 
 
     this.cx = canvas.width;             // position of the images 
-    this.vx = 4;                        // vel
+    this.vx = 1;                        // vel
 
     this.size=70;                       // Width and height of each individual parts of the platform
     

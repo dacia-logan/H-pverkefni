@@ -173,6 +173,7 @@ function preloadDone() {
     g_sprites.midPlat = new Sprite(g_images.midPlat);
     g_sprites.rightPlat = new Sprite(g_images.rightPlat);
 
+    g_sprites.ship = new Sprite(g_images.rightPlat);
     entityManager.init();
     init();
 
