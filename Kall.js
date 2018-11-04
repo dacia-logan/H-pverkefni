@@ -28,7 +28,6 @@ function Kall(descr) {
 
 Kall.prototype = new Entity();
 
-Kall.prototype.KEY_W = 'W'.charCodeAt(0);
 Kall.prototype.KEY_A = 'A'.charCodeAt(0);
 Kall.prototype.KEY_S = 'S'.charCodeAt(0);
 Kall.prototype.KEY_D = 'D'.charCodeAt(0);
