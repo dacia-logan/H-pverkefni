@@ -76,9 +76,10 @@ Star.prototype.update = function(du) {
     //if the star is hit by 'Kall' with spatialID 2 it is cilled
     //TODO 
     //ætti að vera þegar hann er að dash-a en ekki þegar
-    //hann er bara að hlaupa
+    //hann er bara að hlaupa og hann ætti að fá auka stig hér
     if (spatialManager.isHit(
-        this.x, this.y, this.width, this.height)._spatialID === 2) 
+        this.x, this.y, this.width, this.height)._spatialID === 2 
+        /* && isDashing*/) 
             this.isExploding=true; 
     
 
