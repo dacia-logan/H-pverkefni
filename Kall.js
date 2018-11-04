@@ -17,7 +17,7 @@ function Kall(descr) {
     this.height= 30;
 
     this.gravity=0.12;
-    this.jumpForce=-2;
+    this.jumpForce=-8;
 
 };
 
@@ -33,26 +33,28 @@ Kall.prototype.KEY_JUMP= 'W'.charCodeAt(0);
 Kall.prototype.update = function(du){
 
     spatialManager.unregister(this);
+    this.applyAccel(this.gravity,du);
+    this.handleKeys(du);
 
-//Check for hit entity, if its hit it checks which side it is on and acts accordingly,
+//Check for hit entity, if its hit it checks wwhich side it is on and acts accordingly,
 // resets or is on the platform.
     this.handleKeys(du);
     this.applyAccel(0,this.gravity,du);
-    console.log(this.velY)
     if(spatialManager.isHit(this.x, this.y, this.width, this.height)){
-
-        if(this.y+this.height/2 < spatialManager.isHit(this.x, this.y, this.width, this.height).getPos().posY
-           && this.x+this.width >= spatialManager.isHit(this.x, this.y, this.width, this.height).getPos().posX 
-           && this.x <= spatialManager.isHit(this.x, this.y, this.width, this.height).getPos().posX+spatialManager.isHit(this.x, this.y, this.width, this.height).getWidth())
             
-           this.y = spatialManager.isHit(this.x, this.y, this.width, this.height).getPos().posY-this.height;
+        if(this.y+this.height/2 < spatialManager.isHit(this.x, this.y, this.width, this.height).getPos().posY
+           && this.x+this.width >= spatialManager.isHit(this.x, this.y, this.width, this.height).getPos().posX
+           && this.x <= spatialManager.isHit(this.x, this.y, this.width, this.height).getPos().posX+spatialManager.isHit(this.x, this.y, this.width, this.height).getWidth()){
+
+             this.y = spatialManager.isHit(this.x, this.y, this.width, this.height).getPos().posY-this.height;
+             this.velY=0;
+           }
 
         else {
                 this.y =100;
                 this.x =500;
         }
     }
-    
     spatialManager.register(this);
 };
 
@@ -63,28 +65,23 @@ Kall.prototype.handleKeys = function(du){
     if(keys[this.KEY_D]){
         this.x+=this.velX*du;
     }
-    if (eatKey([this.KEY_JUMP])) {
-        this.velY=-5;
+    if (eatKey(this.KEY_JUMP)) {
+      this.applyAccel(this.jumpForce,du)
     }
 }
 
 
-Kall.prototype.applyAccel= function(accelX,accelY,du){
+Kall.prototype.applyAccel= function(accelY,du){
   // u=original velocity
-
   var oldVelY= this.velY;
   //v = u + at
-
   this.velY += accelY * du;
 
   // v_ave = (u + v) / 2
-
   var aveVelY = (oldVelY + this.velY) / 2;
 
   // s = s + v_ave * t
-
   var nextY = this.y + aveVelY * du;
-
 
   this.y += aveVelY*du;
 };

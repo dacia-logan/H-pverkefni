@@ -54,25 +54,42 @@ init: function() {
 },
 
 
+setPlatforms: function(){
 
+        var a = Math.floor(util.randRange(1,5));   
+
+        for(var entity in this._platforms){
+            if(this._platforms[entity].getPos().posX < 20 && !this._platforms[entity].getTouchingEdge()){
+            this._platforms[entity].setTouchingEdge();
+            this._platforms.push(new Platform(a));  
+        }                   
+    } 
+},
+
+
+//TODO
+setObstacle: function(){
+
+   /* for(var entity in this._platforms){
+
+
+        }
+    */
+},
 
 generateMap : function(){
-    this._platforms.push(new Platform(1,500));
+    this._platforms.push(new Platform(1, 200, 500));
     this._dummies.push(new Kall());
 },
 
 
 update: function(du) {
 
-    var a = Math.floor(util.randRange(1,4));           //  Range of numbers that give u different platform
-    
+            //  Range of numbers that give u different platform
+
     //Check if to push new platform or not
-    for(var entity in this._platforms){
-        if(this._platforms[entity].getPos().posX < 20 && !this._platforms[entity].getTouchingEdge()){
-            this._platforms[entity].setTouchingEdge();
-            this._platforms.push(new Platform(a));  
-        }                   
-    } 
+        //this.setObstacle();
+    this.setPlatforms();
 
     for (var c = 0; c < this._categories.length; ++c) {
 
@@ -82,11 +99,9 @@ update: function(du) {
         while (i < aCategory.length) {
 
             var status = aCategory[i].update(du);
-
             if (status === this.KILL_ME_NOW) {
                 // remove the dead guy, and shuffle the others down to
                 // prevent a confusing gap from appearing in the array
-
                 aCategory.splice(i,1);
             }
             else {
