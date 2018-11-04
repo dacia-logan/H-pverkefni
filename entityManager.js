@@ -78,7 +78,7 @@ setObstacle: function(){
 },
 
 generateMap : function(){
-    this._platforms.push(new Platform(1, 200, 500));
+    this._platforms.push(new Platform(1,100,400));
     this._dummies.push(new Kall());
 },
 
@@ -136,7 +136,7 @@ render: function(ctx) {
     }
 }
 
-}
+};
 
 // Some deferred setup which needs the object to have been created first
 entityManager.deferredSetup();
