@@ -30,6 +30,7 @@ var entityManager = {
 _platforms : [],
 _dummies : [],
 _star : [],
+_knifes :[],
 
 
 // "PRIVATE" METHODS
@@ -47,16 +48,21 @@ KILL_ME_NOW : -1,
 // i.e. thing which need `this` to be defined.
 //
 deferredSetup : function () {
-    this._categories = [this._platforms, this._dummies, this._star];
+    this._categories = [this._platforms, this._dummies, this._star, this._knifes];
 },
 
 init: function() {
    this.generateMap();
 },
 
+throwKnife : function(x,y){
+    this._knifes.push(new Knife({x : x, y: y}));
+  },
+
 
 setPlatforms: function(){
     var a = Math.floor(util.randRange(1,5));   
+
 
     for(var entity in this._platforms){
         if(this._platforms[entity].getPos().posX < 20 && !this._platforms[entity].getTouchingEdge()){
@@ -65,7 +71,7 @@ setPlatforms: function(){
             //setja inn nýja stjörnu á hvern platform for now
             this._star.push(new Star());
         }                   
-    } 
+    }
 },
 
 generateMap : function(){
