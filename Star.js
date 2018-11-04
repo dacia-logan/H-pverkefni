@@ -18,7 +18,7 @@ function Star(descr) {
     this.height = 70;
 
     //set x position
-    var widthOfPlat = entityManager._platforms[1].width;    //get the width of the platform
+    var widthOfPlat = entityManager._platforms[1].width;    //get the width of the platform thats under the star
     var xPos = entityManager._platforms[1].x;               //get the starting x position of the platform
     var randPosX = util.randRange(xPos,xPos+widthOfPlat);   //get random position for the star
     this.x = randPosX-(this.width/2);                       //set the position of the star
@@ -38,6 +38,7 @@ function Star(descr) {
 
     //number of images to run through are 0-11
     this.numberOfFrames = 11;
+
 };
 
 
@@ -71,6 +72,15 @@ Star.prototype.update = function(du) {
     if (this._isDeadNow) {
         return entityManager.KILL_ME_NOW;
     }
+
+    //if the star is hit by 'Kall' with spatialID 2 it is cilled
+    //TODO 
+    //ætti að vera þegar hann er að dash-a en ekki þegar
+    //hann er bara að hlaupa
+    if (spatialManager.isHit(
+        this.x, this.y, this.width, this.height)._spatialID === 2) 
+            this.isExploding=true; 
+    
 
     //if is dead and the frames are not done 
     //change the framecounter for explosion

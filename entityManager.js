@@ -89,13 +89,10 @@ generateMap : function(){
 
 
 update: function(du) {
-
-            //  Range of numbers that give u different platform
-
+    //Range of numbers that give u different platform
     //Check if to push new platform or not
-        //this.setObstacle();
+    //this.setObstacle();
     this.setPlatforms();
-
 
     for (var c = 0; c < this._categories.length; ++c) {
 
@@ -115,9 +112,6 @@ update: function(du) {
             }
         }
     }
-
-
-
 },
 
 render: function(ctx) {
