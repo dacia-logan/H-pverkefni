@@ -19,8 +19,8 @@ function Star(descr) {
     //set x position
     var widthOfPlat = entityManager._platforms[1].width;    //get the width of the platform
     var xPos = entityManager._platforms[1].x;               //get the starting x position of the platform
-    var randPosX = util.randRange(xPos, xPos+widthOfPlat);  //get random position for the star
-    this.x = randPosX-this.width;                           //set the position of the star
+    var randPosX = util.randRange(xPos,xPos+widthOfPlat);   //get random position for the star
+    this.x = randPosX-(this.width/2);                       //set the position of the star
 
     //set y position
     var yPos = entityManager._platforms[1].y - this.height; //get the y position of the platform
@@ -48,8 +48,6 @@ Star.prototype.render = function(ctx){
             g_explosionSprite[0].drawAtAndEnlarge(ctx,xPos,yPos,this.width+10,this.height+10);
         }
     }
-    
-
 };
 
 Star.prototype.update = function(du) {
