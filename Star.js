@@ -38,14 +38,17 @@ function Star(descr) {
 Star.prototype = new Entity();
 
 Star.prototype.render = function(ctx){
-
-    //if the star has not been hit draw a star
-    if (!this.isExploding) {
-        g_starSprite.drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
-    //if the star has been hit, draw the explosion
-    } else {
-        g_explosionSprite[0].drawAtAndEnlarge(ctx,xPos,yPos,this.width+10,this.height+10);
+    //only draw if game is not over
+    if (!main._isGameOver) {
+        //if the star has not been hit draw a star
+        if (!this.isExploding) {
+            g_starSprite.drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
+        //if the star has been hit, draw the explosion
+        } else {
+            g_explosionSprite[0].drawAtAndEnlarge(ctx,xPos,yPos,this.width+10,this.height+10);
+        }
     }
+    
 
 };
 
