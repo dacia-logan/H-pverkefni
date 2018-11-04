@@ -13,6 +13,7 @@ function Star(descr) {
     //common inherited setup logic from Entity
     this.setup(descr); 
 
+    //set width and height
     this.width = 75;
     this.height = 70;
 
@@ -31,7 +32,12 @@ function Star(descr) {
 
     //is the sprite exploding or not?
     this.isExploding = false;
- 
+
+    //framecounter for explosion
+    this.frameCounter = 0; 
+
+    //number of images to run through are 0-11
+    this.numberOfFrames = 11;
 };
 
 
@@ -45,7 +51,8 @@ Star.prototype.render = function(ctx){
             g_starSprite.drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
         //if the star has been hit, draw the explosion
         } else {
-            g_explosionSprite[0].drawAtAndEnlarge(ctx,xPos,yPos,this.width+10,this.height+10);
+            g_explosionSprite[Math.floor(this.frameCounter)].drawAtAndEnlarge(
+                ctx,this.x,this.y,this.width,this.height);
         }
     }
 };
@@ -57,12 +64,19 @@ Star.prototype.update = function(du) {
 
     //kill Star if it falls out of the canvas
     //allso has to die if the 'Kall' hits it.
-    if (this.x <= -this.width) this.kill();
+    if (this.x <= -this.width || 
+        this.frameCounter >= this.numberOfFrames) this.kill();
 
     //if isDead
     if (this._isDeadNow) {
         return entityManager.KILL_ME_NOW;
     }
+
+    //if is dead and the frames are not done 
+    //change the framecounter for explosion
+    if (this.isExploding && 
+        this.frameCounter <= this.numberOfFrames) this.frameCounter += 0.2; 
+   
 
     //update the velocity
     this.x-=this.vx*du;
