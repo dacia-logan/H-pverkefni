@@ -2,26 +2,23 @@ function Kall(descr) {
 
     // Common inherited setup logic from Entity
     this.setup(descr);
-
-    // Default sprite, if not otherwise specified
-    this.sprite = this.sprite || g_sprites.platLeft;
-
-    // Set normal drawing scale, and warp state off
+    //upphafsstaða og upphafshraði
     this.x = 200;
     this.y = 400;
     this.velX=0;
     this.velY=0;
 
-
+    //hæð og breidd
     this.width=70;
     this.height= 100;
-
+    //þyngdarafl og hoppkraftur
     this.gravity=0.10;
     this.jumpForce=-5;
-
+    //boolean breita sem er true þegar hann er í loftinu en false annars
     this.inAir=true;
+    //jumpcounter telur hoppin niður
     this.jumpCounter=2;
-
+    //frameCounter er fyrir rammana í sprite animation
     this.framecounter=0;
 
 };
@@ -39,7 +36,6 @@ Kall.prototype.RESET= 'U'.charCodeAt(0);
 Kall.prototype.update = function(du){
 
     spatialManager.unregister(this);
-    //new frame of animation every 5 frams
     if(this.inAir){
       this.framecounter+=0.15;
       if (this.framecounter>=9.1) {
