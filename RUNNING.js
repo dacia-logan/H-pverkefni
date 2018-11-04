@@ -48,8 +48,8 @@ var g_ctx = g_canvas.getContext("2d");
 
 function init() {
 
-    
-    
+
+
 }
 
 // =============
@@ -77,11 +77,11 @@ function gatherInputs() {
 // GAME-SPECIFIC UPDATE LOGIC
 
 function updateSimulation(du) {
-    
+
     processDiagnostics();
     entityManager.update(du);
 
-    
+
 }
 
 // GAME-SPECIFIC DIAGNOSTICS
@@ -109,7 +109,7 @@ function processDiagnostics() {
 
 
 
-    
+
 }
 
 
@@ -129,9 +129,9 @@ function processDiagnostics() {
 
 
 function renderSimulation(ctx) {
-    
+
     entityManager.render(ctx);
-    
+
     if (g_renderSpatialDebug) spatialManager.render(ctx);
 }
 
@@ -148,21 +148,61 @@ function requestPreloads() {
         leftPlat : "images/grassCliffLeft.png",
         midPlat : "images/grassMid.png",
         rightPlat : "images/grassCliffRight.png",
+        Run0 :  "images/Run/Run__000.png",
+        Run1 :  "images/Run/Run__001.png",
+        Run2 :  "images/Run/Run__002.png",
+        Run3 :  "images/Run/Run__003.png",
+        Run4 :  "images/Run/Run__004.png",
+        Run5 :  "images/Run/Run__005.png",
+        Run6 :  "images/Run/Run__006.png",
+        Run7 :  "images/Run/Run__007.png",
+        Run8 :  "images/Run/Run__008.png",
+        Run9 :  "images/Run/Run__009.png",
+        Jump0 : "images/Jump/Jump__000.png",
+        Jump1 : "images/Jump/Jump__001.png",
+        Jump2 : "images/Jump/Jump__002.png",
+        Jump3 : "images/Jump/Jump__003.png",
+        Jump4 : "images/Jump/Jump__004.png",
+        Jump5 : "images/Jump/Jump__005.png",
+        Jump6 : "images/Jump/Jump__006.png",
+        Jump7 : "images/Jump/Jump__007.png",
+        Jump8 : "images/Jump/Jump__008.png",
+        Jump9 : "images/Jump/Jump__009.png",
 
-        
+
     };
 
     imagesPreload(requiredImages, g_images, preloadDone);
 }
 
 var g_sprites = {};
+var g_runSprite=[];
+var g_jumpSprite=[];
 
 function preloadDone() {
-
     g_sprites.leftPlat = new Sprite(g_images.leftPlat);
     g_sprites.midPlat = new Sprite(g_images.midPlat);
     g_sprites.rightPlat = new Sprite(g_images.rightPlat);
-
+    g_runSprite[0]=new Sprite(g_images.Run0);
+    g_runSprite[1]=new Sprite(g_images.Run1);
+    g_runSprite[2]=new Sprite(g_images.Run2);
+    g_runSprite[3]=new Sprite(g_images.Run3);
+    g_runSprite[4]=new Sprite(g_images.Run4);
+    g_runSprite[5]=new Sprite(g_images.Run5);
+    g_runSprite[6]=new Sprite(g_images.Run6);
+    g_runSprite[7]=new Sprite(g_images.Run7);
+    g_runSprite[8]=new Sprite(g_images.Run8);
+    g_runSprite[9]=new Sprite(g_images.Run9);
+    g_jumpSprite[0]=new Sprite(g_images.Jump0);
+    g_jumpSprite[1]=new Sprite(g_images.Jump1);
+    g_jumpSprite[2]=new Sprite(g_images.Jump2);
+    g_jumpSprite[3]=new Sprite(g_images.Jump3);
+    g_jumpSprite[4]=new Sprite(g_images.Jump4);
+    g_jumpSprite[5]=new Sprite(g_images.Jump5);
+    g_jumpSprite[6]=new Sprite(g_images.Jump6);
+    g_jumpSprite[7]=new Sprite(g_images.Jump7);
+    g_jumpSprite[8]=new Sprite(g_images.Jump8);
+    g_jumpSprite[9]=new Sprite(g_images.Jump9);
     entityManager.init();
     init();
 
