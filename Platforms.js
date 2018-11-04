@@ -81,6 +81,9 @@ Platform.prototype.drawPlat = function(ctx){
 
 Platform.prototype.render = function(ctx){
 
-     this.drawPlat(ctx);
+    // Only draw the platforms if the game is not over
+    if (!main._isGameOver) {
+        this.drawPlat(ctx);
+    }
          
 }
