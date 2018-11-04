@@ -9,8 +9,8 @@ function Kall(descr) {
     // Set normal drawing scale, and warp state off
     this.cx = 500;
     this.cy = 200;
-    this.velX=1;
-    this.velY=1;
+    this.velY=0;
+    this.velX=0;
 
 
     this.width=15;
