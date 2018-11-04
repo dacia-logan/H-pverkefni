@@ -14,7 +14,7 @@ function Kall(descr) {
 
 
     this.width=70;
-    this.height= 70;
+    this.height= 100;
 
     this.gravity=0.10;
     this.jumpForce=-5;
@@ -38,7 +38,7 @@ Kall.prototype.RESET= 'U'.charCodeAt(0);
 
 Kall.prototype.update = function(du){
 
-
+    spatialManager.unregister(this);
     //new frame of animation every 5 frams
     if(this.inAir){
       this.framecounter+=0.15;
@@ -58,22 +58,19 @@ Kall.prototype.update = function(du){
       this.velY=0;
     }
 
-    spatialManager.unregister(this);
-    this.applyAccel(this.gravity,du);
-    this.handleKeys(du);
+
 
 //Check for hit entity, if its hit it checks wwhich side it is on and acts accordingly,
 // resets or is on the platform.
     this.handleKeys(du);
-    this.applyAccel(0,this.gravity,du);
+    this.applyAccel(this.gravity,du);
     if(spatialManager.isHit(this.x, this.y, this.width, this.height)){
-            
-        if(this.y+this.height/2 < spatialManager.isHit(this.x, this.y, this.width, this.height).getPos().posY
+        if(this.y+this.height-10 < spatialManager.isHit(this.x, this.y, this.width, this.height).getPos().posY
            && this.x+this.width >= spatialManager.isHit(this.x, this.y, this.width, this.height).getPos().posX
            && this.x <= spatialManager.isHit(this.x, this.y, this.width, this.height).getPos().posX+spatialManager.isHit(this.x, this.y, this.width, this.height).getWidth()){
 
              this.y = spatialManager.isHit(this.x, this.y, this.width, this.height).getPos().posY-this.height;
-             this.velY=0;
+             this.velY=Math.floor(0);
              this.jumpCounter=2;
              this.inAir=false;
            }
@@ -88,6 +85,7 @@ Kall.prototype.update = function(du){
     }
 
     spatialManager.register(this);
+    console.log(this.velY);
 };
 
 Kall.prototype.handleKeys = function(du){
@@ -100,9 +98,9 @@ Kall.prototype.handleKeys = function(du){
     if (eatKey(this.KEY_JUMP)) {
       if (this.jumpCounter!==0) {
         this.framecounter=0;
-        this.velY*=0.2;
+        this.velY=0;
         this.jumpCounter-=1;
-        this.applyAccel(this.jumpForce,du)
+        this.applyAccel(this.jumpForce,du);
       }
     }
 }

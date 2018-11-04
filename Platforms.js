@@ -14,8 +14,8 @@ function Platform(descr, x, y) {
     this.isTouchingEdge=false;
 
     if(descr===1){
-            this.midNr=4;
-            this.width = 70*5;
+            this.midNr=5;
+            this.width = 70*6;
     }
 
     if(descr===2){
