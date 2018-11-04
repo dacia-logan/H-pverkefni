@@ -129,7 +129,7 @@ function processDiagnostics() {
 
 
 function renderSimulation(ctx) {
-
+    g_sprites.Background.drawAtAndEnlarge(ctx,0,0,g_canvas.width,g_canvas.height);
     entityManager.render(ctx);
 
     if (g_renderSpatialDebug) spatialManager.render(ctx);
@@ -168,6 +168,18 @@ function requestPreloads() {
         Jump7 : "images/Jump/Jump__007.png",
         Jump8 : "images/Jump/Jump__008.png",
         Jump9 : "images/Jump/Jump__009.png",
+        Throw0 : "images/Throw/Throw__000.png",
+        Throw1 : "images/Throw/Throw__001.png",
+        Throw2 : "images/Throw/Throw__002.png",
+        Throw3 : "images/Throw/Throw__003.png",
+        Throw4 : "images/Throw/Throw__004.png",
+        Throw5 : "images/Throw/Throw__005.png",
+        Throw6 : "images/Throw/Throw__006.png",
+        Throw7 : "images/Throw/Throw__007.png",
+        Throw8 : "images/Throw/Throw__008.png",
+        Throw9 : "images/Throw/Throw__009.png",
+        Kunai : "images/Throw/Kunai.png",
+        Background : "images/BG.jpg"
 
 
     };
@@ -178,8 +190,11 @@ function requestPreloads() {
 var g_sprites = {};
 var g_runSprite=[];
 var g_jumpSprite=[];
+var g_throwSprite=[];
 
 function preloadDone() {
+    g_sprites.Kunai =new Sprite(g_images.Kunai);
+    g_sprites.Background = new Sprite(g_images.Background);
     g_sprites.leftPlat = new Sprite(g_images.leftPlat);
     g_sprites.midPlat = new Sprite(g_images.midPlat);
     g_sprites.rightPlat = new Sprite(g_images.rightPlat);
@@ -203,6 +218,16 @@ function preloadDone() {
     g_jumpSprite[7]=new Sprite(g_images.Jump7);
     g_jumpSprite[8]=new Sprite(g_images.Jump8);
     g_jumpSprite[9]=new Sprite(g_images.Jump9);
+    g_throwSprite[0]=new Sprite(g_images.Throw0);
+    g_throwSprite[1]=new Sprite(g_images.Throw1);
+    g_throwSprite[2]=new Sprite(g_images.Throw2);
+    g_throwSprite[3]=new Sprite(g_images.Throw3);
+    g_throwSprite[4]=new Sprite(g_images.Throw4);
+    g_throwSprite[5]=new Sprite(g_images.Throw5);
+    g_throwSprite[6]=new Sprite(g_images.Throw6);
+    g_throwSprite[7]=new Sprite(g_images.Throw7);
+    g_throwSprite[8]=new Sprite(g_images.Throw8);
+    g_throwSprite[9]=new Sprite(g_images.Throw9);
     entityManager.init();
     init();
 

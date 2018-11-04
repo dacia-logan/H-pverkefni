@@ -12,7 +12,7 @@ function Kall(descr) {
     this.width=70;
     this.height= 100;
     //þyngdarafl og hoppkraftur
-    this.gravity=0.10;
+    this.gravity=0.15;
     this.jumpForce=-5;
     //boolean breita sem er true þegar hann er í loftinu en false annars
     this.inAir=true;
@@ -21,14 +21,13 @@ function Kall(descr) {
     //frameCounter er fyrir rammana í sprite animation
     this.framecounter=0;
 
+    this.isThrowing=false;
+
 };
 
 Kall.prototype = new Entity();
 
-Kall.prototype.KEY_W = 'W'.charCodeAt(0);
-Kall.prototype.KEY_A = 'A'.charCodeAt(0);
-Kall.prototype.KEY_S = 'S'.charCodeAt(0);
-Kall.prototype.KEY_D = 'D'.charCodeAt(0);
+Kall.prototype.KEY_THROW = ' '.charCodeAt(0);
 Kall.prototype.KEY_JUMP= 'W'.charCodeAt(0);
 Kall.prototype.RESET= 'U'.charCodeAt(0);
 
@@ -36,7 +35,7 @@ Kall.prototype.RESET= 'U'.charCodeAt(0);
 Kall.prototype.update = function(du){
 
     spatialManager.unregister(this);
-    if(this.inAir){
+    if(this.inAir || this.isThrowing){
       this.framecounter+=0.15;
       if (this.framecounter>=9.1) {
         this.framecounter=9.1;
@@ -45,6 +44,10 @@ Kall.prototype.update = function(du){
     else {
       this.framecounter+=0.35;
       this.framecounter%=10;
+    }
+    if (this.framecounter>9 && this.isThrowing) {
+      entityManager.throwKnife(this.x+this.height,this.y+this.width/2);
+      this.isThrowing=false;
     }
 
 
@@ -81,15 +84,12 @@ Kall.prototype.update = function(du){
     }
 
     spatialManager.register(this);
-    console.log(this.velY);
 };
 
 Kall.prototype.handleKeys = function(du){
-    if(keys[this.KEY_A]){
-        this.x-=this.velX*du;
-    }
-    if(keys[this.KEY_D]){
-        this.x+=this.velX*du;
+    if (eatKey(this.KEY_THROW)) {
+        this.isThrowing=true;
+        this.framecounter=0;
     }
     if (eatKey(this.KEY_JUMP)) {
       if (this.jumpCounter!==0) {
@@ -118,7 +118,10 @@ Kall.prototype.applyAccel= function(accelY,du){
 };
 
 Kall.prototype.render = function(ctx){
-    if (this.inAir) {
+    if (this.isThrowing) {
+      g_throwSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
+    }
+    else if (this.inAir) {
       g_jumpSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
     }
     else{
