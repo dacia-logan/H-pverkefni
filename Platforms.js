@@ -1,13 +1,11 @@
-function Platform(descr, cy) {
+function Platform(descr, y) {
 
     // Common inherited setup logic from Entity
     this.setup(descr);
 
-    this.cy = cy;
-
-
-
-    this.cx = canvas.width;             // position of the images 
+    this.y = y || Math.floor(util.randRange(260, 520));
+    this.x = canvas.width;             // position of the images 
+    
     this.vx = 5;                        // vel
 
     this.size=70;                       // Width and height of each individual parts of the platform
@@ -32,6 +30,7 @@ function Platform(descr, cy) {
  
     this.height = 70;   
         
+    
      
 };
 
@@ -39,7 +38,7 @@ Platform.prototype = new Entity();
 
 
 Platform.prototype.getX = function(){
-    return this.cx;
+    return this.x;
 };
 
 Platform.prototype.getLength = function(){
@@ -55,7 +54,7 @@ Platform.prototype.getTouchingEdge = function(){
 }
 Platform.prototype.update = function(du){
    
-    if(this.cx <= -(this.size*(this.midNr+1))){
+    if(this.x <= -(this.size*(this.midNr+1))){
         this.kill()
     }
     spatialManager.unregister(this);
@@ -64,7 +63,7 @@ Platform.prototype.update = function(du){
     }
 
     
-    this.cx-=this.vx*du;
+    this.x-=this.vx*du;
 
     spatialManager.register(this);
      
@@ -74,12 +73,11 @@ Platform.prototype.update = function(du){
 
 Platform.prototype.drawPlat = function(ctx){
     
-
-    g_sprites.leftPlat.drawAtAndEnlarge(ctx, this.cx, this.cy, this.size, this.size); 
+    g_sprites.leftPlat.drawAtAndEnlarge(ctx, this.x, this.y, this.size, this.size); 
     for(var j = 1; j<=this.midNr-1; j++){
-            g_sprites.midPlat.drawAtAndEnlarge(ctx, this.cx+this.size*j, this.cy, this.size, this.size); 
+            g_sprites.midPlat.drawAtAndEnlarge(ctx, this.x+this.size*j, this.y, this.size, this.size); 
     }
-    g_sprites.rightPlat.drawAtAndEnlarge(ctx, this.cx+this.size*(this.midNr), this.cy, this.size, this.size); 
+    g_sprites.rightPlat.drawAtAndEnlarge(ctx, this.x+this.size*(this.midNr), this.y, this.size, this.size); 
 };
 
 Platform.prototype.render = function(ctx){

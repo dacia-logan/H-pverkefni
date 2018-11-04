@@ -96,16 +96,6 @@ var KEY_GRAVITY = keyCode('G');
 var KEY_AVE_VEL = keyCode('V');
 var KEY_SPATIAL = keyCode('X');
 
-var KEY_HALT  = keyCode('H');
-var KEY_RESET = keyCode('R');
-
-var KEY_0 = keyCode('0');
-
-var KEY_1 = keyCode('1');
-var KEY_2 = keyCode('2');
-
-var KEY_K = keyCode('K');
-
 function processDiagnostics() {
 
     if (eatKey(KEY_MIXED))
@@ -173,7 +163,6 @@ function preloadDone() {
     g_sprites.midPlat = new Sprite(g_images.midPlat);
     g_sprites.rightPlat = new Sprite(g_images.rightPlat);
 
-    g_sprites.ship = new Sprite(g_images.rightPlat);
     entityManager.init();
     init();
 

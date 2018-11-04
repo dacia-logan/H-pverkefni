@@ -7,10 +7,10 @@ function Kall(descr) {
     this.sprite = this.sprite || g_sprites.platLeft;
 
     // Set normal drawing scale, and warp state off
-    this.cx = 500;
-    this.cy = 200;
-    this.velY=0;
+    this.x = 500;
+    this.y = 200;
     this.velX=0;
+    this.velY=0;
 
 
     this.width=15;
@@ -38,16 +38,18 @@ Kall.prototype.update = function(du){
 
 //Check for hit entity, if its hit it checks wwhich side it is on and acts accordingly,
 // resets or is on the platform.
-    if(spatialManager.isHit(this.cx, this.cy, this.width, this.height)){
-        if(this.cy+this.height/2 < spatialManager.isHit(this.cx, this.cy, this.width, this.height).getPos().posY
-           && this.cx+this.width >= spatialManager.isHit(this.cx, this.cy, this.width, this.height).getPos().posX
-           && this.cx <= spatialManager.isHit(this.cx, this.cy, this.width, this.height).getPos().posX+spatialManager.isHit(this.cx, this.cy, this.width, this.height).getWidth())
+    if(spatialManager.isHit(this.x, this.y, this.width, this.height)){
+        if(this.y+this.height/2 < spatialManager.isHit(this.x, this.y, this.width, this.height).getPos().posY
+           && this.x+this.width >= spatialManager.isHit(this.x, this.y, this.width, this.height).getPos().posX
+           && this.x <= spatialManager.isHit(this.x, this.y, this.width, this.height).getPos().posX+spatialManager.isHit(this.x, this.y, this.width, this.height).getWidth()){
 
-           this.cy = spatialManager.isHit(this.cx, this.cy, this.width, this.height).getPos().posY-this.height;
+             this.y = spatialManager.isHit(this.x, this.y, this.width, this.height).getPos().posY-this.height;
+             this.velY=0;
+           }
 
         else {
-                this.cy =100;
-                this.cx =500;
+                this.y =100;
+                this.x =500;
         }
     }
 
@@ -56,10 +58,10 @@ Kall.prototype.update = function(du){
 
 Kall.prototype.handleKeys = function(du){
     if(keys[this.KEY_A]){
-        this.cx-=this.velX*du;
+        this.x-=this.velX*du;
     }
     if(keys[this.KEY_D]){
-        this.cx+=this.velX*du;
+        this.x+=this.velX*du;
     }
     if (eatKey(this.KEY_JUMP)) {
       this.applyAccel(this.jumpForce,du)
@@ -77,12 +79,13 @@ Kall.prototype.applyAccel= function(accelY,du){
   var aveVelY = (oldVelY + this.velY) / 2;
 
   // s = s + v_ave * t
-  var nextY = this.cy + aveVelY * du;
-  this.cy += aveVelY*du;
+  var nextY = this.y + aveVelY * du;
+
+  this.y += aveVelY*du;
 };
 
 Kall.prototype.render = function(ctx){
 
-    util.fillBox(ctx, this.cx, this.cy, this.width, this.height,"black");
+    util.fillBox(ctx, this.x, this.y, this.width, this.height,"black");
 
 };
