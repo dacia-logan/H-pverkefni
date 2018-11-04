@@ -71,7 +71,7 @@ Platform.prototype.update = function(du){
 
 
 Platform.prototype.drawPlat = function(ctx){
-
+    //console.log(this.width);
     g_sprites.leftPlat.drawAtAndEnlarge(ctx, this.x, this.y, this.size, this.size);
     for(var j = 1; j<=this.midNr-1; j++){
             g_sprites.midPlat.drawAtAndEnlarge(ctx, this.x+this.size*j, this.y, this.size, this.size);

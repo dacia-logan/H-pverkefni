@@ -29,6 +29,7 @@ var entityManager = {
 
 _platforms : [],
 _dummies : [],
+_star : [],
 
 
 // "PRIVATE" METHODS
@@ -46,7 +47,7 @@ KILL_ME_NOW : -1,
 // i.e. thing which need `this` to be defined.
 //
 deferredSetup : function () {
-    this._categories = [this._platforms, this._dummies];
+    this._categories = [this._platforms, this._dummies, this._star];
 },
 
 init: function() {
@@ -55,26 +56,16 @@ init: function() {
 
 
 setPlatforms: function(){
+    var a = Math.floor(util.randRange(1,5));   
 
-        var a = Math.floor(util.randRange(1,5));   
-
-        for(var entity in this._platforms){
-            if(this._platforms[entity].getPos().posX < 20 && !this._platforms[entity].getTouchingEdge()){
+    for(var entity in this._platforms){
+        if(this._platforms[entity].getPos().posX < 20 && !this._platforms[entity].getTouchingEdge()){
             this._platforms[entity].setTouchingEdge();
-            this._platforms.push(new Platform(a));  
+            this._platforms.push(new Platform(a)); 
+            //setja inn nýja stjörnu á hvern platform for now
+            this._star.push(new Star());
         }                   
     } 
-},
-
-
-//TODO
-setObstacle: function(){
-
-   /* for(var entity in this._platforms){
-
-
-        }
-    */
 },
 
 generateMap : function(){
@@ -90,6 +81,7 @@ update: function(du) {
     //Check if to push new platform or not
         //this.setObstacle();
     this.setPlatforms();
+
 
     for (var c = 0; c < this._categories.length; ++c) {
 

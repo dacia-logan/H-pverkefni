@@ -168,8 +168,21 @@ function requestPreloads() {
         Jump7 : "images/Jump/Jump__007.png",
         Jump8 : "images/Jump/Jump__008.png",
         Jump9 : "images/Jump/Jump__009.png",
-
-
+        //the still star image
+        Star : "images/Star/star.png",
+        //the exploding star image
+        Explosion0 : "images/Explosion/exp_000.png",
+        Explosion1 : "images/Explosion/exp_001.png",
+        Explosion2 : "images/Explosion/exp_002.png",
+        Explosion3 : "images/Explosion/exp_003.png",
+        Explosion4 : "images/Explosion/exp_004.png",
+        Explosion5 : "images/Explosion/exp_005.png",
+        Explosion6 : "images/Explosion/exp_006.png",
+        Explosion7 : "images/Explosion/exp_007.png",
+        Explosion8 : "images/Explosion/exp_008.png",
+        Explosion9 : "images/Explosion/exp_009.png",
+        Explosion10 : "images/Explosion/exp_010.png",
+        Explosion11 : "images/Explosion/exp_011.png",
     };
 
     imagesPreload(requiredImages, g_images, preloadDone);
@@ -178,6 +191,8 @@ function requestPreloads() {
 var g_sprites = {};
 var g_runSprite=[];
 var g_jumpSprite=[];
+var g_starSprite=[];        //the still star sprite
+var g_explosionSprite=[];   //the explosion sprite
 
 function preloadDone() {
     g_sprites.leftPlat = new Sprite(g_images.leftPlat);
@@ -203,6 +218,21 @@ function preloadDone() {
     g_jumpSprite[7]=new Sprite(g_images.Jump7);
     g_jumpSprite[8]=new Sprite(g_images.Jump8);
     g_jumpSprite[9]=new Sprite(g_images.Jump9);
+    //the star sprite
+    g_starSprite=new Sprite(g_images.Star);
+    //the explosion sprite
+    g_explosionSprite[0]=new Sprite(g_images.Explosion0);
+    g_explosionSprite[1]=new Sprite(g_images.Explosion1);
+    g_explosionSprite[2]=new Sprite(g_images.Explosion2);
+    g_explosionSprite[3]=new Sprite(g_images.Explosion3);
+    g_explosionSprite[4]=new Sprite(g_images.Explosion4);
+    g_explosionSprite[5]=new Sprite(g_images.Explosion5);
+    g_explosionSprite[6]=new Sprite(g_images.Explosion6);
+    g_explosionSprite[7]=new Sprite(g_images.Explosion7);
+    g_explosionSprite[8]=new Sprite(g_images.Explosion8);
+    g_explosionSprite[9]=new Sprite(g_images.Explosion9);
+    g_explosionSprite[10]=new Sprite(g_images.Explosion10);
+    g_explosionSprite[11]=new Sprite(g_images.Explosion11);
     entityManager.init();
     init();
 
