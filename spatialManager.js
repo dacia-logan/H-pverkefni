@@ -55,23 +55,33 @@ unregister: function(entity) {
 
 },
 
-findEntityInRange: function(posX, posY, radius) {
+findEntityInRange: function(posX, posY, w, h) {
 
     // TODO: YOUR STUFF HERE!
-
+/*
     var shortest = Number.MAX_SAFE_INTEGER;
-    
     for(var entity in this._entities){
-            var eposX = this._entities[entity].getPos().posX;           //entity's pos
-            var eposY = this._entities[entity].getPos().posY;
+        var eposX = this._entities[entity].getPos().posX;           //entity's pos
+        var eposY = this._entities[entity].getPos().posY;
 
-            var dist = util.wrappedDistSq(posX, posY, eposX, eposY, canvas.width, canvas.height);             
-            var combinedRadiusSq = Math.pow((radius+this._entities[entity].getRadius()), 2);               // Radius of the entities combined, squared
-            
-            if(dist < combinedRadiusSq){                   //Check if distance is less then combinedRadius
-                return this._entities[entity];   
-            }
-        }   
+        var dist = util.wrappedDistSq(posX, posY, eposX, eposY, canvas.width, canvas.height);             
+        var combinedRadiusSq = Math.pow((radius+this._entities[entity].getRadius()), 2);               // Radius of the entities combined, squared
+        
+        if(dist < combinedRadiusSq){                   //Check if distance is less then combinedRadius
+            return this._entities[entity];   
+        }
+    }   */
+    var shortest = Number.MAX_SAFE_INTEGER;
+    for(var entity in this._entities){
+        var eposX = this._entities[entity].getPos().posX;           //entity's pos
+        var eposY = this._entities[entity].getPos().posY;
+        
+        var dist = (canvas.width-posX)-(canvas.width-eposX)
+        var width = (this._entities[entity].getWidth()/2)+w/2;
+        if(dist < width){                   //Check if distance is less then combinedRadius
+            return this._entities[entity];   
+        }
+    }   
 },
 
 //Returns the entity that it is overlapping with
@@ -99,6 +109,8 @@ render: function(ctx) {
     ctx.strokeStyle = "red";
     for (var ID in this._entities) {
         var e = this._entities[ID];
+        console.log(e);
+        console.log(e.y, e.x);
         util.strokeBox(ctx, e.getPos().posX, e.getPos().posY, e.getWidth(), e.getHeight());
     }
     ctx.strokeStyle = oldStyle;

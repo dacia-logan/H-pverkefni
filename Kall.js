@@ -23,6 +23,10 @@ function Kall(descr) {
 
     this.isThrowing=false;
 
+    // Líf
+    this.lives = 3;
+    this.heartSize = 50;
+
 };
 
 Kall.prototype = new Entity();
@@ -83,6 +87,18 @@ Kall.prototype.update = function(du){
       this.inAir=true;
     }
 
+    if (this.y > g_canvas.height) {
+      this.lives--;
+        // Play a 'fail' sound when the girl hits the bottom
+        // TODO
+        // If the player has no lives left, then it's game over
+        if (this.lives === 0) {
+          main.gameOver();
+          // TODO
+          // Play game over sound
+        }
+    }
+
     spatialManager.register(this);
 };
 
@@ -99,7 +115,7 @@ Kall.prototype.handleKeys = function(du){
         this.applyAccel(this.jumpForce,du);
       }
     }
-}
+};
 
 
 Kall.prototype.applyAccel= function(accelY,du){
@@ -128,5 +144,18 @@ Kall.prototype.render = function(ctx){
     else{
       g_runSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
     }
+
+    this.drawLives(ctx);
+};
+
+// Draw the hearts on the screen.
+Kall.prototype.drawLives = function(ctx) {
+  // Space between the hearts
+  var livesOffset = 55;
+
+  // Draw as many hearts as lives the player has left
+  for (var i = 0; i < this.lives; i++) {
+    g_sprites.heart.drawAtAndEnlarge(ctx, 15 + livesOffset * i, 20, this.heartSize, this.heartSize);
+  }
 
 };

@@ -29,6 +29,7 @@ var entityManager = {
 
 _platforms : [],
 _dummies : [],
+_star : [],
 _knifes :[],
 
 
@@ -47,7 +48,7 @@ KILL_ME_NOW : -1,
 // i.e. thing which need `this` to be defined.
 //
 deferredSetup : function () {
-    this._categories = [this._platforms, this._dummies,this._knifes];
+    this._categories = [this._platforms, this._dummies, this._star, this._knifes];
 },
 
 init: function() {
@@ -55,31 +56,22 @@ init: function() {
 },
 
 throwKnife : function(x,y){
-  this._knifes.push(new Knife({x : x, y: y}));
-},
+    this._knifes.push(new Knife({x : x, y: y}));
+  },
 
 
 setPlatforms: function(){
+    var a = Math.floor(util.randRange(1,5));   
 
-        var a = Math.floor(util.randRange(1,5));
 
-        for(var entity in this._platforms){
-            if(this._platforms[entity].getPos().posX < 20 && !this._platforms[entity].getTouchingEdge()){
+    for(var entity in this._platforms){
+        if(this._platforms[entity].getPos().posX < 20 && !this._platforms[entity].getTouchingEdge()){
             this._platforms[entity].setTouchingEdge();
-            this._platforms.push(new Platform(a));
-        }
+            this._platforms.push(new Platform(a)); 
+            //setja inn nýja stjörnu á hvern platform for now
+            this._star.push(new Star());
+        }                   
     }
-},
-
-
-//TODO
-setObstacle: function(){
-
-   /* for(var entity in this._platforms){
-
-
-        }
-    */
 },
 
 generateMap : function(){
@@ -95,6 +87,7 @@ update: function(du) {
     //Check if to push new platform or not
         //this.setObstacle();
     this.setPlatforms();
+
 
     for (var c = 0; c < this._categories.length; ++c) {
 

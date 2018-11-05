@@ -3,6 +3,7 @@ function Knife(descr){
   this.width=40;
   this.height=20;
 }
+
 Knife.prototype= new Entity();
 
 Knife.prototype.rotation=0;
