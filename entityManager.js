@@ -61,15 +61,23 @@ throwKnife : function(x,y){
 
 
 setPlatforms: function(){
-    var a = Math.floor(util.randRange(1,5));   
+    var a = Math.floor(util.randRange(1,5)); 
+
+    //creates a random number, when the number is 1 we create a star
+    var makeStar =  Math.floor(util.randRange(1,4));
+    //random number deciding if the stars are one or two on the platform
+    var oneOrTwo = Math.floor(util.randRange(1,3));
 
 
     for(var entity in this._platforms){
         if(this._platforms[entity].getPos().posX < 20 && !this._platforms[entity].getTouchingEdge()){
             this._platforms[entity].setTouchingEdge();
             this._platforms.push(new Platform(a)); 
-            //setja inn nýja stjörnu á hvern platform for now
-            this._star.push(new Star());
+
+            //make a new star when 'makeStar' is equal to 1
+            if (makeStar === 1) this._star.push(new Star());
+            //if oneOrTwo is equal to two then we make another star for this platform
+            if (oneOrTwo === 2) this._star.push(new Star());
         }                   
     }
 },
@@ -81,13 +89,10 @@ generateMap : function(){
 
 
 update: function(du) {
-
-            //  Range of numbers that give u different platform
-
+    //Range of numbers that give u different platform
     //Check if to push new platform or not
-        //this.setObstacle();
+    //this.setObstacle();
     this.setPlatforms();
-
 
     for (var c = 0; c < this._categories.length; ++c) {
 
@@ -107,9 +112,6 @@ update: function(du) {
             }
         }
     }
-
-
-
 },
 
 render: function(ctx) {
