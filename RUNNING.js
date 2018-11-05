@@ -205,7 +205,7 @@ function requestPreloads() {
         Kunai : "images/Throw/Kunai.png",
         Heart : "images/Lives/heart.png",
         Gameover : "images/Lives/gameover.png",
-        Background : "images/BG.jpg"
+        Background : "images/background.png"
 
 
     };
