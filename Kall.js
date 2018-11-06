@@ -13,7 +13,7 @@ function Kall(descr) {
     this.height= 100;
     //þyngdarafl og hoppkraftur
     this.gravity=0.15;
-    this.jumpForce=-10;
+    this.jumpForce=-5;
     //boolean breita sem er true þegar hann er í loftinu en false annars
     this.inAir=true;
     //jumpcounter telur hoppin niður
@@ -108,6 +108,7 @@ Kall.prototype.collidesWith = function(du){
   }
 
 };
+
 
 Kall.prototype.starCollide = function(star){
   /* if(this.isCharging){
