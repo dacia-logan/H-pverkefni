@@ -4,7 +4,7 @@ function Kall(descr) {
     this.setup(descr);
     //upphafsstaða og upphafshraði
     this.x = 200;
-    this.y = 400;
+    this.y = 200;
     this.velX=1;
     this.velY=0;
 
@@ -41,6 +41,7 @@ Kall.prototype.RESET= 'U'.charCodeAt(0);
 Kall.prototype.update = function(du){
 
     spatialManager.unregister(this);
+    this.x+=this.velX*du;
     if(this.inAir || this.isThrowing){
       this.framecounter+=0.15;
       if (this.framecounter>=9.1) {
@@ -171,8 +172,7 @@ Kall.prototype.loseLife = function(){
       this.x =100;
       this.velY=0;
     }
-    this.x+=this.velX*du;
-    spatialManager.register(this);
+
 };
 
 

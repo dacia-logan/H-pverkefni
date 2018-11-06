@@ -73,7 +73,7 @@ setPlatforms: function(){
         var platX = this._platforms[entity].getPos().posX;
         var platWidth =this._platforms[entity].getWidth();
 
-        if(platX + platWidth <= 500 && !this._platforms[entity].getPlatformPushed()){
+        if(platX + platWidth <= camera.getPos().posX+500 && !this._platforms[entity].getPlatformPushed()){
             this._platforms[entity].setPlatformPushed();
             this._platforms.push(new Platform(a));
 
