@@ -154,9 +154,9 @@ var g_images = {};
 function requestPreloads() {
 
     var requiredImages = {
-        leftPlat : "images/grassCliffLeft.png",
-        midPlat : "images/grassMid.png",
-        rightPlat : "images/grassCliffRight.png",
+        leftPlat : "images/tundraCliffLeft.png",
+        midPlat : "images/tundraMid.png",
+        rightPlat : "images/tundraCliffRight.png",
         Run0 :  "images/Run/Run__000.png",
         Run1 :  "images/Run/Run__001.png",
         Run2 :  "images/Run/Run__002.png",
