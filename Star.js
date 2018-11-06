@@ -39,10 +39,16 @@ function Star(descr) {
     //number of images to run through are 0-11
     this.numberOfFrames = 11;
 
+    this.type = "Star";
 };
 
 
 Star.prototype = new Entity();
+
+Star.prototype.explodes = function(){
+    this.isExploding=true;
+}
+
 
 Star.prototype.render = function(ctx){
     //only draw if game is not over
@@ -74,15 +80,14 @@ Star.prototype.update = function(du) {
     }
 
     //if the star is hit by 'Kall' with spatialID 2 it is cilled
-    //TODO 
-    //ætti að vera þegar hann er að dash-a en ekki þegar
-    //hann er bara að hlaupa og hann ætti að fá auka stig hér
-    if (spatialManager.isHit(
+    //TODO                                                                      /*
+    //ætti að vera þegar hann er að dash-a en ekki þegar                         * Lagaði saptialmanagerinn þannig allt collision a stjörnu er höndlað í kall
+    //hann er bara að hlaupa og hann ætti að fá auka stig hér                    */
+    /*if (spatialManager.isHit(                                                 
         this.x, this.y, this.width, this.height)._spatialID === 2 
-        /* && isDashing*/) 
-            this.isExploding=true; 
+         && isDashing) 
+            this.isExploding=true;*/ 
     
-
     //if is dead and the frames are not done 
     //change the framecounter for explosion
     if (this.isExploding && 
