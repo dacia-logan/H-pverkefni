@@ -31,6 +31,8 @@ _entities : [],
 
 // PUBLIC METHODS
 
+
+
 getNewSpatialID : function() {
 
     // TODO: YOUR STUFF HERE!z
@@ -78,6 +80,9 @@ findEntityInRange: function(posX, posY, radius) {
 //
 //Uses AABB to determine it
 isHit: function(posX, posY, w, h){
+
+    var ent = [];
+
     for(var entity in this._entities){
 
         var eposX = this._entities[entity].getPos().posX;           //entity's pos
@@ -88,9 +93,13 @@ isHit: function(posX, posY, w, h){
        if (posX <= eposX + eW &&                
            eposX <= posX + w &&
            posY <= eposY +eH &&
-           eposY <= posY + h)
-         return this._entities[entity];
+           eposY <= posY + h){
+            
+            ent.push(this._entities[entity]);
+           }
         }
+        
+        return ent;                                                 //Returnar fylki af entities sem hann hlutur snertir
 },
 
 
