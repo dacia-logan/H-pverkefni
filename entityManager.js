@@ -68,10 +68,13 @@ setPlatforms: function(){
     //random number deciding if the stars are one or two on the platform
     var oneOrTwo = Math.floor(util.randRange(1,3));
 
-
     for(var entity in this._platforms){
-        if(this._platforms[entity].getPos().posX < 20 && !this._platforms[entity].getTouchingEdge()){
-            this._platforms[entity].setTouchingEdge();
+
+        var platX = this._platforms[entity].getPos().posX;
+        var platWidth =this._platforms[entity].getWidth();
+
+        if(platX + platWidth <= 500 && !this._platforms[entity].getPlatformPushed()){
+            this._platforms[entity].setPlatformPushed();
             this._platforms.push(new Platform(a)); 
 
             //make a new star when 'makeStar' is equal to 1
