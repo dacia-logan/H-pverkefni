@@ -5,7 +5,7 @@ function Kall(descr) {
     //upphafsstaða og upphafshraði
     this.x = 200;
     this.y = 400;
-    this.velX=0;
+    this.velX=1;
     this.velY=0;
 
     //hæð og breidd
@@ -13,7 +13,7 @@ function Kall(descr) {
     this.height= 100;
     //þyngdarafl og hoppkraftur
     this.gravity=0.15;
-    this.jumpForce=-5;
+    this.jumpForce=-7;
     //boolean breita sem er true þegar hann er í loftinu en false annars
     this.inAir=true;
     //jumpcounter telur hoppin niður
@@ -26,7 +26,6 @@ function Kall(descr) {
     // Líf
     this.lives = 3;
     this.heartSize = 50;
-
 };
 
 Kall.prototype = new Entity();
@@ -98,7 +97,7 @@ Kall.prototype.update = function(du){
           // Play game over sound
         }
     }
-
+    this.x+=this.velX*du;
     spatialManager.register(this);
 };
 
@@ -143,7 +142,6 @@ Kall.prototype.render = function(ctx){
     else{
       g_runSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
     }
-
     this.drawLives(ctx);
 };
 
@@ -154,7 +152,7 @@ Kall.prototype.drawLives = function(ctx) {
 
   // Draw as many hearts as lives the player has left
   for (var i = 0; i < this.lives; i++) {
-    g_sprites.heart.drawAtAndEnlarge(ctx, 15 + livesOffset * i, 20, this.heartSize, this.heartSize);
+    g_sprites.heart.drawAtAndEnlarge(ctx, camera.getPos().posX+15 + livesOffset * i,camera.getPos().posY+20, this.heartSize, this.heartSize);
   }
 
 };

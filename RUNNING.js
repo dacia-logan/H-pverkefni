@@ -133,11 +133,11 @@ function renderSimulation(ctx) {
     var gameOverOffset = 50;
     // If the game is over, display the game over screen
     if (main._isGameOver) {
-        g_sprites.gameover.drawAtAndEnlarge(ctx,- gameOverOffset,0,g_canvas.width + gameOverOffset,g_canvas.height);
+        g_sprites.gameover.drawAtAndEnlarge(ctx,camera.getPos().posX- gameOverOffset,camera.getPos().posY,g_canvas.width + gameOverOffset,g_canvas.height);
     } else {
-    // Else draw the regular background    
-        g_sprites.Background.drawAtAndEnlarge(ctx,0,0,g_canvas.width,g_canvas.height);
-        
+    // Else draw the regular background
+        g_sprites.Background.drawAtAndEnlarge(ctx,0,-g_canvas.height*5,g_canvas.width*10,g_canvas.height*10);
+
     }
     entityManager.render(ctx);
 

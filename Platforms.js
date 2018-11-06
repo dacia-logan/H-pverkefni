@@ -4,7 +4,7 @@ function Platform(descr, x, y) {
     this.setup(descr);
 
     this.y = y || Math.floor(util.randRange(260, 520));
-    this.x = x || canvas.width;             // position of the images
+    this.x = x || camera.getPos().posX+g_canvas.width;             // position of the images
 
     this.vx = 5;                        // vel
 
@@ -27,16 +27,16 @@ function Platform(descr, x, y) {
             this.midNr=7;
             this.width = 70*8;
         }
-    
+
     if(descr===4){
         this.midNr = 8;
         this.width = 70*9;
-    }    
- 
-    this.height = 70;   
-        
-    
-     
+    }
+
+    this.height = 70;
+
+
+
 };
 
 Platform.prototype = new Entity();
@@ -50,12 +50,12 @@ Platform.prototype.getTouchingEdge = function(){
     return this.isTouchingEdge;
 }
 Platform.prototype.update = function(du){
-    
+
     spatialManager.unregister(this);
     if(this.x <= -(this.size*(this.midNr+1))){
         this.kill()
     }
-   
+
     if(this._isDeadNow){
         return entityManager.KILL_ME_NOW;
     }
@@ -64,7 +64,7 @@ Platform.prototype.update = function(du){
     this.x-=this.vx*du;
 
     spatialManager.register(this);
-    
+
 };
 
 
@@ -85,5 +85,5 @@ Platform.prototype.render = function(ctx){
     if (!main._isGameOver) {
         this.drawPlat(ctx);
     }
-         
+
 }
