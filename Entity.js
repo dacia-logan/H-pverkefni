@@ -67,6 +67,10 @@ Entity.prototype.getSpatialID = function () {
     return this._spatialID;
 };
 
+Entity.prototype.getType = function(){
+    return this.type;
+};
+
 Entity.prototype.kill = function () {
     this._isDeadNow = true;
 };
