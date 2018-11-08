@@ -83,7 +83,7 @@ Star.prototype.update = function(du) {
     //TODO                                                                      /*
     //ætti að vera þegar hann er að dash-a en ekki þegar                         * Lagaði saptialmanagerinn þannig allt collision a stjörnu er höndlað í kall
     //hann er bara að hlaupa og hann ætti að fá auka stig hér                    */
-    /*if (spatialManager.isHit(                                                 
+    if (spatialManager.isHit(                                                 
         this.x, this.y, this.width, this.height)._spatialID === 2 
         /* && isDashing*/) 
             this.isExploding=true; 
