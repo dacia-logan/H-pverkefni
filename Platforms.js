@@ -4,58 +4,63 @@ function Platform(descr, x, y) {
     this.setup(descr);
 
     this.y = y || Math.floor(util.randRange(260, 520));
-    this.x = x || canvas.width;             // position of the images
+    this.x = x || camera.getPos().posX+g_canvas.width;             // position of the images
 
     this.vx = 5;                        // vel
 
     this.size=70;                       // Width and height of each individual parts of the platform
 
 
-    this.isTouchingEdge=false;
+    this.platformPushed=false;
 
     if(descr===1){
-            this.midNr=5;
+            this.nrTiles=5;
             this.width = 70*6;
     }
 
     if(descr===2){
-            this.midNr=6;
+            this.nrTiles=6;
             this.width = 70*7;
     }
 
     if(descr===3){
-            this.midNr=7;
+            this.nrTiles=7;
             this.width = 70*8;
         }
-    
+
     if(descr===4){
-        this.midNr = 8;
+        this.nrTiles = 8;
         this.width = 70*9;
-    }    
- 
-    this.height = 70;   
-        
-    
-     
+    }
+
+    this.height = 70;
+
+    this.type = "Platform";
+
 };
 
 Platform.prototype = new Entity();
 
 
-Platform.prototype.setTouchingEdge = function(){
-    this.isTouchingEdge = !this.isTouchingEdge;
+Platform.prototype.setPlatformPushed = function(){
+    this.platformPushed = !this.platformPushed;
 };
 
-Platform.prototype.getTouchingEdge = function(){
-    return this.isTouchingEdge;
+Platform.prototype.getPlatformPushed = function(){
+    return this.platformPushed;
+};
+
+Platform.prototype.getSpeed = function(){
+    return this.vx;
 }
+
 Platform.prototype.update = function(du){
-    
+
     spatialManager.unregister(this);
-    if(this.x <= -(this.size*(this.midNr+1))){
+    if(this.x <= -(this.size*(this.nrTiles+1))){
         this.kill()
     }
-   
+
     if(this._isDeadNow){
         return entityManager.KILL_ME_NOW;
     }
@@ -64,7 +69,7 @@ Platform.prototype.update = function(du){
     this.x-=this.vx*du;
 
     spatialManager.register(this);
-    
+
 };
 
 
@@ -73,10 +78,10 @@ Platform.prototype.update = function(du){
 Platform.prototype.drawPlat = function(ctx){
     //console.log(this.width);
     g_sprites.leftPlat.drawAtAndEnlarge(ctx, this.x, this.y, this.size, this.size);
-    for(var j = 1; j<=this.midNr-1; j++){
+    for(var j = 1; j<=this.nrTiles-1; j++){
             g_sprites.midPlat.drawAtAndEnlarge(ctx, this.x+this.size*j, this.y, this.size, this.size);
     }
-    g_sprites.rightPlat.drawAtAndEnlarge(ctx, this.x+this.size*(this.midNr), this.y, this.size, this.size);
+    g_sprites.rightPlat.drawAtAndEnlarge(ctx, this.x+this.size*(this.nrTiles), this.y, this.size, this.size);
 };
 
 Platform.prototype.render = function(ctx){
@@ -85,5 +90,5 @@ Platform.prototype.render = function(ctx){
     if (!main._isGameOver) {
         this.drawPlat(ctx);
     }
-         
+
 }

@@ -133,11 +133,11 @@ function renderSimulation(ctx) {
     var gameOverOffset = 50;
     // If the game is over, display the game over screen
     if (main._isGameOver) {
-        g_sprites.gameover.drawAtAndEnlarge(ctx,- gameOverOffset,0,g_canvas.width + gameOverOffset,g_canvas.height);
+        g_sprites.gameover.drawAtAndEnlarge(ctx,camera.getPos().posX- gameOverOffset,camera.getPos().posY,g_canvas.width + gameOverOffset,g_canvas.height);
     } else {
-    // Else draw the regular background    
-        g_sprites.Background.drawAtAndEnlarge(ctx,0,0,g_canvas.width,g_canvas.height);
-        
+    // Else draw the regular background
+        g_sprites.Background.drawAtAndEnlarge(ctx,0,-g_canvas.height*5,g_canvas.width*10,g_canvas.height*10);
+
     }
     entityManager.render(ctx);
 
@@ -154,9 +154,9 @@ var g_images = {};
 function requestPreloads() {
 
     var requiredImages = {
-        leftPlat : "images/grassCliffLeft.png",
-        midPlat : "images/grassMid.png",
-        rightPlat : "images/grassCliffRight.png",
+        leftPlat : "images/tundraCliffLeft.png",
+        midPlat : "images/tundraMid.png",
+        rightPlat : "images/tundraCliffRight.png",
         Run0 :  "images/Run/Run__000.png",
         Run1 :  "images/Run/Run__001.png",
         Run2 :  "images/Run/Run__002.png",

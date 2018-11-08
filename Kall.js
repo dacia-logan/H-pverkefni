@@ -4,8 +4,8 @@ function Kall(descr) {
     this.setup(descr);
     //upphafsstaða og upphafshraði
     this.x = 200;
-    this.y = 400;
-    this.velX=0;
+    this.y = 200;
+    this.velX=1;
     this.velY=0;
 
     //hæð og breidd
@@ -13,7 +13,7 @@ function Kall(descr) {
     this.height= 100;
     //þyngdarafl og hoppkraftur
     this.gravity=0.15;
-    this.jumpForce=-5;
+    this.jumpForce=-7;
     //boolean breita sem er true þegar hann er í loftinu en false annars
     this.inAir=true;
     //jumpcounter telur hoppin niður
@@ -21,11 +21,14 @@ function Kall(descr) {
     //frameCounter er fyrir rammana í sprite animation
     this.framecounter=0;
 
+    this.isCharging=true;
     this.isThrowing=false;
 
     // Líf
     this.lives = 3;
     this.heartSize = 50;
+
+    this.type =  "Kall";
 
 };
 
@@ -35,10 +38,10 @@ Kall.prototype.KEY_THROW = ' '.charCodeAt(0);
 Kall.prototype.KEY_JUMP= 'W'.charCodeAt(0);
 Kall.prototype.RESET= 'U'.charCodeAt(0);
 
-
 Kall.prototype.update = function(du){
 
     spatialManager.unregister(this);
+    this.x+=this.velX*du;
     if(this.inAir || this.isThrowing){
       this.framecounter+=0.15;
       if (this.framecounter>=9.1) {
@@ -55,52 +58,123 @@ Kall.prototype.update = function(du){
     }
 
 
-    if (eatKey(this.RESET)||this.y>g_canvas.height) {
-      this.x=200;
-      this.y=200;
-      this.velY=0;
-    }
-
-
-
 //Check for hit entity, if its hit it checks wwhich side it is on and acts accordingly,
 // resets or is on the platform.
     this.handleKeys(du);
     this.applyAccel(this.gravity,du);
-    if(spatialManager.isHit(this.x, this.y, this.width, this.height)){
-        if(this.y+this.height-10 < spatialManager.isHit(this.x, this.y, this.width, this.height).getPos().posY
-           && this.x+this.width >= spatialManager.isHit(this.x, this.y, this.width, this.height).getPos().posX
-           && this.x <= spatialManager.isHit(this.x, this.y, this.width, this.height).getPos().posX+spatialManager.isHit(this.x, this.y, this.width, this.height).getWidth()){
 
-             this.y = spatialManager.isHit(this.x, this.y, this.width, this.height).getPos().posY-this.height;
-             this.velY=Math.floor(0);
-             this.jumpCounter=2;
-             this.inAir=false;
-           }
+    this.collidesWith(du);
 
-        else {
-                this.y =200;
-                this.x =100;
-        }
+
+    //Check for death
+    if(this._isDeadNow){
+      return entityManager.KILL_ME_NOW
     }
-    else {
-      this.inAir=true;
-    }
-
+    //else register
+    else
+      spatialManager.register(this);
+    //check if out of canvas
     if (this.y > g_canvas.height) {
-      this.lives--;
-        // Play a 'fail' sound when the girl hits the bottom
-        // TODO
-        // If the player has no lives left, then it's game over
-        if (this.lives === 0) {
-          main.gameOver();
-          // TODO
-          // Play game over sound
+      this.loseLife();
+    }
+};
+
+
+
+Kall.prototype.collidesWith = function(du){
+
+  if(spatialManager.isHit(this.x, this.y, this.width, this.height).length != 0){
+
+    var ent = spatialManager.isHit(this.x, this.y, this.width, this.height);
+    console.log(ent);
+    for(i=0 ; i < ent.length; i++){
+
+      if(ent[i].getType() === "Star"){
+
+        this.starCollide(ent[i]);
+        if(!this.isCharging){
+          this.loseLife();
         }
+      }
+
+      if(ent[i].getType() === "Platform"){
+
+        this.platformCollide(ent[i]);
+      }
+    }
+  }
+
+  else {
+    this.inAir=true;
+  }
+
+};
+
+
+Kall.prototype.starCollide = function(star){
+  /* if(this.isCharging){
+        entity.kill();
+  }
+  */
+        star.explodes();
+
+
+};
+
+
+Kall.prototype.platformCollide = function(entity){
+
+    if(this.y+this.height-5 < entity.getPos().posY                        // Cheching if character is on top of platform
+       && this.x+this.width >= entity.getPos().posX
+       && this.x <= entity.getPos().posX + entity.getWidth())
+    {
+
+      this.y = entity.getPos().posY-this.height;
+      this.velY=0;
+      this.jumpCounter=2;
+      this.inAir=false;
+
     }
 
-    spatialManager.register(this);
+    //TODO\\
+//------------\\
+/*
+*Tjekka hvort hann lendir undir platform eða a vinstri hliðinni (mun aldrei lenda á hægri)
+*/
+   else if(this.x+this.width >= entity.getPos().posX)
+    {
+
+      this.x -=5;
+   }
+
+
+
 };
+
+Kall.prototype.loseLife = function(){
+      //----\\
+     // TODO \\
+    //--------\\
+    /*
+    *Gera reset function sem resettar mappið ofl.
+    */
+    this.lives--;
+
+    if (this.lives === 0) {
+        this.kill();
+        main.gameOver();
+      // TODO
+      // Play game over sound
+    }
+
+    else {
+      this.y =200;
+      this.x =100;
+      this.velY=0;
+    }
+
+};
+
 
 Kall.prototype.handleKeys = function(du){
     if (eatKey(this.KEY_THROW)) {
@@ -112,8 +186,14 @@ Kall.prototype.handleKeys = function(du){
         this.framecounter=0;
         this.velY=0;
         this.jumpCounter-=1;
-        this.applyAccel(this.jumpForce,du);
+        this.inAir=true;
+        this.applyAccel(this.jumpForce, du);
       }
+    }
+    if (eatKey(this.RESET)||this.y>g_canvas.height) {
+      this.x=200;
+      this.y=200;
+      this.velY=0;
     }
 };
 
@@ -131,6 +211,7 @@ Kall.prototype.applyAccel= function(accelY,du){
   var nextY = this.y + aveVelY * du;
 
   this.y += aveVelY*du;
+  return this.velY;
 };
 
 Kall.prototype.render = function(ctx){
@@ -143,7 +224,6 @@ Kall.prototype.render = function(ctx){
     else{
       g_runSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
     }
-
     this.drawLives(ctx);
 };
 
@@ -154,7 +234,7 @@ Kall.prototype.drawLives = function(ctx) {
 
   // Draw as many hearts as lives the player has left
   for (var i = 0; i < this.lives; i++) {
-    g_sprites.heart.drawAtAndEnlarge(ctx, 15 + livesOffset * i, 20, this.heartSize, this.heartSize);
+    g_sprites.heart.drawAtAndEnlarge(ctx, camera.getPos().posX+15 + livesOffset * i,camera.getPos().posY+20, this.heartSize, this.heartSize);
   }
 
 };
