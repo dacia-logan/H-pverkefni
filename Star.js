@@ -81,6 +81,8 @@ Star.prototype.update = function(du) {
         this.x, this.y, this.width, this.height)._spatialID === 2 
         /* && isDashing*/) 
             this.isExploding=true; 
+            //todo : unregister, viljum ekki að caracterinn hoppi yfir eða geti 
+            // lent á sprengingunni
     
 
     //if is dead and the frames are not done 

@@ -61,6 +61,7 @@ throwKnife : function(x,y){
 
 
 setPlatforms: function(){
+    //TODO nota þetta sem viðmið hvaða platform er verið að nota.
     var a = Math.floor(util.randRange(1,5)); 
 
     //creates a random number, when the number is 1 we create a star
