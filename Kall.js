@@ -114,35 +114,24 @@ Kall.prototype.setSpeed = function(du) {
 };
 
 Kall.prototype.collidesWith = function(du){
-  //console.log(spatialManager.isHit(this.x, this.y, this.width, this.height).length != 0);
+    //console.log(spatialManager.isHit(this.x, this.y, this.width, this.height).length != 0);
 
-  if(spatialManager.isHit(this.x, this.y, this.width, this.height).length != 0){
+    if(spatialManager.isHit(this.x, this.y, this.width, this.height).length != 0){
 
-    var ent = spatialManager.isHit(this.x, this.y, this.width, this.height);
-    //console.log(ent);
-    for(i=0 ; i < ent.length; i++){
-
-      if((ent[i].getType() === "Star") ||
-         (ent[i].getType() === "Star" && 
-          ent[i].getType() === "Platform"))
-      {
-        if (this.isDashing) {
-          ent[i].explodes();
-        } else {
-          this.loseLife();
+      var ent = spatialManager.isHit(this.x, this.y, this.width, this.height);
+      //console.log(ent);
+      for(i=0 ; i < ent.length; i++){
+        if(ent[i].getType() === "Star"){
+          //collision with the star
+          this.starCollide(ent[i]);
+        } else if (ent[i].getType() === "Platform"){
+          //collision with the platform
+          this.platformCollide(ent[i]);
         }
-      } else if 
-        (ent[i].getType() === "Platform")
-      {
-        this.platformCollide(ent[i]);
       }
+    } else {
+      this.inAir=true;
     }
-  }
-
-  else {
-    this.inAir=true;
-  }
-
 };
 
 
@@ -151,9 +140,19 @@ Kall.prototype.starCollide = function(star){
         entity.kill();
   }
   */
-    if (this.isDashing) {
-      star.explodes();
+    //if we land on top of the star we want to walk on it
+    if(this.y+this.height <
+          star.getPos().posY + star.getWidth()/2){
+      this.inAir = false; 
+      this.y = star.getPos().posY - this.height;  
     }
+    //if we dash into the star the star explodes
+    else if (this.isDashing) {
+      star.explodes();
+    //else the unicorn loses a life
+    } else  {
+      this.loseLife();
+    }  
 };
 
 

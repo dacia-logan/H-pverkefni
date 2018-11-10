@@ -47,6 +47,7 @@ function Star(descr) {
 Star.prototype = new Entity();
 
 Star.prototype.explodes = function(){
+    spatialManager.unregister; 
     this.isExploding=true;
 }
 
@@ -84,13 +85,14 @@ Star.prototype.update = function(du) {
     //TODO                                                                      /*
     //ætti að vera þegar hann er að dash-a en ekki þegar                         * Lagaði saptialmanagerinn þannig allt collision a stjörnu er höndlað í kall
     //hann er bara að hlaupa og hann ætti að fá auka stig hér                    */
+    /*
     if (spatialManager.isHit(                                                 
         this.x, this.y, this.width, this.height)._spatialID === 2 
-        /* && isDashing*/) 
+        /* && isDashing) 
             this.isExploding=true; 
             //todo : unregister, viljum ekki að caracterinn hoppi yfir eða geti 
             // lent á sprengingunni
-    
+    */
     //if is dead and the frames are not done 
     //change the framecounter for explosion
     if (this.isExploding && 
@@ -101,6 +103,5 @@ Star.prototype.update = function(du) {
     this.x-=this.vx*du;
 
     //re-register to spatial manager
-    spatialManager.register(this);
-
+    if (!this.isExploding) spatialManager.register(this);
 };
