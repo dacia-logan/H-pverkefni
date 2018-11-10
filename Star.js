@@ -39,6 +39,7 @@ function Star(descr) {
     //number of images to run through are 0-11
     this.numberOfFrames = 11;
 
+    //the stars type for collision detection
     this.type = "Star";
 };
 

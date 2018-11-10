@@ -24,6 +24,9 @@ function Kall(descr) {
     this.isCharging=true;
     this.isThrowing=false;
 
+    //should explode when colliding with left edge of platform
+    this.isExploding = false;
+
     // Líf
     this.lives = 3;
     this.heartSize = 50;
@@ -82,11 +85,12 @@ Kall.prototype.update = function(du){
 
 
 Kall.prototype.collidesWith = function(du){
+  //console.log(spatialManager.isHit(this.x, this.y, this.width, this.height).length != 0);
 
   if(spatialManager.isHit(this.x, this.y, this.width, this.height).length != 0){
 
     var ent = spatialManager.isHit(this.x, this.y, this.width, this.height);
-    console.log(ent);
+    //console.log(ent);
     for(i=0 ; i < ent.length; i++){
 
       if(ent[i].getType() === "Star"){
@@ -123,32 +127,47 @@ Kall.prototype.starCollide = function(star){
 
 
 Kall.prototype.platformCollide = function(entity){
+    //where are we colliding with platform?
 
-    if(this.y+this.height-5 < entity.getPos().posY                        // Cheching if character is on top of platform
-       && this.x+this.width >= entity.getPos().posX
-       && this.x <= entity.getPos().posX + entity.getWidth())
+    //LEFT EDGE - character should explode and lose a life
+    if (this.x+this.width+5 > entity.getPos().posX && 
+        this.x+this.width-5 < entity.getPos().posX) 
     {
-
-      this.y = entity.getPos().posY-this.height;
-      this.velY=0;
-      this.jumpCounter=2;
-      this.inAir=false;
-
+      //this.isExploding = true; 
+      this.x -=5
+      this.loseLife();
+      return; 
     }
 
-    //TODO\\
-//------------\\
-/*
-*Tjekka hvort hann lendir undir platform eða a vinstri hliðinni (mun aldrei lenda á hægri)
-*/
-   else if(this.x+this.width >= entity.getPos().posX)
+    //TOP EDGE - character should run on platform 
+    if (this.y+this.height < 
+        entity.getPos().posY + entity.getWidth()/2) 
     {
+        //make sure to drag it out of the ground if it 
+        //went to far on the last frame 
+        while(Math.floor(this.y+this.height) > entity.y)
+        {           
+          this.y--;                                               
+        }
+        this.y = entity.getPos().posY-this.height;
+        this.velY=0;
+        this.jumpCounter=2;
+        this.inAir=false;
+    }
 
-      this.x -=5;
-   }
-
-
-
+    //BOTTOM EDGE - character should stop rising and start falling 
+    if (this.y > 
+        entity.getPos().posY + entity.getWidth()/2) 
+    {
+        //make sure to drag it out of the ground if it 
+        //went to far on the last frame
+        while(Math.floor(this.y) < entity.y+entity.getHeight())
+        {           
+          this.y++;                                               
+        }
+        // TODO ÞEGAR AÐ DASH ER KOMIÐ ÞARF AÐ SKODÐA ÞETTA BETUR
+        // ERFITT AÐ EIGA VIÐ BOTNINN NÚNA.
+    }
 };
 
 Kall.prototype.loseLife = function(){
@@ -221,6 +240,11 @@ Kall.prototype.render = function(ctx){
     else if (this.inAir) {
       g_jumpSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
     }
+    /*
+    else if (this.isExploding) {
+      g_explosionSprite[Math.floor(this.frameCounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
+    }
+    */
     else{
       g_runSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
     }
