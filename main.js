@@ -38,8 +38,8 @@ main.iter = function (frameTime) {
     this._updateClocks(frameTime);
     
     // Perform the iteration core to do all the "real" work
+
     this._iterCore(this._frameTimeDelta_ms);
-    
     // Diagnostics, such as showing current timer values etc.
     this._debugRender(g_ctx);
     
@@ -125,9 +125,7 @@ main.init = function () {
     //
     //window.focus(true);
 
-    // We'll be working on a black background here,
-    // so let's use a fillStyle which works against that...
-    //
+ 
     g_ctx.fillStyle = "white";
 
     this._requestNextIteration();

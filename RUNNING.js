@@ -263,16 +263,6 @@ function preloadDone() {
     g_explosionSprite[9]=new Sprite(g_images.Explosion9);
     g_explosionSprite[10]=new Sprite(g_images.Explosion10);
     g_explosionSprite[11]=new Sprite(g_images.Explosion11);
-    g_throwSprite[0]=new Sprite(g_images.Throw0);
-    g_throwSprite[1]=new Sprite(g_images.Throw1);
-    g_throwSprite[2]=new Sprite(g_images.Throw2);
-    g_throwSprite[3]=new Sprite(g_images.Throw3);
-    g_throwSprite[4]=new Sprite(g_images.Throw4);
-    g_throwSprite[5]=new Sprite(g_images.Throw5);
-    g_throwSprite[6]=new Sprite(g_images.Throw6);
-    g_throwSprite[7]=new Sprite(g_images.Throw7);
-    g_throwSprite[8]=new Sprite(g_images.Throw8);
-    g_throwSprite[9]=new Sprite(g_images.Throw9);
     entityManager.init();
     init();
 

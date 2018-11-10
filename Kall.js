@@ -10,9 +10,9 @@ function Kall(descr) {
 
     //hæð og breidd
     this.width=70;
-    this.height= 100;
+    this.height=100;
     //þyngdarafl og hoppkraftur
-    this.gravity=0.15;
+    this.gravity=0.12;
     this.jumpForce=-5;
     //boolean breita sem er true þegar hann er í loftinu en false annars
     this.inAir=true;
@@ -34,7 +34,7 @@ function Kall(descr) {
 
 Kall.prototype = new Entity();
 
-Kall.prototype.KEY_THROW = ' '.charCodeAt(0);
+
 Kall.prototype.KEY_JUMP= 'W'.charCodeAt(0);
 Kall.prototype.RESET= 'U'.charCodeAt(0);
 
@@ -60,24 +60,31 @@ Kall.prototype.update = function(du){
 //Check for hit entity, if its hit it checks wwhich side it is on and acts accordingly,
 // resets or is on the platform.
     this.handleKeys(du);
+    this.collidesWith(du);
     this.applyAccel(this.gravity,du);
 
-    this.collidesWith(du);
-
-
-    //Check for death
-    if(this._isDeadNow){
-      return entityManager.KILL_ME_NOW
-    }
-    //else register
-    else 
-      spatialManager.register(this);
     //check if out of canvas
     if (this.y > g_canvas.height) {
       this.loseLife();
     }  
+
+    spatialManager.register(this);
 };
 
+
+Kall.prototype.render = function(ctx){
+  if (this.isThrowing) {
+    g_throwSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
+  }
+  else if (this.inAir) {
+    g_jumpSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
+  }
+  else{
+    g_runSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
+  }
+
+  this.drawLives(ctx);
+};
 
 
 Kall.prototype.collidesWith = function(du){
@@ -98,7 +105,7 @@ Kall.prototype.collidesWith = function(du){
 
       if(ent[i].getType() === "Platform"){
         
-        this.platformCollide(ent[i]);
+        this.platformCollide(ent[i],du);
       }
     }
   }
@@ -121,20 +128,27 @@ Kall.prototype.starCollide = function(star){
 };
 
 
-Kall.prototype.platformCollide = function(entity){
-    
-    if(this.y+this.height-5 < entity.getPos().posY                        // Cheching if character is on top of platform
-       && this.x+this.width >= entity.getPos().posX
-       && this.x <= entity.getPos().posX + entity.getWidth())
-    {
+Kall.prototype.platformCollide = function(entity,du){
+  
+  if(this.y < entity.getPos().posY  && this.getNextY(this.gravity,du) > entity.getPos().posY )
+  { 
+    this.y = entity.getPos().posY-this.height;
+    this.velY=0;
+    this.jumpCounter=2;
+    this.inAir=false;
+  }
 
+    if(this.y+this.height-10 < entity.getPos().posY                      // Cheching if character is on top of platform
+        && this.x+this.width >= entity.getPos().posX
+        && this.x <= entity.getPos().posX + entity.getWidth())
+    {
+    
       this.y = entity.getPos().posY-this.height;
       this.velY=0;
       this.jumpCounter=2;
       this.inAir=false;
-  
+      
     }
-  
     //TODO\\
 //------------\\
 /*
@@ -146,7 +160,7 @@ Kall.prototype.platformCollide = function(entity){
       this.x -=5;
    }
 
-
+ 
 
 };
 
@@ -189,7 +203,7 @@ Kall.prototype.handleKeys = function(du){
         this.velY=0;
         this.jumpCounter-=1;
         this.inAir=true;
-        this.applyAccel(this.jumpForce, du);
+        this.applyAccel(this.jumpForce,du);
       }
     }
     if (eatKey(this.RESET)||this.y>g_canvas.height) {
@@ -197,10 +211,45 @@ Kall.prototype.handleKeys = function(du){
       this.y=200;
       this.velY=0;
     }
+    
+};
+
+Kall.prototype.applyAccel = function(accelY, du){
+  // u=original velocity
+ 
+  var oldVelY= this.velY;
+  //v = u + at
+ 
+  this.velY += accelY * du;
+
+  // v_ave = (u + v) / 2
+ 
+  var aveVelY = (oldVelY + this.velY) / 2;
+
+  // s = s + v_ave * tvar nextY = this.y + aveVelY * du;
+  
+  var nextY = this.y + aveVelY * du;
+
+  this.y += aveVelY*du;
+};
+
+Kall.prototype.getNextX = function(accelY,du){
+  // u=original velocity
+  var oldVelX= this.velX;
+  //v = u + at
+  this.velX += accelX * du;
+
+  // v_ave = (u + v) / 2
+  var aveVelX = (oldVelX + this.velX) / 2;
+
+  // s = s + v_ave * t
+  var nextX = this.x + aveVelX * du;
+
+  return nextX;
 };
 
 
-Kall.prototype.applyAccel= function(accelY,du){
+Kall.prototype.getNextY = function(accelY,du){
   // u=original velocity
   var oldVelY= this.velY;
   //v = u + at
@@ -212,23 +261,9 @@ Kall.prototype.applyAccel= function(accelY,du){
   // s = s + v_ave * t
   var nextY = this.y + aveVelY * du;
 
-  this.y += aveVelY*du;
-  return this.velY;
+  return nextY;
 };
 
-Kall.prototype.render = function(ctx){
-    if (this.isThrowing) {
-      g_throwSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
-    }
-    else if (this.inAir) {
-      g_jumpSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
-    }
-    else{
-      g_runSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
-    }
-
-    this.drawLives(ctx);
-};
 
 // Draw the hearts on the screen.
 Kall.prototype.drawLives = function(ctx) {

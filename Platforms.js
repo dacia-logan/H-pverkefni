@@ -57,23 +57,24 @@ Platform.prototype.getSpeed = function(){
 Platform.prototype.update = function(du){
     
     spatialManager.unregister(this);
+
+    this.x-=this.vx*du;
     if(this.x <= -(this.size*(this.nrTiles+1))){
         this.kill()
     }
-   
+
     if(this._isDeadNow){
         return entityManager.KILL_ME_NOW;
     }
+    else  spatialManager.register(this);
 
-
-    this.x-=this.vx*du;
-
-    spatialManager.register(this);
     
 };
 
 
-
+Platform.prototype._spawnPlatform = function () {
+    entityManager.generatePlat(1, this.x+50, this.y-100);
+};
 
 Platform.prototype.drawPlat = function(ctx){
     //console.log(this.width);

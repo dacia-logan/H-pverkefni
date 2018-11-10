@@ -74,10 +74,6 @@ Star.prototype.update = function(du) {
     if (this.x <= -this.width || 
         this.frameCounter >= this.numberOfFrames) this.kill();
 
-    //if isDead
-    if (this._isDeadNow) {
-        return entityManager.KILL_ME_NOW;
-    }
 
     //if the star is hit by 'Kall' with spatialID 2 it is cilled
     //TODO                                                                      /*
@@ -98,6 +94,9 @@ Star.prototype.update = function(du) {
     this.x-=this.vx*du;
 
     //re-register to spatial manager
-    spatialManager.register(this);
-
+    //if isDead
+    if (this._isDeadNow) {
+        return entityManager.KILL_ME_NOW;
+    }
+    else spatialManager.register(this);
 };

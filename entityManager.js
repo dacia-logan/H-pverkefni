@@ -55,10 +55,9 @@ init: function() {
    this.generateMap();
 },
 
-throwKnife : function(x,y){
-    this._knifes.push(new Knife({x : x, y: y}));
-  },
-
+generatePlat : function(descr, x,y) {
+    this._platforms.push(new Platform(descr));
+},
 
 setPlatforms: function(){
     var a = Math.floor(util.randRange(1,5)); 
@@ -76,7 +75,7 @@ setPlatforms: function(){
         if(platX + platWidth <= 500 && !this._platforms[entity].getPlatformPushed()){
             this._platforms[entity].setPlatformPushed();
             this._platforms.push(new Platform(a)); 
-
+            
             //make a new star when 'makeStar' is equal to 1
             if (makeStar === 1) this._star.push(new Star());
             //if oneOrTwo is equal to two then we make another star for this platform
