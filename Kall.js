@@ -27,6 +27,11 @@ function Kall(descr) {
     //should explode when colliding with left edge of platform
     this.isExploding = false;
 
+    //dashing, extra speed
+    this.isDashing = false;
+    //number of frames we want to be dashing 
+    this.dashCounter = 10; 
+
     // Líf
     this.lives = 3;
     this.heartSize = 50;
@@ -39,12 +44,17 @@ Kall.prototype = new Entity();
 
 Kall.prototype.KEY_THROW = ' '.charCodeAt(0);
 Kall.prototype.KEY_JUMP= 'W'.charCodeAt(0);
+Kall.prototype.KEY_DASH= 'D'.charCodeAt(0); //fast speed forward, dashing
 Kall.prototype.RESET= 'U'.charCodeAt(0);
 
 Kall.prototype.update = function(du){
 
     spatialManager.unregister(this);
-    this.x+=this.velX*du;
+
+    //set the xVel of the unicorn based on if
+    //it is dashing or not
+    this.setSpeed(du);
+
     if(this.inAir || this.isThrowing){
       this.framecounter+=0.15;
       if (this.framecounter>=9.1) {
@@ -60,14 +70,11 @@ Kall.prototype.update = function(du){
       this.isThrowing=false;
     }
 
-
-//Check for hit entity, if its hit it checks wwhich side it is on and acts accordingly,
-// resets or is on the platform.
+    //Check for hit entity, if its hit it checks wwhich side it is on and acts accordingly,
+    //resets or is on the platform.
     this.handleKeys(du);
     this.applyAccel(this.gravity,du);
-
     this.collidesWith(du);
-
 
     //Check for death
     if(this._isDeadNow){
@@ -82,7 +89,23 @@ Kall.prototype.update = function(du){
     }
 };
 
+Kall.prototype.setSpeed = function(du) {
+  
+  if (this.isDashing && this.dashCounter !== 0) 
+  { //is the unicorn dashing and is the dashcounter not zero?
+    this.dashCounter--;         //dash for only 15 frames
+    this.x += this.velX*20*du;  //set velocity to more speed
+    this.jumpCounter=1;         //unicorn can jump once after it has dashed
+  
+  } else 
+  {//unicorn is not dashing anymore move as usual
+    this.isDashing = false;     //not dashing
+    this.velX=1;                //set velocity to normal speed
+    this.x+=this.velX*du;       //change x
+    this.dashCounter = 10;      //reset the dashCounter to 15 again
+  }
 
+};
 
 Kall.prototype.collidesWith = function(du){
   //console.log(spatialManager.isHit(this.x, this.y, this.width, this.height).length != 0);
@@ -130,11 +153,14 @@ Kall.prototype.platformCollide = function(entity){
     //where are we colliding with platform?
 
     //LEFT EDGE - character should explode and lose a life
-    if (this.x+this.width+5 > entity.getPos().posX && 
-        this.x+this.width-5 < entity.getPos().posX) 
+    if (this.x+this.width < entity.getPos().posX + 30) /*&& 
+        this.x+this.width-5 < entity.getPos().posX)*/ 
     {
       //this.isExploding = true; 
-      this.x -=5
+      while (Math.floor(this.x+this.width)> entity.x) {
+        this.x--;
+      }
+      //this.x -=5
       this.loseLife();
       return; 
     }
@@ -214,6 +240,9 @@ Kall.prototype.handleKeys = function(du){
       this.y=200;
       this.velY=0;
     }
+    if (eatKey(this.KEY_DASH)) {
+      this.isDashing = true;
+    }
 };
 
 
@@ -241,6 +270,7 @@ Kall.prototype.render = function(ctx){
       g_jumpSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
     }
     /*
+    TODO LÁTA ÞETTA VIRKA
     else if (this.isExploding) {
       g_explosionSprite[Math.floor(this.frameCounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
     }
