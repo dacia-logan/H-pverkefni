@@ -21,16 +21,17 @@ function Kall(descr) {
     //frameCounter er fyrir rammana í sprite animation
     this.framecounter=0;
 
-    this.isCharging=true;
+    this.isCharging=true; //er þetta sama og dash?
     this.isThrowing=false;
 
     //should explode when colliding with left edge of platform
+    //and when colliding with star entity
     this.isExploding = false;
 
     //dashing, extra speed
     this.isDashing = false;
     //number of frames we want to be dashing 
-    this.dashCounter = 10; 
+    this.dashCounter = 15; 
 
     // Líf
     this.lives = 3;
@@ -89,6 +90,11 @@ Kall.prototype.update = function(du){
     }
 };
 
+
+/**
+ * handles speed of unicorn when the unicorn is dashing 
+ * and not dashing.
+ */
 Kall.prototype.setSpeed = function(du) {
   
   if (this.isDashing && this.dashCounter !== 0) 
@@ -102,7 +108,7 @@ Kall.prototype.setSpeed = function(du) {
     this.isDashing = false;     //not dashing
     this.velX=1;                //set velocity to normal speed
     this.x+=this.velX*du;       //change x
-    this.dashCounter = 10;      //reset the dashCounter to 15 again
+    this.dashCounter = 15;      //reset the dashCounter to 15 again
   }
 
 };
@@ -116,16 +122,18 @@ Kall.prototype.collidesWith = function(du){
     //console.log(ent);
     for(i=0 ; i < ent.length; i++){
 
-      if(ent[i].getType() === "Star"){
-
-        this.starCollide(ent[i]);
-        if(!this.isCharging){
+      if((ent[i].getType() === "Star") ||
+         (ent[i].getType() === "Star" && 
+          ent[i].getType() === "Platform"))
+      {
+        if (this.isDashing) {
+          ent[i].explodes();
+        } else {
           this.loseLife();
         }
-      }
-
-      if(ent[i].getType() === "Platform"){
-
+      } else if 
+        (ent[i].getType() === "Platform")
+      {
         this.platformCollide(ent[i]);
       }
     }
@@ -143,9 +151,9 @@ Kall.prototype.starCollide = function(star){
         entity.kill();
   }
   */
-        star.explodes();
-
-
+    if (this.isDashing) {
+      star.explodes();
+    }
 };
 
 
@@ -241,7 +249,7 @@ Kall.prototype.handleKeys = function(du){
       this.velY=0;
     }
     if (eatKey(this.KEY_DASH)) {
-      this.isDashing = true;
+      this.isDashing = true;      //more speed access
     }
 };
 
