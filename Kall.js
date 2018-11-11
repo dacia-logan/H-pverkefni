@@ -5,15 +5,15 @@ function Kall(descr) {
     //upphafsstaða og upphafshraði
     this.x = 200;
     this.y = 200;
-    this.velX=0;
+    this.velX=1;
     this.velY=0;
 
     //hæð og breidd
     this.width=70;
     this.height=100;
     //þyngdarafl og hoppkraftur
-    this.gravity=0.12;
-    this.jumpForce=-5;
+    this.gravity=0.15;
+    this.jumpForce=-7;
     //boolean breita sem er true þegar hann er í loftinu en false annars
     this.inAir=true;
     //jumpcounter telur hoppin niður
@@ -22,7 +22,9 @@ function Kall(descr) {
     this.framecounter=0;
 
     this.isCharging=true;
-    this.isThrowing=false;
+
+    //should explode when colliding with left edge of platform
+    this.isExploding = false;
 
     // Líf
     this.lives = 3;
@@ -41,7 +43,8 @@ Kall.prototype.RESET= 'U'.charCodeAt(0);
 Kall.prototype.update = function(du){
 
     spatialManager.unregister(this);
-    if(this.inAir || this.isThrowing){
+    this.x+=this.velX*du;
+    if(this.inAir ){
       this.framecounter+=0.15;
       if (this.framecounter>=9.1) {
         this.framecounter=9.1;
@@ -51,10 +54,7 @@ Kall.prototype.update = function(du){
       this.framecounter+=0.35;
       this.framecounter%=10;
     }
-    if (this.framecounter>9 && this.isThrowing) {
-      entityManager.throwKnife(this.x+this.height,this.y+this.width/2);
-      this.isThrowing=false;
-    }
+    
 
 
 //Check for hit entity, if its hit it checks wwhich side it is on and acts accordingly,
@@ -63,20 +63,25 @@ Kall.prototype.update = function(du){
     this.collidesWith(du);
     this.applyAccel(this.gravity,du);
 
-    //check if out of canvas
+     //check if out of canvas
     if (this.y > g_canvas.height) {
       this.loseLife();
-    }  
+    }
 
-    spatialManager.register(this);
+    //Check for death
+    if(this._isDeadNow){
+      return entityManager.KILL_ME_NOW
+    }
+    //else register
+    else
+      spatialManager.register(this);
+   
 };
 
 
 Kall.prototype.render = function(ctx){
-  if (this.isThrowing) {
-    g_throwSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
-  }
-  else if (this.inAir) {
+  
+  if (this.inAir) {
     g_jumpSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
   }
   else{
@@ -88,15 +93,16 @@ Kall.prototype.render = function(ctx){
 
 
 Kall.prototype.collidesWith = function(du){
+  //console.log(spatialManager.isHit(this.x, this.y, this.width, this.height).length != 0);
 
   if(spatialManager.isHit(this.x, this.y, this.width, this.height).length != 0){
 
     var ent = spatialManager.isHit(this.x, this.y, this.width, this.height);
-    console.log(ent);
+    //console.log(ent);
     for(i=0 ; i < ent.length; i++){
-    
+
       if(ent[i].getType() === "Star"){
-        
+
         this.starCollide(ent[i]);
         if(!this.isCharging){
           this.loseLife();
@@ -104,12 +110,12 @@ Kall.prototype.collidesWith = function(du){
       }
 
       if(ent[i].getType() === "Platform"){
-        
-        this.platformCollide(ent[i],du);
+
+        this.platformCollide(ent[i]);
       }
     }
   }
-  
+
   else {
     this.inAir=true;
   }
@@ -121,47 +127,56 @@ Kall.prototype.starCollide = function(star){
   /* if(this.isCharging){
         entity.kill();
   }
-  */ 
+  */
         star.explodes();
 
-  
+
 };
 
 
-Kall.prototype.platformCollide = function(entity,du){
-  
-  if(this.y < entity.getPos().posY  && this.getNextY(this.gravity,du) > entity.getPos().posY )
-  { 
-    this.y = entity.getPos().posY-this.height;
-    this.velY=0;
-    this.jumpCounter=2;
-    this.inAir=false;
-  }
 
-    if(this.y+this.height-10 < entity.getPos().posY                      // Cheching if character is on top of platform
-        && this.x+this.width >= entity.getPos().posX
-        && this.x <= entity.getPos().posX + entity.getWidth())
+Kall.prototype.platformCollide = function(entity){
+    //where are we colliding with platform?
+
+    //LEFT EDGE - character should explode and lose a life
+    if (this.x+this.width+5 > entity.getPos().posX && 
+        this.x+this.width-5 < entity.getPos().posX) 
     {
-    
-      this.y = entity.getPos().posY-this.height;
-      this.velY=0;
-      this.jumpCounter=2;
-      this.inAir=false;
-      
+      //this.isExploding = true; 
+      this.x -=5
+      this.loseLife();
+      return; 
     }
-    //TODO\\
-//------------\\
-/*
-*Tjekka hvort hann lendir undir platform eða a vinstri hliðinni (mun aldrei lenda á hægri)
-*/
-   else if(this.x+this.width >= entity.getPos().posX) 
+
+    //TOP EDGE - character should run on platform 
+    if (this.y+this.height < 
+        entity.getPos().posY + entity.getWidth()/2) 
     {
+        //make sure to drag it out of the ground if it 
+        //went to far on the last frame 
+        while(Math.floor(this.y+this.height) > entity.y)
+        {           
+          this.y--;                                               
+        }
+        this.y = entity.getPos().posY-this.height;
+        this.velY=0;
+        this.jumpCounter=2;
+        this.inAir=false;
+    }
 
-      this.x -=5;
-   }
-
- 
-
+    //BOTTOM EDGE - character should stop rising and start falling 
+    if (this.y > 
+        entity.getPos().posY + entity.getWidth()/2) 
+    {
+        //make sure to drag it out of the ground if it 
+        //went to far on the last frame
+        while(Math.floor(this.y) < entity.y+entity.getHeight())
+        {           
+          this.y++;                                               
+        }
+        // TODO ÞEGAR AÐ DASH ER KOMIÐ ÞARF AÐ SKODÐA ÞETTA BETUR
+        // ERFITT AÐ EIGA VIÐ BOTNINN NÚNA.
+    }
 };
 
 Kall.prototype.loseLife = function(){
@@ -185,18 +200,12 @@ Kall.prototype.loseLife = function(){
       this.x =100;
       this.velY=0;
     }
-       // Play a 'fail' sound when the girl hits the bottom
-       // TODO
-       // If the player has no lives left, then it's game over
 
 };
 
 
 Kall.prototype.handleKeys = function(du){
-    if (eatKey(this.KEY_THROW)) {
-        this.isThrowing=true;
-        this.framecounter=0;
-    }
+
     if (eatKey(this.KEY_JUMP)) {
       if (this.jumpCounter!==0) {
         this.framecounter=0;
@@ -233,19 +242,20 @@ Kall.prototype.applyAccel = function(accelY, du){
   this.y += aveVelY*du;
 };
 
-Kall.prototype.getNextX = function(accelY,du){
-  // u=original velocity
-  var oldVelX= this.velX;
-  //v = u + at
-  this.velX += accelX * du;
-
-  // v_ave = (u + v) / 2
-  var aveVelX = (oldVelX + this.velX) / 2;
-
-  // s = s + v_ave * t
-  var nextX = this.x + aveVelX * du;
-
-  return nextX;
+Kall.prototype.render = function(ctx){
+    
+    if (this.inAir) {
+      g_jumpSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
+    }
+    /*
+    else if (this.isExploding) {
+      g_explosionSprite[Math.floor(this.frameCounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
+    }
+    */
+    else{
+      g_runSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
+    }
+    this.drawLives(ctx);
 };
 
 
@@ -272,7 +282,7 @@ Kall.prototype.drawLives = function(ctx) {
 
   // Draw as many hearts as lives the player has left
   for (var i = 0; i < this.lives; i++) {
-    g_sprites.heart.drawAtAndEnlarge(ctx, 15 + livesOffset * i, 20, this.heartSize, this.heartSize);
+    g_sprites.heart.drawAtAndEnlarge(ctx, camera.getPos().posX+15 + livesOffset * i,camera.getPos().posY+20, this.heartSize, this.heartSize);
   }
 
 };

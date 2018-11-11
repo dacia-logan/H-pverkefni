@@ -48,7 +48,7 @@ KILL_ME_NOW : -1,
 // i.e. thing which need `this` to be defined.
 //
 deferredSetup : function () {
-    this._categories = [this._platforms, this._dummies, this._star, this._knifes];
+    this._categories = [this._platforms, this._dummies, this._knifes];
 },
 
 init: function() {
@@ -60,6 +60,7 @@ generatePlat : function(descr, x,y) {
 },
 
 setPlatforms: function(){
+    //TODO nota þetta sem viðmið hvaða platform er verið að nota.
     var a = Math.floor(util.randRange(1,5)); 
 
     //creates a random number, when the number is 1 we create a star
@@ -72,15 +73,15 @@ setPlatforms: function(){
         var platX = this._platforms[entity].getPos().posX;
         var platWidth =this._platforms[entity].getWidth();
 
-        if(platX + platWidth <= 500 && !this._platforms[entity].getPlatformPushed()){
+        if(platX + platWidth <= camera.getPos().posX+500 && !this._platforms[entity].getPlatformPushed()){
             this._platforms[entity].setPlatformPushed();
-            this._platforms.push(new Platform(a)); 
-            
+            this._platforms.push(new Platform(a));
+
             //make a new star when 'makeStar' is equal to 1
             if (makeStar === 1) this._star.push(new Star());
             //if oneOrTwo is equal to two then we make another star for this platform
             if (oneOrTwo === 2) this._star.push(new Star());
-        }                   
+        }
     }
 },
 
@@ -89,6 +90,9 @@ generateMap : function(){
     this._dummies.push(new Kall());
 },
 
+getMainCharacter : function(){
+  return this._dummies[0];
+},
 
 update: function(du) {
     //Range of numbers that give u different platform
@@ -124,9 +128,6 @@ render: function(ctx) {
 
         var aCategory = this._categories[c];
 
-        if (!this._bShowRocks &&
-            aCategory == this._rocks)
-            continue;
 
         for (var i = 0; i < aCategory.length; ++i) {
 

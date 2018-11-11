@@ -39,6 +39,7 @@ function Star(descr) {
     //number of images to run through are 0-11
     this.numberOfFrames = 11;
 
+    //the stars type for collision detection
     this.type = "Star";
 };
 
@@ -79,10 +80,12 @@ Star.prototype.update = function(du) {
     //TODO                                                                      /*
     //ætti að vera þegar hann er að dash-a en ekki þegar                         * Lagaði saptialmanagerinn þannig allt collision a stjörnu er höndlað í kall
     //hann er bara að hlaupa og hann ætti að fá auka stig hér                    */
-    /*if (spatialManager.isHit(                                                 
+    if (spatialManager.isHit(                                                 
         this.x, this.y, this.width, this.height)._spatialID === 2 
-         && isDashing) 
-            this.isExploding=true;*/ 
+        /* && isDashing*/) 
+            this.isExploding=true; 
+            //todo : unregister, viljum ekki að caracterinn hoppi yfir eða geti 
+            // lent á sprengingunni
     
     //if is dead and the frames are not done 
     //change the framecounter for explosion

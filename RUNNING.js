@@ -133,14 +133,15 @@ function renderSimulation(ctx) {
     var gameOverOffset = 50;
     // If the game is over, display the game over screen
     if (main._isGameOver) {
-        g_sprites.gameover.drawAtAndEnlarge(ctx,- gameOverOffset,0,g_canvas.width + gameOverOffset,g_canvas.height);
+        g_sprites.gameover.drawAtAndEnlarge(ctx,camera.getPos().posX- gameOverOffset,camera.getPos().posY+ gameOverOffset,g_canvas.width,g_canvas.height);
     } else {
-    // Else draw the regular background    
-        g_sprites.Background.drawAtAndEnlarge(ctx,0,0,g_canvas.width,g_canvas.height);
-        
+    // Else draw the regular background
+        camera.Follow(ctx,entityManager.getMainCharacter(),100,250);
+        g_sprites.Background.drawAtAndEnlarge(ctx,0,-g_canvas.height*5,g_canvas.width*10,g_canvas.height*10);
+
     }
     entityManager.render(ctx);
-
+    
     if (g_renderSpatialDebug) spatialManager.render(ctx);
 }
 
@@ -157,6 +158,7 @@ function requestPreloads() {
         leftPlat : "images/tundraCliffLeft.png",
         midPlat : "images/tundraMid.png",
         rightPlat : "images/tundraCliffRight.png",
+
         Run0 :  "images/Run/Run__000.png",
         Run1 :  "images/Run/Run__001.png",
         Run2 :  "images/Run/Run__002.png",
@@ -177,6 +179,7 @@ function requestPreloads() {
         Jump7 : "images/Jump/Jump__007.png",
         Jump8 : "images/Jump/Jump__008.png",
         Jump9 : "images/Jump/Jump__009.png",
+
         //the still star image
         Star : "images/Star/star.png",
         //the exploding star image
@@ -192,17 +195,7 @@ function requestPreloads() {
         Explosion9 : "images/Explosion/exp_009.png",
         Explosion10 : "images/Explosion/exp_010.png",
         Explosion11 : "images/Explosion/exp_011.png",
-        Throw0 : "images/Throw/Throw__000.png",
-        Throw1 : "images/Throw/Throw__001.png",
-        Throw2 : "images/Throw/Throw__002.png",
-        Throw3 : "images/Throw/Throw__003.png",
-        Throw4 : "images/Throw/Throw__004.png",
-        Throw5 : "images/Throw/Throw__005.png",
-        Throw6 : "images/Throw/Throw__006.png",
-        Throw7 : "images/Throw/Throw__007.png",
-        Throw8 : "images/Throw/Throw__008.png",
-        Throw9 : "images/Throw/Throw__009.png",
-        Kunai : "images/Throw/Kunai.png",
+
         Heart : "images/Lives/heart.png",
         Gameover : "images/Lives/gameover.png",
         Background : "images/background.png"
@@ -218,10 +211,8 @@ var g_runSprite=[];
 var g_jumpSprite=[];
 var g_starSprite=[];        //the still star sprite
 var g_explosionSprite=[];   //the explosion sprite
-var g_throwSprite=[];
 
 function preloadDone() {
-    g_sprites.Kunai =new Sprite(g_images.Kunai);
     g_sprites.Background = new Sprite(g_images.Background);
     g_sprites.gameover = new Sprite(g_images.Gameover);
     g_sprites.leftPlat = new Sprite(g_images.leftPlat);

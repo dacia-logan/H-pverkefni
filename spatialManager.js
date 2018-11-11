@@ -105,11 +105,9 @@ isHit: function(posX, posY, w, h){
 
 render: function(ctx) {
     var oldStyle = ctx.strokeStyle;
-    ctx.strokeStyle = "red";
+    ctx.strokeStyle = "blue";
     for (var ID in this._entities) {
         var e = this._entities[ID];
-        console.log(e);
-        console.log(e.y, e.x);
         util.strokeBox(ctx, e.getPos().posX, e.getPos().posY, e.getWidth(), e.getHeight());
     }
     ctx.strokeStyle = oldStyle;
