@@ -10,5 +10,8 @@ var camera = {
 
     getPos : function(){
       return {posX: this.x, posY: this.y};
+    },
+    reset : function(ctx){
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
     }
 }

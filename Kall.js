@@ -12,8 +12,8 @@ function Kall(descr) {
     this.width=70;
     this.height= 100;
     //þyngdarafl og hoppkraftur
-    this.gravity=0.15;
-    this.jumpForce=-7;
+    this.gravity=0.22;
+    this.jumpForce=-8;
     //boolean breita sem er true þegar hann er í loftinu en false annars
     this.inAir=true;
     //jumpcounter telur hoppin niður
@@ -30,8 +30,8 @@ function Kall(descr) {
 
     //dashing, extra speed
     this.isDashing = false;
-    //number of frames we want to be dashing 
-    this.dashCounter = 15; 
+    //number of frames we want to be dashing
+    this.dashCounter = 20;
 
     // Líf
     this.lives = 3;
@@ -74,7 +74,7 @@ Kall.prototype.update = function(du){
     //Check for hit entity, if its hit it checks wwhich side it is on and acts accordingly,
     //resets or is on the platform.
     this.handleKeys(du);
-    this.applyAccel(this.gravity,du);
+    this.applyAccel(0,this.gravity,du);
     this.collidesWith(du);
 
     //Check for death
@@ -92,22 +92,22 @@ Kall.prototype.update = function(du){
 
 
 /**
- * handles speed of unicorn when the unicorn is dashing 
+ * handles speed of unicorn when the unicorn is dashing
  * and not dashing.
  */
 Kall.prototype.setSpeed = function(du) {
-  
-  if (this.isDashing && this.dashCounter !== 0) 
+
+  if (this.isDashing && this.dashCounter !== 0)
   { //is the unicorn dashing and is the dashcounter not zero?
     this.dashCounter--;         //dash for only 15 frames
-    this.x += this.velX*20*du;  //set velocity to more speed
+    this.applyAccel(1,0,du) ;   //set velocity to more speed
     this.jumpCounter=1;         //unicorn can jump once after it has dashed
-  
-  } else 
+    this.velY=0;                // no vertical velocity while dashing
+
+  } else
   {//unicorn is not dashing anymore move as usual
     this.isDashing = false;     //not dashing
     this.velX=1;                //set velocity to normal speed
-    this.x+=this.velX*du;       //change x
     this.dashCounter = 15;      //reset the dashCounter to 15 again
   }
 
@@ -143,8 +143,8 @@ Kall.prototype.starCollide = function(star){
     //if we land on top of the star we want to walk on it
     if(this.y+this.height <
           star.getPos().posY + star.getWidth()/2){
-      this.inAir = false; 
-      this.y = star.getPos().posY - this.height;  
+      this.inAir = false;
+      this.y = star.getPos().posY - this.height;
     }
     //if we dash into the star the star explodes
     else if (this.isDashing) {
@@ -152,7 +152,7 @@ Kall.prototype.starCollide = function(star){
     //else the unicorn loses a life
     } else  {
       this.loseLife();
-    }  
+    }
 };
 
 
@@ -160,27 +160,27 @@ Kall.prototype.platformCollide = function(entity){
     //where are we colliding with platform?
 
     //LEFT EDGE - character should explode and lose a life
-    if (this.x+this.width < entity.getPos().posX + 30) /*&& 
-        this.x+this.width-5 < entity.getPos().posX)*/ 
+    if (this.x+this.width < entity.getPos().posX + 30) /*&&
+        this.x+this.width-5 < entity.getPos().posX)*/
     {
-      //this.isExploding = true; 
+      //this.isExploding = true;
       while (Math.floor(this.x+this.width)> entity.x) {
         this.x--;
       }
       //this.x -=5
       this.loseLife();
-      return; 
+      return;
     }
 
-    //TOP EDGE - character should run on platform 
-    if (this.y+this.height < 
-        entity.getPos().posY + entity.getWidth()/2) 
+    //TOP EDGE - character should run on platform
+    if (this.y+this.height <
+        entity.getPos().posY + entity.getWidth()/2)
     {
-        //make sure to drag it out of the ground if it 
-        //went to far on the last frame 
+        //make sure to drag it out of the ground if it
+        //went to far on the last frame
         while(Math.floor(this.y+this.height) > entity.y)
-        {           
-          this.y--;                                               
+        {
+          this.y--;
         }
         this.y = entity.getPos().posY-this.height;
         this.velY=0;
@@ -188,15 +188,15 @@ Kall.prototype.platformCollide = function(entity){
         this.inAir=false;
     }
 
-    //BOTTOM EDGE - character should stop rising and start falling 
-    if (this.y > 
-        entity.getPos().posY + entity.getWidth()/2) 
+    //BOTTOM EDGE - character should stop rising and start falling
+    if (this.y >
+        entity.getPos().posY + entity.getWidth()/2)
     {
-        //make sure to drag it out of the ground if it 
+        //make sure to drag it out of the ground if it
         //went to far on the last frame
         while(Math.floor(this.y) < entity.y+entity.getHeight())
-        {           
-          this.y++;                                               
+        {
+          this.y++;
         }
         // TODO ÞEGAR AÐ DASH ER KOMIÐ ÞARF AÐ SKODÐA ÞETTA BETUR
         // ERFITT AÐ EIGA VIÐ BOTNINN NÚNA.
@@ -239,7 +239,7 @@ Kall.prototype.handleKeys = function(du){
         this.velY=0;
         this.jumpCounter-=1;
         this.inAir=true;
-        this.applyAccel(this.jumpForce, du);
+        this.applyAccel(0,this.jumpForce, du);
       }
     }
     if (eatKey(this.RESET)||this.y>g_canvas.height) {
@@ -253,20 +253,20 @@ Kall.prototype.handleKeys = function(du){
 };
 
 
-Kall.prototype.applyAccel= function(accelY,du){
+Kall.prototype.applyAccel= function(accelX,accelY,du){
   // u=original velocity
   var oldVelY= this.velY;
+  var oldVelX= this.velX;
   //v = u + at
   this.velY += accelY * du;
-
+  this.velX += accelX * du;
   // v_ave = (u + v) / 2
   var aveVelY = (oldVelY + this.velY) / 2;
-
+  var aveVelX = (oldVelX + this.velX) / 2;
   // s = s + v_ave * t
-  var nextY = this.y + aveVelY * du;
 
   this.y += aveVelY*du;
-  return this.velY;
+  this.x += aveVelX*du;
 };
 
 Kall.prototype.render = function(ctx){
