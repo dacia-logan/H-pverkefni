@@ -37,6 +37,10 @@ function Kall(descr) {
     this.lives = 3;
     this.heartSize = 50;
 
+    // Score
+    this.score = 0;
+    this.scoreSpeed = 2.5
+
     this.type =  "Kall";
 
 };
@@ -71,8 +75,9 @@ Kall.prototype.update = function(du){
       this.isThrowing=false;
     }
 
-    //Check for hit entity, if its hit it checks wwhich side it is on and acts accordingly,
-    //resets or is on the platform.
+
+// Check for hit entity, if its hit it checks wwhich side it is on and acts accordingly,
+// resets or is on the platform.
     this.handleKeys(du);
     this.applyAccel(0,this.gravity,du);
     this.collidesWith(du);
@@ -88,6 +93,9 @@ Kall.prototype.update = function(du){
     if (this.y > g_canvas.height) {
       this.loseLife();
     }
+
+    // Update the score
+    this.score += Math.floor(this.scoreSpeed);
 };
 
 
@@ -286,6 +294,7 @@ Kall.prototype.render = function(ctx){
       g_runSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
     }
     this.drawLives(ctx);
+    this.drawScore(ctx);
 };
 
 // Draw the hearts on the screen.
@@ -298,4 +307,26 @@ Kall.prototype.drawLives = function(ctx) {
     g_sprites.heart.drawAtAndEnlarge(ctx, camera.getPos().posX+15 + livesOffset * i,camera.getPos().posY+20, this.heartSize, this.heartSize);
   }
 
+};
+
+Kall.prototype.drawScore = function(ctx) {
+  
+  ctx.font = "bold 40px Consolas";
+  ctx.textAlign = "center";
+
+  // Color of the score
+  ctx.fillStyle = "white";
+  
+  // Color of the shadow
+  ctx.shadowColor = '#1c5e66';
+  ctx.shadowBlur = 40
+
+  // Draw the score
+  ctx.fillText(this.score, g_canvas.width / 2 + camera.getPos().posX - 20,
+                            70 + camera.getPos().posY);
+
+  ctx.fill();
+
+  // Make sure the shadow is only applied to the score
+  ctx.shadowBlur = 0;
 };
