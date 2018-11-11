@@ -48,7 +48,7 @@ KILL_ME_NOW : -1,
 // i.e. thing which need `this` to be defined.
 //
 deferredSetup : function () {
-    this._categories = [this._platforms, this._dummies, this._knifes];
+    this._categories = [this._platforms, this._dummies, this._star, this._knifes];
 },
 
 init: function() {
@@ -64,9 +64,9 @@ setPlatforms: function(){
     var a = Math.floor(util.randRange(1,5)); 
 
     //creates a random number, when the number is 1 we create a star
-    var makeStar =  Math.floor(util.randRange(1,4));
+    var makeStar =  Math.floor(util.randRange(0,2));
     //random number deciding if the stars are one or two on the platform
-    var oneOrTwo = Math.floor(util.randRange(1,3));
+    //var oneOrTwo = Math.floor(util.randRange(1,3));
 
     for(var entity in this._platforms){
 
@@ -76,11 +76,12 @@ setPlatforms: function(){
         if(platX + platWidth <= camera.getPos().posX+500 && !this._platforms[entity].getPlatformPushed()){
             this._platforms[entity].setPlatformPushed();
             this._platforms.push(new Platform(a));
+            //this._star.push(new Star(a));
 
             //make a new star when 'makeStar' is equal to 1
-            if (makeStar === 1) this._star.push(new Star());
+            if (makeStar === 1) this._star.push(new Star(a));
             //if oneOrTwo is equal to two then we make another star for this platform
-            if (oneOrTwo === 2) this._star.push(new Star());
+            //if (oneOrTwo === 2) this._star.push(new Star(a));
         }
     }
 },

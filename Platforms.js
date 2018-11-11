@@ -4,7 +4,7 @@ function Platform(descr, x, y) {
     this.setup(descr);
 
     this.y = y || Math.floor(util.randRange(260, 520));
-    this.x = x || camera.getPos().posX+g_canvas.width;             // position of the images
+    this.x = x || camera.getPos().posX + g_canvas.width;             // position of the images
 
     this.vx = 5;                        // vel
 
@@ -60,7 +60,7 @@ Platform.prototype.update = function(du){
 
     this.x-=this.vx*du;
     if(this.x <= -(this.size*(this.nrTiles+1))){
-        this.kill()
+        this.kill();
     }
 
     if(this._isDeadNow){
