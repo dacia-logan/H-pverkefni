@@ -1,14 +1,3 @@
-/* the star sprite
-* explodes when 'Kall' hits it while dashing
-* else it kills 'Kall'.
-* it's pos is always ontop of a platform.
-* 
-*
-* hvað er ég búin að gera:
-* preload image Star - still star image
-* preload image Explosion
-* teikna stjörnuna based á isExplosion eða ekki
-*/
 function Star(descr) {
     //common inherited setup logic from Entity
     this.setup(descr);
