@@ -30,8 +30,7 @@ var entityManager = {
 _platforms : [],
 _dummies : [],
 _star : [],
-_knifes :[],
-
+_knifes : [],
 
 // "PRIVATE" METHODS
 
