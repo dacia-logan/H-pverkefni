@@ -92,6 +92,7 @@ Star.prototype.update = function(du) {
     if (this._isDeadNow) {
         return entityManager.KILL_ME_NOW;
     }
-    else spatialManager.register(this);
+    //else spatialManager.register(this);
+
     if (!this.isExploding) spatialManager.register(this);
 };

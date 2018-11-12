@@ -14,43 +14,43 @@ function Platform(descr, p, x, y) {
 
     if(descr===1){
 
-        this.width = g_images.large.width*2.2
-        this.height = g_images.large.height*1.5;
+        this.width = g_images.large.width*2.2/1.5;
+        this.height = g_images.large.height*1.5/1.5;
     }
 
     else if(descr===2){
 
-        this.width = g_images.normal1.width*2
-        this.height = g_images.normal1.height*1.7;
+        this.width = g_images.normal1.width*2/1.5;
+        this.height = g_images.normal1.height*1.7/1.5;
 
     }
 
     else if(descr===3){
 
-        this.width = g_images.normal2.width*1.9
-        this.height = g_images.normal2.height*1.6;
+        this.width = g_images.normal2.width*1.9/1.5;
+        this.height = g_images.normal2.height*1.6/1.5;
 
         
         }
 
     else if(descr===4){
 
-        this.width = g_images.normal3.width*2
-        this.height = g_images.normal3.height*1.4;
+        this.width = g_images.normal3.width*2/1.5;
+        this.height = g_images.normal3.height*1.4/1.5;
         
     }
 
     else if(descr===5){
 
-        this.width = g_images.small.width*1.4
-        this.height = g_images.small.height*1.3;
+        this.width = g_images.small.width*1.4/1.5;
+        this.height = g_images.small.height*1.3/1.5;
 
     }
 
     else if(descr===6){
 
-        this.width = g_images.esmall.width*1.6
-        this.height = g_images.esmall.height*1.6;
+        this.width = g_images.esmall.width*1.6/1.5;
+        this.height = g_images.esmall.height*1.6/1.5;
 
     }
     

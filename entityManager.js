@@ -31,7 +31,7 @@ _platforms : [],
 _dummies : [],
 _star : [],
 _knifes :[],
-_butterfly : [],
+_rainbow : [],
 
 
 // "PRIVATE" METHODS
@@ -49,7 +49,7 @@ KILL_ME_NOW : -1,
 // i.e. thing which need `this` to be defined.
 //
 deferredSetup : function () {
-    this._categories = [this._platforms, this._dummies, this._star, this._knifes, this._butterfly];
+    this._categories = [this._platforms, this._dummies, this._star, this._knifes, this._rainbow];
 },
 
 init: function() {
@@ -83,7 +83,7 @@ setPlatforms: function(){
             //make a new star when 'makeStar' is equal to 1
             if (makeStar === 1) this._star.push(new Star(a));
             //make a new butterfly when 'makeButterfly' is equal to 1
-            if (makeButterfly === 1) this._butterfly.push(new Butterfly(a));
+            if (makeButterfly === 1) this._rainbow.push(new Rainbow(a));
         }
     }
 },

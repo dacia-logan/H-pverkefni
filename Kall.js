@@ -42,6 +42,9 @@ function Kall(descr) {
 
     this.type =  "Kall";
 
+    //collision helper with rainbowCollide
+    this.hasRainbowCombo = false;  
+    this.combo = 0;  
 };
 
 Kall.prototype = new Entity();
@@ -137,6 +140,9 @@ Kall.prototype.collidesWith = function(du){
         } else if (ent[i].getType() === "Platform"){
           //collision with the platform
           this.platformCollide(ent[i]);
+        } else if (ent[i].getType() === "Rainbow") {
+          //collision with rainbow
+          this.rainbowCollide(ent[i]);
         }
       }
     } else {
@@ -146,26 +152,14 @@ Kall.prototype.collidesWith = function(du){
 
 
 Kall.prototype.starCollide = function(star){
-  /* if(this.isCharging){
-        entity.kill();
-  }
-  */
-    //if we land on top of the star we want to walk on it
-    if(this.y+this.height <
-          star.getPos().posY + star.getWidth()/2){
-      this.inAir = false;
-      this.y = star.getPos().posY - this.height;
-    }
     //if we dash into the star the star explodes
-    else if (this.isDashing) {
+    if (this.isDashing) {
       star.explodes();
     //else the unicorn loses a life
     } else  {
       this.loseLife();
     }
 };
-
-
 
 Kall.prototype.platformCollide = function(entity){
     //where are we colliding with platform?
@@ -174,14 +168,8 @@ Kall.prototype.platformCollide = function(entity){
     var eWidth = entity.getWidth()-25;
     var eHeight = entity.getHeight()*0.6;
     //LEFT EDGE - character should explode and lose a life
-    if (this.x+this.width < posX + 30) /*&&
-        this.x+this.width-5 < entity.getPos().posX)*/
+    if (this.x+this.width < posX + 15)
     {
-      //this.isExploding = true;
-      while (Math.floor(this.x+this.width)> posX) {
-        this.x--;
-      }
-      //this.x -=5
       this.loseLife();
       return;
     }
@@ -215,6 +203,24 @@ Kall.prototype.platformCollide = function(entity){
         // TODO ÞEGAR AÐ DASH ER KOMIÐ ÞARF AÐ SKODÐA ÞETTA BETUR
         // ERFITT AÐ EIGA VIÐ BOTNINN NÚNA.
     }
+};
+
+Kall.prototype.rainbowCollide = function(rainbow) {
+
+  //TODO LAGA ÞETTA ÞANNIG AÐ COMBO DETTI ÚT. 
+      
+      console.log(this.hasRainbowCombo); 
+      this.hasRainbowCombo = true;
+      console.log(this.score);
+      rainbow.kill();
+      if (this.hasRainbowCombo) {
+        this.combo++;
+        this.score += this.combo*10; 
+      } else {
+        this.score += 10;
+      }
+      console.log(this.score);
+      
 };
 
 Kall.prototype.loseLife = function(){

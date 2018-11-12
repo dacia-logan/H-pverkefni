@@ -203,7 +203,10 @@ function requestPreloads() {
 
         Heart : "images/Lives/heart.png",
         Gameover : "images/Lives/gameover.png",
-        Background : "images/background.png"
+        Background : "images/background.png",
+
+        //the rainbow image
+        Rainbow : "images/Rainbow/rainbow_000.png"
 
 
     };
@@ -217,6 +220,7 @@ var g_runSprite=[];
 var g_jumpSprite=[];
 var g_starSprite=[];        //the still star sprite
 var g_explosionSprite=[];   //the explosion sprite
+var g_rainbowSprite = [];     //the rainbow sprite
 
 function preloadDone() {
     g_sprites.Background = new Sprite(g_images.Background);
@@ -263,6 +267,8 @@ function preloadDone() {
     g_explosionSprite[9]=new Sprite(g_images.Explosion9);
     g_explosionSprite[10]=new Sprite(g_images.Explosion10);
     g_explosionSprite[11]=new Sprite(g_images.Explosion11);
+    //the rainbow
+    g_rainbowSprite= new Sprite(g_images.Rainbow);
     entityManager.init();
     init();
 
