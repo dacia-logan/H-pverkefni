@@ -134,19 +134,16 @@ function renderSimulation(ctx) {
     var gameOverOffset = 50;
     // If the game is over, display the game over screen
     if (main._isGameOver) {
-        g_sprites.gameover.drawAtAndEnlarge(ctx,camera.getPos().posX- gameOverOffset,camera.getPos().posY,g_canvas.width + gameOverOffset,g_canvas.height);
-        if (eatKey(KEY_PLAYAGAIN)) {
-           // main._isGameOver = false;
-            window.location.reload(false);
-            //g_sprites.Background.drawAtAndEnlarge(ctx,0,-g_canvas.height*5,g_canvas.width*10,g_canvas.height*10);
-        }
+        camera.reset(ctx);
+        g_sprites.gameover.drawAtAndEnlarge(ctx,-gameOverOffset,0,g_canvas.width,g_canvas.height);
     } else {
     // Else draw the regular background
+      
         g_sprites.Background.drawAtAndEnlarge(ctx,0,-g_canvas.height*5,g_canvas.width*10,g_canvas.height*10);
 
     }
     entityManager.render(ctx);
-
+    
     if (g_renderSpatialDebug) spatialManager.render(ctx);
 }
 
@@ -268,6 +265,13 @@ function requestPreloads() {
         Down16 :  "images/Unicorn/down/down_016.png",
         Down17 :  "images/Unicorn/down/down_017.png",
         Down18 :  "images/Unicorn/down/down_018.png",
+
+        normal1 : "images/Platforms/normalSize.png",
+        normal2 : "images/Platforms/normalSize2.png",
+        normal3 : "images/Platforms/normalSize3.png",
+        small : "images/Platforms/smallSize.png",
+        esmall : "images/Platforms/extraSmallSize.png",
+        large : "images/Platforms/largeSize.png",
         //the still star image
         Star : "images/Star/star.png",
         //the exploding star image
@@ -283,20 +287,13 @@ function requestPreloads() {
         Explosion9 : "images/Explosion/exp_009.png",
         Explosion10 : "images/Explosion/exp_010.png",
         Explosion11 : "images/Explosion/exp_011.png",
-        Throw0 : "images/Throw/Throw__000.png",
-        Throw1 : "images/Throw/Throw__001.png",
-        Throw2 : "images/Throw/Throw__002.png",
-        Throw3 : "images/Throw/Throw__003.png",
-        Throw4 : "images/Throw/Throw__004.png",
-        Throw5 : "images/Throw/Throw__005.png",
-        Throw6 : "images/Throw/Throw__006.png",
-        Throw7 : "images/Throw/Throw__007.png",
-        Throw8 : "images/Throw/Throw__008.png",
-        Throw9 : "images/Throw/Throw__009.png",
-        Kunai : "images/Throw/Kunai.png",
+
         Heart : "images/Lives/heart.png",
         Gameover : "images/Lives/gameover.png",
-        Background : "images/background.png"
+        Background : "images/background.png",
+
+        //the rainbow image
+        Rainbow : "images/Rainbow/rainbow_000.png"
 
 
     };
@@ -304,22 +301,25 @@ function requestPreloads() {
     imagesPreload(requiredImages, g_images, preloadDone);
 }
 
-var g_sprites = {};
+var g_sprites={};
+var g_platforms = {};
 var g_runSprite=[];
 var g_jumpSprite=[];
 var g_downSprite=[];
 var g_dashSprite=[];
 var g_starSprite=[];        //the still star sprite
 var g_explosionSprite=[];   //the explosion sprite
-var g_throwSprite=[];
+var g_rainbowSprite = [];     //the rainbow sprite
 
 function preloadDone() {
-    g_sprites.Kunai =new Sprite(g_images.Kunai);
     g_sprites.Background = new Sprite(g_images.Background);
     g_sprites.gameover = new Sprite(g_images.Gameover);
-    g_sprites.leftPlat = new Sprite(g_images.leftPlat);
-    g_sprites.midPlat = new Sprite(g_images.midPlat);
-    g_sprites.rightPlat = new Sprite(g_images.rightPlat);
+    g_platforms.normal1 = new Sprite(g_images.normal1);
+    g_platforms.normal2 = new Sprite(g_images.normal2);
+    g_platforms.normal3 = new Sprite(g_images.normal3);
+    g_platforms.small = new Sprite(g_images.small);
+    g_platforms.esmall = new Sprite(g_images.esmall);
+    g_platforms.large = new Sprite(g_images.large);
     g_sprites.heart = new Sprite(g_images.Heart);
 
 /*
@@ -410,16 +410,8 @@ function preloadDone() {
     g_explosionSprite[9]=new Sprite(g_images.Explosion9);
     g_explosionSprite[10]=new Sprite(g_images.Explosion10);
     g_explosionSprite[11]=new Sprite(g_images.Explosion11);
-    g_throwSprite[0]=new Sprite(g_images.Throw0);
-    g_throwSprite[1]=new Sprite(g_images.Throw1);
-    g_throwSprite[2]=new Sprite(g_images.Throw2);
-    g_throwSprite[3]=new Sprite(g_images.Throw3);
-    g_throwSprite[4]=new Sprite(g_images.Throw4);
-    g_throwSprite[5]=new Sprite(g_images.Throw5);
-    g_throwSprite[6]=new Sprite(g_images.Throw6);
-    g_throwSprite[7]=new Sprite(g_images.Throw7);
-    g_throwSprite[8]=new Sprite(g_images.Throw8);
-    g_throwSprite[9]=new Sprite(g_images.Throw9);
+    //the rainbow
+    g_rainbowSprite= new Sprite(g_images.Rainbow);
     entityManager.init();
     init();
 

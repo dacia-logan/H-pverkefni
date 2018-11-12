@@ -1,14 +1,3 @@
-/* the star sprite
-* explodes when 'Kall' hits it while dashing
-* else it kills 'Kall'.
-* it's pos is always ontop of a platform.
-* 
-*
-* hvað er ég búin að gera:
-* preload image Star - still star image
-* preload image Explosion
-* teikna stjörnuna based á isExplosion eða ekki
-*/
 function Star(descr) {
     //common inherited setup logic from Entity
     this.setup(descr);
@@ -24,7 +13,7 @@ function Star(descr) {
     this.x = newestPlat.x + newestPlat.getWidth()/2;                    //set the position of the star
 
     //set y position based on newest platform y-position
-    var yPos = newestPlat.y - this.height;                              //get the y position of the platform
+    var yPos = newestPlat.y - this.height+5;                              //get the y position of the platform
     this.y = yPos;                                                      //set the y position of the star
     
     //set the velosity to the same as the platfoms
@@ -76,10 +65,6 @@ Star.prototype.update = function(du) {
     if (this.x <= -this.width || 
         this.frameCounter >= this.numberOfFrames) this.kill();
 
-    //if isDead
-    if (this._isDeadNow) {
-        return entityManager.KILL_ME_NOW;
-    }
 
     //if the star is hit by 'Kall' with spatialID 2 it is cilled
     //TODO                                                                      /*
@@ -103,5 +88,11 @@ Star.prototype.update = function(du) {
     this.x-=this.vx*du;
 
     //re-register to spatial manager
+    //if isDead
+    if (this._isDeadNow) {
+        return entityManager.KILL_ME_NOW;
+    }
+    //else spatialManager.register(this);
+
     if (!this.isExploding) spatialManager.register(this);
 };
