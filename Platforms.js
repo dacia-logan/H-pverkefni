@@ -1,39 +1,59 @@
-function Platform(descr, x, y) {
+function Platform(descr, p, x, y) {
 
     // Common inherited setup logic from Entity
     this.setup(descr);
 
-    this.y = y || Math.floor(util.randRange(260, 520));
+    this.y = y || Math.floor(util.randRange(300, 520));
     this.x = x || camera.getPos().posX + g_canvas.width;             // position of the images
 
     this.vx = 5;                        // vel
 
-    this.size=70;                       // Width and height of each individual parts of the platform
-    this.l=g_sprites.leftPlat.width;
-
+    this.primary = p || false;
+    this.plat = descr;
     this.platformPushed=false;
 
     if(descr===1){
-            this.nrTiles=5;
-            this.width = 70*6;
+
+        this.width = g_images.large.width*2.2
+        this.height = g_images.large.height*1.5;
     }
 
-    if(descr===2){
-            this.nrTiles=6;
-            this.width = 70*7;
+    else if(descr===2){
+
+        this.width = g_images.normal1.width*2
+        this.height = g_images.normal1.height*1.7;
+
     }
 
-    if(descr===3){
-            this.nrTiles=7;
-            this.width = 70*8;
+    else if(descr===3){
+
+        this.width = g_images.normal2.width*1.9
+        this.height = g_images.normal2.height*1.6;
+
+        
         }
 
-    if(descr===4){
-        this.nrTiles = 8;
-        this.width = 70*9;
+    else if(descr===4){
+
+        this.width = g_images.normal3.width*2
+        this.height = g_images.normal3.height*1.4;
+        
     }
 
-    this.height = 70;
+    else if(descr===5){
+
+        this.width = g_images.small.width*1.4
+        this.height = g_images.small.height*1.3;
+
+    }
+
+    else if(descr===6){
+
+        this.width = g_images.esmall.width*1.6
+        this.height = g_images.esmall.height*1.6;
+
+    }
+    
 
     this.type = "Platform";
 
@@ -50,6 +70,10 @@ Platform.prototype.getPlatformPushed = function(){
     return this.platformPushed;
 };
 
+Platform.prototype.getPrimary = function(){
+    return this.primary;
+}
+
 Platform.prototype.getSpeed = function(){
     return this.vx;
 }
@@ -58,8 +82,9 @@ Platform.prototype.update = function(du){
 
     spatialManager.unregister(this);
 
+  
     this.x-=this.vx*du;
-    if(this.x <= -(this.size*(this.nrTiles+1))){
+    if(this.x <= -this.width){
         this.kill();
     }
 
@@ -73,14 +98,35 @@ Platform.prototype.update = function(du){
 
 
 Platform.prototype._spawnPlatform = function () {
-    entityManager.generatePlat(1, this.x+50, this.y-100);
+   
 };
 
 Platform.prototype.drawPlat = function(ctx){
   
-    g_sprites.leftPlat.drawAtAndEnlarge(ctx, this.x, this.y, this.size, this.size);
- 
-    g_sprites.rightPlat.drawAtAndEnlarge(ctx, this.x+this.size*(this.nrTiles), this.y, this.size, this.size);
+if(this.plat===1){
+    g_platforms.large.drawAtAndEnlarge(ctx, this.x, this.y, this.width, this.height);
+}
+
+else if(this.plat===2){
+    g_platforms.normal1.drawAtAndEnlarge(ctx, this.x, this.y, this.width, this.height);
+}
+
+else if(this.plat===3){
+    g_platforms.normal2.drawAtAndEnlarge(ctx, this.x, this.y, this.width, this.height);
+}
+
+else if(this.plat===4){
+    g_platforms.normal3.drawAtAndEnlarge(ctx, this.x, this.y, this.width, this.height);
+}
+
+else if(this.plat===5){
+    g_platforms.small.drawAtAndEnlarge(ctx, this.x, this.y, this.width, this.height);
+}
+
+else if(this.plat===6) {
+    g_platforms.esmall.drawAtAndEnlarge(ctx, this.x, this.y, this.width, this.height);
+}
+    
 };
 
 Platform.prototype.render = function(ctx){

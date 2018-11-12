@@ -30,8 +30,7 @@ var entityManager = {
 _platforms : [],
 _dummies : [],
 _star : [],
-_knifes :[],
-
+_knifes : [],
 
 // "PRIVATE" METHODS
 
@@ -55,14 +54,13 @@ init: function() {
    this.generateMap();
 },
 
-generatePlat : function(descr, x,y) {
-    this._platforms.push(new Platform(descr));
+generatePlat : function(descr,x,y) {
+    this._platforms.push(new Platform(descr,x,y));
 },
 
 setPlatforms: function(){
     //TODO nota þetta sem viðmið hvaða platform er verið að nota.
     var a = Math.floor(util.randRange(1,5)); 
-
     //creates a random number, when the number is 1 we create a star
     var makeStar =  Math.floor(util.randRange(0,2));
     //random number deciding if the stars are one or two on the platform
@@ -72,10 +70,12 @@ setPlatforms: function(){
 
         var platX = this._platforms[entity].getPos().posX;
         var platWidth =this._platforms[entity].getWidth();
+        var primary = this._platforms[entity].getPrimary();
 
-        if(platX + platWidth <= camera.getPos().posX+500 && !this._platforms[entity].getPlatformPushed()){
+        if(primary && platX + platWidth <= camera.getPos().posX+500 && !this._platforms[entity].getPlatformPushed()){
             this._platforms[entity].setPlatformPushed();
-            this._platforms.push(new Platform(a));
+            this._platforms.push(new Platform(a,true));
+
             //this._star.push(new Star(a));
 
             //make a new star when 'makeStar' is equal to 1
@@ -87,7 +87,7 @@ setPlatforms: function(){
 },
 
 generateMap : function(){
-    this._platforms.push(new Platform(1,100,400));
+    this._platforms.push(new Platform(1, true, 300, 500));
     this._dummies.push(new Kall());
 },
 

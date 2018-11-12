@@ -133,10 +133,11 @@ function renderSimulation(ctx) {
     var gameOverOffset = 50;
     // If the game is over, display the game over screen
     if (main._isGameOver) {
-        g_sprites.gameover.drawAtAndEnlarge(ctx,camera.getPos().posX- gameOverOffset,camera.getPos().posY+ gameOverOffset,g_canvas.width,g_canvas.height);
+        camera.reset(ctx);
+        g_sprites.gameover.drawAtAndEnlarge(ctx,-gameOverOffset,0,g_canvas.width,g_canvas.height);
     } else {
     // Else draw the regular background
-        camera.Follow(ctx,entityManager.getMainCharacter(),100,250);
+      
         g_sprites.Background.drawAtAndEnlarge(ctx,0,-g_canvas.height*5,g_canvas.width*10,g_canvas.height*10);
 
     }
@@ -155,9 +156,13 @@ var g_images = {};
 function requestPreloads() {
 
     var requiredImages = {
-        leftPlat : "images/tundraCliffLeft.png",
-        midPlat : "images/tundraMid.png",
-        rightPlat : "images/tundraCliffRight.png",
+        normal1 : "images/Platforms/normalSize.png",
+        normal2 : "images/Platforms/normalSize2.png",
+        normal3 : "images/Platforms/normalSize3.png",
+        small : "images/Platforms/smallSize.png",
+        esmall : "images/Platforms/extraSmallSize.png",
+        large : "images/Platforms/largeSize.png",
+       
 
         Run0 :  "images/Run/Run__000.png",
         Run1 :  "images/Run/Run__001.png",
@@ -206,7 +211,8 @@ function requestPreloads() {
     imagesPreload(requiredImages, g_images, preloadDone);
 }
 
-var g_sprites = {};
+var g_sprites={};
+var g_platforms = {};
 var g_runSprite=[];
 var g_jumpSprite=[];
 var g_starSprite=[];        //the still star sprite
@@ -215,9 +221,12 @@ var g_explosionSprite=[];   //the explosion sprite
 function preloadDone() {
     g_sprites.Background = new Sprite(g_images.Background);
     g_sprites.gameover = new Sprite(g_images.Gameover);
-    g_sprites.leftPlat = new Sprite(g_images.leftPlat);
-    g_sprites.midPlat = new Sprite(g_images.midPlat);
-    g_sprites.rightPlat = new Sprite(g_images.rightPlat);
+    g_platforms.normal1 = new Sprite(g_images.normal1);
+    g_platforms.normal2 = new Sprite(g_images.normal2);
+    g_platforms.normal3 = new Sprite(g_images.normal3);
+    g_platforms.small = new Sprite(g_images.small);
+    g_platforms.esmall = new Sprite(g_images.esmall);
+    g_platforms.large = new Sprite(g_images.large);
     g_sprites.heart = new Sprite(g_images.Heart);
     g_runSprite[0]=new Sprite(g_images.Run0);
     g_runSprite[1]=new Sprite(g_images.Run1);

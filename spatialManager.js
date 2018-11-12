@@ -84,12 +84,17 @@ isHit: function(posX, posY, w, h){
     var ent = [];
 
     for(var entity in this._entities){
-
-        var eposX = this._entities[entity].getPos().posX;           //entity's pos
-        var eposY = this._entities[entity].getPos().posY;
-        var eW = this._entities[entity].getWidth();           
-        var eH = this._entities[entity].getHeight();
-        
+        if(this._entities[entity].getType()==="Platform"){
+            var eposX = this._entities[entity].getPos().posX+15;           //entity's pos
+            var eposY = this._entities[entity].getPos().posY*1.035;
+            var eW = this._entities[entity].getWidth()-25;           
+            var eH = this._entities[entity].getHeight()*0.6;
+        }else{
+            var eposX = this._entities[entity].getPos().posX;           //entity's pos
+            var eposY = this._entities[entity].getPos().posY;
+            var eW = this._entities[entity].getWidth();           
+            var eH = this._entities[entity].getHeight();
+        }
        if (posX <= eposX + eW &&                
            eposX <= posX + w &&
            posY <= eposY +eH &&
@@ -107,8 +112,18 @@ render: function(ctx) {
     var oldStyle = ctx.strokeStyle;
     ctx.strokeStyle = "blue";
     for (var ID in this._entities) {
-        var e = this._entities[ID];
-        util.strokeBox(ctx, e.getPos().posX, e.getPos().posY, e.getWidth(), e.getHeight());
+        if(this._entities[ID].getType()==="Platform"){
+            var eposX = this._entities[ID].getPos().posX+15;           //entity's pos
+            var eposY = this._entities[ID].getPos().posY*1.035;
+            var eW = this._entities[ID].getWidth()-25;           
+            var eH = this._entities[ID].getHeight()*0.6;
+        
+        util.strokeBox(ctx, eposX, eposY, eW, eH);
+        }
+        else{
+            var e = this._entities[ID];
+            util.strokeBox(ctx, e.getPos().posX, e.getPos().posY, e.getWidth(), e.getHeight());
+        }
     }
     ctx.strokeStyle = oldStyle;
 }

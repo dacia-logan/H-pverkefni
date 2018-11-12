@@ -12,8 +12,8 @@ function Kall(descr) {
     this.width=70;
     this.height=100;
     //þyngdarafl og hoppkraftur
-    this.gravity=0.15;
-    this.jumpForce=-7;
+    this.gravity=0.22;
+    this.jumpForce=-8;
     //boolean breita sem er true þegar hann er í loftinu en false annars
     this.inAir=true;
     //jumpcounter telur hoppin niður
@@ -29,12 +29,16 @@ function Kall(descr) {
 
     //dashing, extra speed
     this.isDashing = false;
-    //number of frames we want to be dashing 
-    this.dashCounter = 15; 
+    //number of frames we want to be dashing
+    this.dashCounter = 20;
 
     // Líf
     this.lives = 3;
     this.heartSize = 50;
+
+    // Score
+    this.score = 0;
+    this.scoreSpeed = 2.5
 
     this.type =  "Kall";
 
@@ -67,11 +71,13 @@ Kall.prototype.update = function(du){
     }
     
 
-    //Check for hit entity, if its hit it checks wwhich side it is on and acts accordingly,
-    //resets or is on the platform.
+
+// Check for hit entity, if its hit it checks wwhich side it is on and acts accordingly,
+// resets or is on the platform.
     this.handleKeys(du);
+    this.applyAccel(0,this.gravity,du);
     this.collidesWith(du);
-    this.applyAccel(this.gravity,du);
+    
 
      //check if out of canvas
     if (this.y > g_canvas.height) {
@@ -85,27 +91,33 @@ Kall.prototype.update = function(du){
     //else register
     else
       spatialManager.register(this);
-   
+    //check if out of canvas
+    if (this.y > g_canvas.height) {
+      this.loseLife();
+    }
+
+    // Update the score
+    this.score += Math.floor(this.scoreSpeed);
 };
 
 
 /**
- * handles speed of unicorn when the unicorn is dashing 
+ * handles speed of unicorn when the unicorn is dashing
  * and not dashing.
  */
 Kall.prototype.setSpeed = function(du) {
-  
-  if (this.isDashing && this.dashCounter !== 0) 
+
+  if (this.isDashing && this.dashCounter !== 0)
   { //is the unicorn dashing and is the dashcounter not zero?
     this.dashCounter--;         //dash for only 15 frames
-    this.x += this.velX*20*du;  //set velocity to more speed
+    this.applyAccel(1,0,du) ;   //set velocity to more speed
     this.jumpCounter=1;         //unicorn can jump once after it has dashed
-  
-  } else 
+    this.velY=0;                // no vertical velocity while dashing
+
+  } else
   {//unicorn is not dashing anymore move as usual
     this.isDashing = false;     //not dashing
     this.velX=1;                //set velocity to normal speed
-    this.x+=this.velX*du;       //change x
     this.dashCounter = 15;      //reset the dashCounter to 15 again
   }
 
@@ -141,8 +153,8 @@ Kall.prototype.starCollide = function(star){
     //if we land on top of the star we want to walk on it
     if(this.y+this.height <
           star.getPos().posY + star.getWidth()/2){
-      this.inAir = false; 
-      this.y = star.getPos().posY - this.height;  
+      this.inAir = false;
+      this.y = star.getPos().posY - this.height;
     }
     //if we dash into the star the star explodes
     else if (this.isDashing) {
@@ -150,52 +162,55 @@ Kall.prototype.starCollide = function(star){
     //else the unicorn loses a life
     } else  {
       this.loseLife();
-    }  
+    }
 };
 
 
 
 Kall.prototype.platformCollide = function(entity){
     //where are we colliding with platform?
-
+    var posX = entity.getPos().posX+10;
+    var posY = entity.getPos().posY*1.035;
+    var eWidth = entity.getWidth()-25;
+    var eHeight = entity.getHeight()*0.6;
     //LEFT EDGE - character should explode and lose a life
-    if (this.x+this.width < entity.getPos().posX + 30) /*&& 
-        this.x+this.width-5 < entity.getPos().posX)*/ 
+    if (this.x+this.width < posX + 30) /*&&
+        this.x+this.width-5 < entity.getPos().posX)*/
     {
-      //this.isExploding = true; 
-      while (Math.floor(this.x+this.width)> entity.x) {
+      //this.isExploding = true;
+      while (Math.floor(this.x+this.width)> posX) {
         this.x--;
       }
       //this.x -=5
       this.loseLife();
-      return; 
+      return;
     }
 
-    //TOP EDGE - character should run on platform 
-    if (this.y+this.height < 
-        entity.getPos().posY + entity.getWidth()/2) 
+    //TOP EDGE - character should run on platform
+    if (this.y+this.height <
+        posY + eWidth/2)
     {
-        //make sure to drag it out of the ground if it 
-        //went to far on the last frame 
-        while(Math.floor(this.y+this.height) > entity.y)
-        {           
-          this.y--;                                               
+        //make sure to drag it out of the ground if it
+        //went to far on the last frame
+        while(Math.floor(this.y+this.height) > posY)
+        {
+          this.y--;
         }
-        this.y = entity.getPos().posY-this.height;
+        this.y = posY-this.height;
         this.velY=0;
         this.jumpCounter=2;
         this.inAir=false;
     }
 
-    //BOTTOM EDGE - character should stop rising and start falling 
-    if (this.y > 
-        entity.getPos().posY + entity.getWidth()/2) 
+    //BOTTOM EDGE - character should stop rising and start falling
+    if (this.y >
+        posY+ eWidth/2)
     {
-        //make sure to drag it out of the ground if it 
+        //make sure to drag it out of the ground if it
         //went to far on the last frame
-        while(Math.floor(this.y) < entity.y+entity.getHeight())
-        {           
-          this.y++;                                               
+        while(Math.floor(this.y) < entity.y+eHeight)
+        {
+          this.y++;
         }
         // TODO ÞEGAR AÐ DASH ER KOMIÐ ÞARF AÐ SKODÐA ÞETTA BETUR
         // ERFITT AÐ EIGA VIÐ BOTNINN NÚNA.
@@ -220,7 +235,7 @@ Kall.prototype.loseLife = function(){
 
     else {
       this.y =200;
-      this.x =100;
+      this.x =500;
       this.velY=0;
     }
 
@@ -235,7 +250,7 @@ Kall.prototype.handleKeys = function(du){
         this.velY=0;
         this.jumpCounter-=1;
         this.inAir=true;
-        this.applyAccel(this.jumpForce,du);
+        this.applyAccel(0,this.jumpForce, du);
       }
     }
     if (eatKey(this.RESET)||this.y>g_canvas.height) {
@@ -248,23 +263,24 @@ Kall.prototype.handleKeys = function(du){
     }
 };
 
-Kall.prototype.applyAccel = function(accelY, du){
+
+Kall.prototype.applyAccel= function(accelX,accelY,du){
   // u=original velocity
  
   var oldVelY= this.velY;
+  var oldVelX= this.velX;
   //v = u + at
  
   this.velY += accelY * du;
-
+  this.velX += accelX * du;
   // v_ave = (u + v) / 2
  
   var aveVelY = (oldVelY + this.velY) / 2;
-
-  // s = s + v_ave * tvar nextY = this.y + aveVelY * du;
-  
-  var nextY = this.y + aveVelY * du;
+  var aveVelX = (oldVelX + this.velX) / 2;
+  // s = s + v_ave * t
 
   this.y += aveVelY*du;
+  this.x += aveVelX*du;
 };
 
 Kall.prototype.render = function(ctx){
@@ -282,6 +298,7 @@ Kall.prototype.render = function(ctx){
       g_runSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
     }
     this.drawLives(ctx);
+    this.drawScore(ctx);
 };
 
 
@@ -311,4 +328,26 @@ Kall.prototype.drawLives = function(ctx) {
     g_sprites.heart.drawAtAndEnlarge(ctx, camera.getPos().posX+15 + livesOffset * i,camera.getPos().posY+20, this.heartSize, this.heartSize);
   }
 
+};
+
+Kall.prototype.drawScore = function(ctx) {
+  
+  ctx.font = "bold 40px Consolas";
+  ctx.textAlign = "center";
+
+  // Color of the score
+  ctx.fillStyle = "white";
+  
+  // Color of the shadow
+  ctx.shadowColor = '#1c5e66';
+  ctx.shadowBlur = 40
+
+  // Draw the score
+  ctx.fillText(this.score, g_canvas.width / 2 + camera.getPos().posX - 20,
+                            70 + camera.getPos().posY);
+
+  ctx.fill();
+
+  // Make sure the shadow is only applied to the score
+  ctx.shadowBlur = 0;
 };

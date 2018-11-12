@@ -24,7 +24,7 @@ function Star(descr) {
     this.x = newestPlat.x + newestPlat.getWidth()/2;                    //set the position of the star
 
     //set y position based on newest platform y-position
-    var yPos = newestPlat.y - this.height;                              //get the y position of the platform
+    var yPos = newestPlat.y - this.height+5;                              //get the y position of the platform
     this.y = yPos;                                                      //set the y position of the star
     
     //set the velosity to the same as the platfoms
