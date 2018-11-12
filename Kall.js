@@ -9,12 +9,21 @@ function Kall(descr) {
     this.velY=0;
 
     //hæð og breidd
-    this.width=70;
-    this.height= 100;
+    this.width = g_runSprite[0].width;
+    this.height = g_runSprite[0].height;
+
+    // Hæð og breidd á jump-spriteinum
+    this.jumpWidth = g_jumpSprite[0].width;
+    this.jumpHeight = g_jumpSprite[0].height;
+
+    // Hæð og breidd á dash-spriteinum
+    this.dashWidth = g_dashSprite[0].width;
+    this.dashHeight = g_dashSprite[0].height;
+
     //þyngdarafl og hoppkraftur
     this.gravity=0.15;
     this.jumpForce=-7;
-    //boolean breita sem er true þegar hann er í loftinu en false annars
+    //boolean breyta sem er true þegar hann er í loftinu en false annars
     this.inAir=true;
     //jumpcounter telur hoppin niður
     this.jumpCounter=2;
@@ -39,7 +48,11 @@ function Kall(descr) {
 
     // Score
     this.score = 0;
-    this.scoreSpeed = 2.5
+    this.scoreSpeed = 2.5;
+
+    // Highscore
+    this.highscore = [];
+    this.nrOfTries = 0;
 
     this.type =  "Kall";
 
@@ -82,8 +95,13 @@ Kall.prototype.update = function(du){
     this.applyAccel(this.gravity,du);
     this.collidesWith(du);
 
-    //Check for death
+    // Check for death
     if(this._isDeadNow){
+      if (this.nrOfTries < 2) {
+        this.highscore[this.nrOfTries] = this.score;
+      }
+      this.nrOfTries++;
+      console.log(this.highscore);
       return entityManager.KILL_ME_NOW
     }
     //else register
@@ -96,6 +114,7 @@ Kall.prototype.update = function(du){
 
     // Update the score
     this.score += Math.floor(this.scoreSpeed);
+    //console.log(this.score);
 };
 
 
@@ -278,11 +297,15 @@ Kall.prototype.applyAccel= function(accelY,du){
 };
 
 Kall.prototype.render = function(ctx){
+
+    if (main._isGameOver) return;
+
     if (this.isThrowing) {
       g_throwSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
-    }
-    else if (this.inAir) {
-      g_jumpSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
+    } else if (this.inAir && this.isDashing) {
+      g_dashSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x - this.width,this.y,this.dashWidth,this.dashHeight);
+   } else if (this.inAir) {
+      g_jumpSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.jumpWidth,this.jumpHeight);
     }
     /*
     TODO LÁTA ÞETTA VIRKA
@@ -290,7 +313,7 @@ Kall.prototype.render = function(ctx){
       g_explosionSprite[Math.floor(this.frameCounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
     }
     */
-    else{
+    else {
       g_runSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
     }
     this.drawLives(ctx);
@@ -321,10 +344,15 @@ Kall.prototype.drawScore = function(ctx) {
   ctx.shadowColor = '#1c5e66';
   ctx.shadowBlur = 40
 
-  // Draw the score
-  ctx.fillText(this.score, g_canvas.width / 2 + camera.getPos().posX - 20,
+  // Draw the score if the game is not over
+  if (!main._isGameOver) {
+    ctx.fillText(this.score, g_canvas.width / 2 + camera.getPos().posX - 20,
                             70 + camera.getPos().posY);
-
+  } else if (main._isGameOver) {
+    // VIRKAR EKKI, IMPLEMENTA Á ANNAN HÁTT
+    ctx.fillText("You got " + this.score + "points", g_canvas.width / 2 - 20, 70);
+  }
+  
   ctx.fill();
 
   // Make sure the shadow is only applied to the score
