@@ -30,14 +30,14 @@ function Platform(descr, p, x, y) {
         this.width = g_images.normal2.width*1.9/1.5;
         this.height = g_images.normal2.height*1.6/1.5;
 
-        
+
         }
 
     else if(descr===4){
 
         this.width = g_images.normal3.width*2/1.5;
         this.height = g_images.normal3.height*1.4/1.5;
-        
+
     }
 
     else if(descr===5){
@@ -53,7 +53,7 @@ function Platform(descr, p, x, y) {
         this.height = g_images.esmall.height*1.6/1.5;
 
     }
-    
+
 
     this.type = "Platform";
 
@@ -82,7 +82,7 @@ Platform.prototype.update = function(du){
 
     spatialManager.unregister(this);
 
-  
+
     this.x-=this.vx*du;
     if(this.x + this.width <= camera.getPos().posX){
         this.kill();
@@ -93,16 +93,16 @@ Platform.prototype.update = function(du){
     }
     else  spatialManager.register(this);
 
-    
+
 };
 
 
 Platform.prototype._spawnPlatform = function () {
-   
+
 };
 
 Platform.prototype.drawPlat = function(ctx){
-  
+
 if(this.plat===1){
     g_platforms.large.drawAtAndEnlarge(ctx, this.x, this.y, this.width, this.height);
 }
@@ -126,7 +126,7 @@ else if(this.plat===5){
 else if(this.plat===6) {
     g_platforms.esmall.drawAtAndEnlarge(ctx, this.x, this.y, this.width, this.height);
 }
-    
+
 };
 
 Platform.prototype.render = function(ctx){
