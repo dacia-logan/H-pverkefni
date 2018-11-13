@@ -62,7 +62,7 @@ Star.prototype.update = function(du) {
 
     //kill Star if it falls out of the canvas
     //allso has to die if the 'Kall' hits it.
-    if (this.x <= -this.width || 
+    if (this.x <= -camera.getPos()-this.width || 
         this.frameCounter >= this.numberOfFrames) this.kill();
 
 

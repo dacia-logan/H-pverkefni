@@ -85,9 +85,9 @@ isHit: function(posX, posY, w, h){
 
     for(var entity in this._entities){
         if(this._entities[entity].getType()==="Platform"){
-            var eposX = this._entities[entity].getPos().posX+15;           //entity's pos
+            var eposX = this._entities[entity].getPos().posX+20;           //entity's pos
             var eposY = this._entities[entity].getPos().posY*1.035;
-            var eW = this._entities[entity].getWidth()-25;           
+            var eW = this._entities[entity].getWidth()-30;           
             var eH = this._entities[entity].getHeight()*0.6;
         }else{
             var eposX = this._entities[entity].getPos().posX;           //entity's pos
@@ -111,11 +111,12 @@ isHit: function(posX, posY, w, h){
 render: function(ctx) {
     var oldStyle = ctx.strokeStyle;
     ctx.strokeStyle = "blue";
+    console.log(this._entities);
     for (var ID in this._entities) {
         if(this._entities[ID].getType()==="Platform"){
-            var eposX = this._entities[ID].getPos().posX+15;           //entity's pos
+            var eposX = this._entities[ID].getPos().posX+20;           //entity's pos
             var eposY = this._entities[ID].getPos().posY*1.035;
-            var eW = this._entities[ID].getWidth()-25;           
+            var eW = this._entities[ID].getWidth()-30;           
             var eH = this._entities[ID].getHeight()*0.6;
         
         util.strokeBox(ctx, eposX, eposY, eW, eH);

@@ -4,23 +4,24 @@ function Kall(descr) {
     this.setup(descr);
     //upphafsstaða og upphafshraði
     this.x = 200;
-    this.y = 200;
-    this.velX=1;
+    this.y = 400;
+    this.defVelX = 6;
+    this.velX=this.defVelX;
     this.velY=0;
 
     //hæð og breidd
     this.width=70;
     this.height=100;
     //þyngdarafl og hoppkraftur
-    this.gravity=0.22;
-    this.jumpForce=-8;
+    this.gravity=0.40;
+    this.jumpForce=-11;
     //boolean breita sem er true þegar hann er í loftinu en false annars
     this.inAir=true;
     //jumpcounter telur hoppin niður
     this.jumpCounter=2;
     //frameCounter er fyrir rammana í sprite animation
     this.framecounter=0;
-
+    //hraði á kall
     this.isThrowing=false;
 
     //should explode when colliding with left edge of platform
@@ -117,7 +118,7 @@ Kall.prototype.setSpeed = function(du) {
   } else
   {//unicorn is not dashing anymore move as usual
     this.isDashing = false;     //not dashing
-    this.velX=1;                //set velocity to normal speed
+    this.velX=this.defVelX;                //set velocity to normal speed
     this.dashCounter = 15;      //reset the dashCounter to 15 again
   }
 
@@ -169,14 +170,15 @@ Kall.prototype.starCollide = function(star){
 
 Kall.prototype.platformCollide = function(entity){
     //where are we colliding with platform?
-    var posX = entity.getPos().posX+10;
-    var posY = entity.getPos().posY*1.035;
-    var eWidth = entity.getWidth()-25;
+    var posX = entity.getPos().posX+20;         //Ég breytti platform collide boxinu 
+    var posY = entity.getPos().posY*1.035;      //til þess að þetta looki meira smooth
+    var eWidth = entity.getWidth()-30;          //Breytti því líka þegar X er togglað
     var eHeight = entity.getHeight()*0.6;
+    
     //LEFT EDGE - character should explode and lose a life
-    if (this.x+this.width < posX + 30) /*&&
-        this.x+this.width-5 < entity.getPos().posX)*/
-    {
+    if (this.x+this.width < posX + 30 &&  this.y+this.height >= posY+12) //Gerði y coord til að collisionið sé  
+    /*&& this.x+this.width-5 < entity.getPos().posX)*/                   //meira forgiving utaf collisionið er stundum ekkert 
+    {                                                                   // alltor nakvæmt miðað við platforms
       //this.isExploding = true;
       while (Math.floor(this.x+this.width)> posX) {
         this.x--;
@@ -206,12 +208,14 @@ Kall.prototype.platformCollide = function(entity){
     if (this.y >
         posY+ eWidth/2)
     {
+      
         //make sure to drag it out of the ground if it
         //went to far on the last frame
         while(Math.floor(this.y) < entity.y+eHeight)
         {
           this.y++;
         }
+        this.velY*=-0.7;
         // TODO ÞEGAR AÐ DASH ER KOMIÐ ÞARF AÐ SKODÐA ÞETTA BETUR
         // ERFITT AÐ EIGA VIÐ BOTNINN NÚNA.
     }
@@ -255,7 +259,7 @@ Kall.prototype.handleKeys = function(du){
     }
     if (eatKey(this.RESET)||this.y>g_canvas.height) {
       this.x=200;
-      this.y=200;
+      this.y=400;
       this.velY=0;
     }
     if (eatKey(this.KEY_DASH)) {

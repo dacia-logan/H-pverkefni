@@ -162,6 +162,7 @@ function requestPreloads() {
         small : "images/Platforms/smallSize.png",
         esmall : "images/Platforms/extraSmallSize.png",
         large : "images/Platforms/largeSize.png",
+        long : "images/Platforms/long.png",
        
 
         Run0 :  "images/Run/Run__000.png",
@@ -227,6 +228,7 @@ function preloadDone() {
     g_platforms.small = new Sprite(g_images.small);
     g_platforms.esmall = new Sprite(g_images.esmall);
     g_platforms.large = new Sprite(g_images.large);
+    g_platforms.long = new Sprite(g_images.long);
     g_sprites.heart = new Sprite(g_images.Heart);
     g_runSprite[0]=new Sprite(g_images.Run0);
     g_runSprite[1]=new Sprite(g_images.Run1);
