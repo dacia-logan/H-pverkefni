@@ -50,7 +50,7 @@ Rainbow.prototype.update = function(du) {
 
     //kill Rainbow if it falls out of the canvas
     //allso has to die if the 'Kall' hits it.
-    if (this.x + this.width <= camera.getPos().posX) {
+    if (this.x <= camera.getPos().posX - this.width) {
         //this.lostCombo(); 
         this.kill();
     }
@@ -60,8 +60,6 @@ Rainbow.prototype.update = function(du) {
         return entityManager.KILL_ME_NOW;
     }
 
-    //update the velocity
-    this.x -= this.vx * du;
 
     //re-register to spatial manager
     if (!this._isDeadNow) spatialManager.register(this);

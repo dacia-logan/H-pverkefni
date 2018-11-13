@@ -1,23 +1,20 @@
-function Star(descr) {
+function Star(x,y) {
     //common inherited setup logic from Entity
-    this.setup(descr);
+    this.setup(x);
 
     //set width and height
     this.width = 75;
     this.height = 70;
-
-    var numberOfLivePlats = entityManager._platforms.length;            //the number of platforms that are not dead
-    var newestPlat = entityManager._platforms[numberOfLivePlats-1];     //the platform that is newest of them all
     
     //set x position based on newest platform x-position
-    this.x = newestPlat.x + newestPlat.getWidth()/2;                    //set the position of the star
+    this.x = x;                  //set the position of the star
 
     //set y position based on newest platform y-position
-    var yPos = newestPlat.y - this.height+5;                            //get the y position of the platform
-    this.y = yPos;                                                      //set the y position of the star
+                         //get the y position of the platform
+    this.y = y;                                                      //set the y position of the star
     
     //set the velosity to the same as the platfoms
-    this.vx = newestPlat.vx;
+
 
     //is the sprite exploding or not?
     this.isExploding = false;
@@ -61,7 +58,7 @@ Star.prototype.update = function(du) {
 
     //kill Star if it falls out of the canvas
     //allso has to die if the 'Kall' hits it.
-    if (this.x + this.width <= camera.getPos().posX || 
+    if (this.x <= camera.getPos().posX - this.width || 
         this.frameCounter >= this.numberOfFrames) this.kill();
 
     //if is dead and the frames are not done 
@@ -69,8 +66,6 @@ Star.prototype.update = function(du) {
     if (this.isExploding && 
         this.frameCounter <= this.numberOfFrames) this.frameCounter += 0.2; 
    
-    //update the velocity
-    this.x -= this.vx * du;
 
     //re-register to spatial manager
     //if isDead
