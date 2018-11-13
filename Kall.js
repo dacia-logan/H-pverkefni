@@ -10,8 +10,17 @@ function Kall(descr) {
     this.velY=0;
 
     //hæð og breidd
-    this.width=70;
-    this.height=100;
+    this.width = g_runSprite[0].width;
+    this.height = g_runSprite[0].height;
+
+    // Hæð og breidd á jump-spriteinum
+    this.jumpWidth = g_jumpSprite[0].width;
+    this.jumpHeight = g_jumpSprite[0].height;
+
+    // Hæð og breidd á dash-spriteinum
+    this.dashWidth = g_dashSprite[0].width;
+    this.dashHeight = g_dashSprite[0].height;
+
     //þyngdarafl og hoppkraftur
     this.gravity=0.40;
     this.jumpForce=-11;
@@ -39,10 +48,17 @@ function Kall(descr) {
 
     // Score
     this.score = 0;
-    this.scoreSpeed = 2.5
+    this.scoreSpeed = 2.5;
+
+    // Highscore
+    this.highscore = [];
+    this.nrOfTries = 0;
 
     this.type =  "Kall";
 
+    //collision helper with rainbowCollide
+    this.hasRainbowCombo = false;  
+    this.combo = 0;  
 };
 
 Kall.prototype = new Entity();
@@ -71,10 +87,8 @@ Kall.prototype.update = function(du){
       this.framecounter%=10;
     }
     
-
-
-// Check for hit entity, if its hit it checks wwhich side it is on and acts accordingly,
-// resets or is on the platform.
+    // Check for hit entity, if its hit it checks wwhich side it is on and acts accordingly,
+    // resets or is on the platform.
     this.handleKeys(du);
     this.applyAccel(0,this.gravity,du);
     this.collidesWith(du);
@@ -85,8 +99,13 @@ Kall.prototype.update = function(du){
       this.loseLife();
     }
 
-    //Check for death
+    // Check for death
     if(this._isDeadNow){
+      if (this.nrOfTries < 2) {
+        this.highscore[this.nrOfTries] = this.score;
+      }
+      this.nrOfTries++;
+      console.log(this.highscore);
       return entityManager.KILL_ME_NOW
     }
     //else register
@@ -99,15 +118,10 @@ Kall.prototype.update = function(du){
 
     // Update the score
     this.score += Math.floor(this.scoreSpeed);
+    //console.log(this.score);
 };
 
-
-/**
- * handles speed of unicorn when the unicorn is dashing
- * and not dashing.
- */
 Kall.prototype.setSpeed = function(du) {
-
   if (this.isDashing && this.dashCounter !== 0)
   { //is the unicorn dashing and is the dashcounter not zero?
     this.dashCounter--;         //dash for only 15 frames
@@ -121,52 +135,37 @@ Kall.prototype.setSpeed = function(du) {
     this.velX=this.defVelX;                //set velocity to normal speed
     this.dashCounter = 15;      //reset the dashCounter to 15 again
   }
-
 };
 
 Kall.prototype.collidesWith = function(du){
-    //console.log(spatialManager.isHit(this.x, this.y, this.width, this.height).length != 0);
 
-    if(spatialManager.isHit(this.x, this.y, this.width, this.height).length != 0){
+    if (spatialManager.isHit(this.x, this.y, this.width, this.height).length != 0){
+        var ent = spatialManager.isHit(this.x, this.y, this.width, this.height);
 
-      var ent = spatialManager.isHit(this.x, this.y, this.width, this.height);
-      //console.log(ent);
-      for(i=0 ; i < ent.length; i++){
-        if(ent[i].getType() === "Star"){
-          //collision with the star
-          this.starCollide(ent[i]);
-        } else if (ent[i].getType() === "Platform"){
-          //collision with the platform
-          this.platformCollide(ent[i]);
+        for(i=0 ; i < ent.length; i++){
+          if(ent[i].getType() === "Star"){                //collision with the star
+            this.starCollide(ent[i]);           
+          } else if (ent[i].getType() === "Platform"){    //collision with the platform
+            this.platformCollide(ent[i]);
+          } else if (ent[i].getType() === "Rainbow") {    //collision with rainbow
+            this.rainbowCollide(ent[i]);
+          }
         }
-      }
     } else {
-      this.inAir=true;
+        this.inAir=true;
     }
 };
 
 
 Kall.prototype.starCollide = function(star){
-  /* if(this.isCharging){
-        entity.kill();
-  }
-  */
-    //if we land on top of the star we want to walk on it
-    if(this.y+this.height <
-          star.getPos().posY + star.getWidth()/2){
-      this.inAir = false;
-      this.y = star.getPos().posY - this.height;
-    }
     //if we dash into the star the star explodes
-    else if (this.isDashing) {
+    if (this.isDashing) {
       star.explodes();
     //else the unicorn loses a life
     } else  {
       this.loseLife();
     }
 };
-
-
 
 Kall.prototype.platformCollide = function(entity){
     //where are we colliding with platform?
@@ -219,6 +218,24 @@ Kall.prototype.platformCollide = function(entity){
         // TODO ÞEGAR AÐ DASH ER KOMIÐ ÞARF AÐ SKODÐA ÞETTA BETUR
         // ERFITT AÐ EIGA VIÐ BOTNINN NÚNA.
     }
+};
+
+Kall.prototype.rainbowCollide = function(rainbow) {
+
+  //TODO LAGA ÞETTA ÞANNIG AÐ COMBO DETTI ÚT. 
+      
+      //console.log(this.hasRainbowCombo); 
+      this.hasRainbowCombo = true;
+      //console.log(this.score);
+      rainbow.kill();
+      if (this.hasRainbowCombo) {
+        this.combo++;
+        this.score += this.combo*10; 
+      } else {
+        this.score += 10;
+      }
+      //console.log(this.score);
+      
 };
 
 Kall.prototype.loseLife = function(){
@@ -288,9 +305,15 @@ Kall.prototype.applyAccel= function(accelX,accelY,du){
 };
 
 Kall.prototype.render = function(ctx){
-    
-    if (this.inAir) {
-      g_jumpSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
+
+    if (main._isGameOver) return;
+
+    if (this.isThrowing) {
+      g_throwSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
+    } else if (this.inAir && this.isDashing) {
+      g_dashSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x - this.width,this.y,this.dashWidth,this.dashHeight);
+   } else if (this.inAir) {
+      g_jumpSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.jumpWidth,this.jumpHeight);
     }
     /*
     TODO LÁTA ÞETTA VIRKA
@@ -298,7 +321,7 @@ Kall.prototype.render = function(ctx){
       g_explosionSprite[Math.floor(this.frameCounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
     }
     */
-    else{
+    else {
       g_runSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
     }
     this.drawLives(ctx);
@@ -346,10 +369,15 @@ Kall.prototype.drawScore = function(ctx) {
   ctx.shadowColor = '#1c5e66';
   ctx.shadowBlur = 40
 
-  // Draw the score
-  ctx.fillText(this.score, g_canvas.width / 2 + camera.getPos().posX - 20,
+  // Draw the score if the game is not over
+  if (!main._isGameOver) {
+    ctx.fillText(this.score, g_canvas.width / 2 + camera.getPos().posX - 20,
                             70 + camera.getPos().posY);
-
+  } else if (main._isGameOver) {
+    // VIRKAR EKKI, IMPLEMENTA Á ANNAN HÁTT
+    ctx.fillText("You got " + this.score + "points", g_canvas.width / 2 - 20, 70);
+  }
+  
   ctx.fill();
 
   // Make sure the shadow is only applied to the score

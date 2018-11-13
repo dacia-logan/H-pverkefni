@@ -12,7 +12,7 @@ function Platform(descr, p, x, y) {
 
     if(descr===1){
 
-        this.width = g_images.large.width*2.6
+        this.width = g_images.large.width*2.6;
         this.height = g_images.large.height*1.8;
     }
 
