@@ -42,7 +42,6 @@ Rainbow.prototype.render = function(ctx){
 };
 
 Rainbow.prototype.update = function(du) {
-    
     //unregister from spatial manager
     spatialManager.unregister(this);
 
@@ -51,8 +50,8 @@ Rainbow.prototype.update = function(du) {
 
     //kill Rainbow if it falls out of the canvas
     //allso has to die if the 'Kall' hits it.
-    if (this.x <= -this.width) {
-        //this.lostCombo();  
+    if (this.x + this.width <= camera.getPos().posX) {
+        //this.lostCombo(); 
         this.kill();
     }
 

@@ -228,9 +228,9 @@ Kall.prototype.rainbowCollide = function(rainbow) {
 
   //TODO LAGA ÞETTA ÞANNIG AÐ COMBO DETTI ÚT. 
       
-      console.log(this.hasRainbowCombo); 
+      //console.log(this.hasRainbowCombo); 
       this.hasRainbowCombo = true;
-      console.log(this.score);
+      //console.log(this.score);
       rainbow.kill();
       if (this.hasRainbowCombo) {
         this.combo++;
@@ -238,7 +238,7 @@ Kall.prototype.rainbowCollide = function(rainbow) {
       } else {
         this.score += 10;
       }
-      console.log(this.score);
+      //console.log(this.score);
       
 };
 

@@ -84,7 +84,7 @@ Platform.prototype.update = function(du){
 
   
     this.x-=this.vx*du;
-    if(this.x <= -this.width){
+    if(this.x + this.width <= camera.getPos().posX){
         this.kill();
     }
 
