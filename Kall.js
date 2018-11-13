@@ -86,10 +86,8 @@ Kall.prototype.update = function(du){
       this.framecounter%=10;
     }
     
-
-
-// Check for hit entity, if its hit it checks wwhich side it is on and acts accordingly,
-// resets or is on the platform.
+    // Check for hit entity, if its hit it checks wwhich side it is on and acts accordingly,
+    // resets or is on the platform.
     this.handleKeys(du);
     this.applyAccel(0,this.gravity,du);
     this.collidesWith(du);
@@ -122,13 +120,7 @@ Kall.prototype.update = function(du){
     //console.log(this.score);
 };
 
-
-/**
- * handles speed of unicorn when the unicorn is dashing
- * and not dashing.
- */
 Kall.prototype.setSpeed = function(du) {
-
   if (this.isDashing && this.dashCounter !== 0)
   { //is the unicorn dashing and is the dashcounter not zero?
     this.dashCounter--;         //dash for only 15 frames
@@ -142,30 +134,24 @@ Kall.prototype.setSpeed = function(du) {
     this.velX=1;                //set velocity to normal speed
     this.dashCounter = 15;      //reset the dashCounter to 15 again
   }
-
 };
 
 Kall.prototype.collidesWith = function(du){
-    //console.log(spatialManager.isHit(this.x, this.y, this.width, this.height).length != 0);
 
-    if(spatialManager.isHit(this.x, this.y, this.width, this.height).length != 0){
+    if (spatialManager.isHit(this.x, this.y, this.width, this.height).length != 0){
+        var ent = spatialManager.isHit(this.x, this.y, this.width, this.height);
 
-      var ent = spatialManager.isHit(this.x, this.y, this.width, this.height);
-      //console.log(ent);
-      for(i=0 ; i < ent.length; i++){
-        if(ent[i].getType() === "Star"){
-          //collision with the star
-          this.starCollide(ent[i]);
-        } else if (ent[i].getType() === "Platform"){
-          //collision with the platform
-          this.platformCollide(ent[i]);
-        } else if (ent[i].getType() === "Rainbow") {
-          //collision with rainbow
-          this.rainbowCollide(ent[i]);
+        for(i=0 ; i < ent.length; i++){
+          if(ent[i].getType() === "Star"){                //collision with the star
+            this.starCollide(ent[i]);           
+          } else if (ent[i].getType() === "Platform"){    //collision with the platform
+            this.platformCollide(ent[i]);
+          } else if (ent[i].getType() === "Rainbow") {    //collision with rainbow
+            this.rainbowCollide(ent[i]);
+          }
         }
-      }
     } else {
-      this.inAir=true;
+        this.inAir=true;
     }
 };
 

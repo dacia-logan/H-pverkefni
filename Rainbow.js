@@ -61,7 +61,7 @@ Rainbow.prototype.update = function(du) {
     }
 
     //update the velocity
-    this.x-=this.vx*du;
+    this.x -= this.vx * du;
 
     //re-register to spatial manager
     if (!this._isDeadNow) spatialManager.register(this);
