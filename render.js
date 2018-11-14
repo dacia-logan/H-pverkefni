@@ -29,7 +29,7 @@ function render(ctx) {
     //
     if (g_doClear) util.clearCanvas(ctx);
     if (entityManager.getMainCharacter()) {
-      camera.Follow(ctx,entityManager.getMainCharacter(),100,300);
+        camera.Follow(ctx,entityManager.getMainCharacter(),100,300);
     }
 
     // The main purpose of the box is to demonstrate that it is

@@ -138,8 +138,8 @@ function renderSimulation(ctx) {
         g_sprites.gameover.drawAtAndEnlarge(ctx,-gameOverOffset,0,g_canvas.width,g_canvas.height);
     } else {
     // Else draw the regular background
-
-        g_sprites.Background.drawAtAndEnlarge(ctx,0,-g_canvas.height*5,g_canvas.width*10,g_canvas.height*10);
+        
+        g_sprites.Background.drawAtAndEnlarge(ctx,0,0,g_sprites.Background.width, g_sprites.Background.height);
 
     }
     entityManager.render(ctx);

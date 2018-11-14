@@ -149,8 +149,8 @@ Kall.prototype.setSpeed = function(du) {
 
 Kall.prototype.collidesWith = function(du){
 
-    if (spatialManager.isHit(this.x, this.y, this.width, this.height).length != 0){
-        var ent = spatialManager.isHit(this.x, this.y, this.width, this.height);
+    if (spatialManager.isHit(this.x+60, this.y+30, this.width-145, this.height-40).length != 0){              //þessar tölur fengum við út með því að prófa okkur áfram í render á spatial manager
+        var ent = spatialManager.isHit(this.x+60, this.y+30, this.width-145, this.height-40);                 //Þær gera collideboxið hjá einhyrningnum minna, munu koma 2-3 fyrir aftur í platformcollide
 
         for(i=0 ; i < ent.length; i++){
           if(ent[i].getType() === "Star"){                //collision with the star
@@ -183,48 +183,54 @@ Kall.prototype.platformCollide = function(entity){
     var posY = entity.getPos().posY*1.035;      //til þess að þetta looki meira smooth
     var eWidth = entity.getWidth()-30;          //Breytti því líka þegar X er togglað
     var eHeight = entity.getHeight()*0.6;
+    var x=this.x+70;
+    var y=this.y+30;
+    var w=this.width-135;
+    var h=this.height-40;
 
-    //LEFT EDGE - character should explode and lose a life
-    if (this.x+this.width < posX + 30 &&  this.y+this.height >= posY+12) //Gerði y coord til að collisionið sé
-    /*&& this.x+this.width-5 < entity.getPos().posX)*/                   //meira forgiving utaf collisionið er stundum ekkert
-    {                                                                   // alltor nakvæmt miðað við platforms
+    //LEFT EDGE - character should explode and lose a life                         
+    if (x < posX  &&  y+h >= posY+12)  //Gerði y coord til að collisionið sé
+    /*&& this.x+this.width-5 < entity.getPos().posX)*/                            //meira forgiving utaf collisionið er stundum ekkert
+    {                                                                             // alltor nakvæmt miðað við platforms
       //this.isExploding = true;
-      while (Math.floor(this.x+this.width)> posX) {
+      while (Math.floor(x+w) > posX) {
         this.x--;
+        x=this.x+70;
       }
       //this.x -=5
       this.loseLife();
       return;
     }
-
+    
     //TOP EDGE - character should run on platform
-    if (this.y+this.height <
-        posY + eWidth/2)
+    else if (y < posY)
     {
         //make sure to drag it out of the ground if it
         //went to far on the last frame
-        while(Math.floor(this.y+this.height ) > posY)
+        while(Math.floor(y+h) > posY+eHeight)
         {
           this.y--;
+          var y=this.y+30;
         }
-        this.y = posY-this.height;
+        this.y = posY-this.height-(30-40);   //y and height difference    
         this.velY=0;
         this.jumpCounter=2;
         this.inAir=false;
     }
 
     //BOTTOM EDGE - character should stop rising and start falling
-    if (this.y >
-        posY+ eWidth/2)
+    else if (y+h >
+        posY + eHeight)
     {
 
         //make sure to drag it out of the ground if it
         //went to far on the last frame
-        while(Math.floor(this.y) < entity.y+eHeight)
+        while(Math.floor(y) < posY+eHeight)
         {
           this.y++;
+          var y=this.y+30;
         }
-        this.velY*=-0.7;
+        this.velY*=-0.5;
         // TODO ÞEGAR AÐ DASH ER KOMIÐ ÞARF AÐ SKODÐA ÞETTA BETUR
         // ERFITT AÐ EIGA VIÐ BOTNINN NÚNA.
     }
@@ -381,12 +387,9 @@ Kall.prototype.render = function(ctx){
   } else if (this.inAir) {
     g_jumpSprite[Math.floor(this.Jumpframecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width-20,this.height+20);
   }
-  /*
-  TODO LÁTA ÞETTA VIRKA
   else if (this.isExploding) {
     g_explosionSprite[Math.floor(this.frameCounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
   }
-  */
   else {
     g_runSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
   }
