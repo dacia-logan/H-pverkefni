@@ -46,7 +46,7 @@ Rainbow.prototype.update = function(du) {
     spatialManager.unregister(this);
 
     //if the unicorn has caught the Rainbow it shoud die
-    if (this.isCaught) this._isDeadNow; 
+    if (this.isCaught) this._isDeadNow;
 
     //kill Rainbow if it falls out of the canvas
     //allso has to die if the 'Kall' hits it.
