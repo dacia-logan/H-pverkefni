@@ -44,6 +44,7 @@ function Kall(descr) {
     // Líf
     this.lives = 3;
     this.heartSize = 50;
+    this.dead = 0;
 
     // Score
     this.score = 0;
@@ -57,7 +58,6 @@ function Kall(descr) {
 
     //collision helper with rainbowCollide
     this.hasRainbowCombo = false;  
-    this.combo = 0;  
 };
 
 Kall.prototype = new Entity();
@@ -70,6 +70,9 @@ Kall.prototype.RESET= 'U'.charCodeAt(0);
 Kall.prototype.update = function(du){
 
     spatialManager.unregister(this);
+
+    this.comboLifeSpan -= du;
+    if (this.lifeSpan < 0) return entityManager.KILL_ME_NOW;
 
     //set the xVel of the unicorn based on if
     //it is dashing or not
@@ -224,25 +227,44 @@ Kall.prototype.platformCollide = function(entity){
     }
 };
 
-Kall.prototype.rainbowCollide = function(rainbow) {
+Kall.prototype.rainbowCollide = function (rainbow) {
 
   //TODO LAGA ÞETTA ÞANNIG AÐ COMBO DETTI ÚT. 
       
       console.log(this.hasRainbowCombo); 
       this.hasRainbowCombo = true;
-      console.log(this.score);
+     // console.log(this.score);
       rainbow.kill();
       if (this.hasRainbowCombo) {
         this.combo++;
-        this.score += this.combo*10; 
+        this.score += this.combo*10;
       } else {
         this.score += 10;
-      }
-      console.log(this.score);
-      
+      }      
 };
 
-Kall.prototype.loseLife = function(){
+Kall.prototype.drawCombo = function (ctx, xPos, yPos) {
+
+    ctx.font = "bold 40px Consolas";
+    ctx.textAlign = "center";
+
+    // Color of the combo text
+    ctx.fillStyle = "white";
+  
+    // Color of the shadow
+    ctx.shadowColor = '#1c5e66';
+    ctx.shadowBlur = 40;
+
+    // Draw the combo text
+    ctx.fillText("10", xPos, yPos);
+    
+    ctx.fill();
+
+    // Make sure the shadow is only applied to the combo
+    ctx.shadowBlur = 0;
+};
+
+Kall.prototype.loseLife = function () {
       //----\\
      // TODO \\
     //--------\\
@@ -250,6 +272,7 @@ Kall.prototype.loseLife = function(){
     *Gera reset function sem resettar mappið ofl.
     */
     this.lives--;
+    this.dead++;
 
     if (this.lives === 0) {
         this.kill();
@@ -328,8 +351,20 @@ Kall.prototype.render = function(ctx){
     else {
       g_runSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
     }
+
+    var fadeThresh = this.comboLifeSpan / 3;
+
+    if (this.comboLifeSpan < fadeThresh) {
+        ctx.globalAlpha = this.comboLifeSpan / fadeThresh;
+    }
+
+    ctx.globalAlpha = 1;
+
     this.drawLives(ctx);
     this.drawScore(ctx);
+    if (this.hasRainbowCombo) {
+      this.drawCombo(ctx, this.x, this.y);
+    }
 };
 
 
@@ -356,8 +391,16 @@ Kall.prototype.drawLives = function(ctx) {
 
   // Draw as many hearts as lives the player has left
   for (var i = 0; i < this.lives; i++) {
-    g_sprites.heart.drawAtAndEnlarge(ctx, camera.getPos().posX+15 + livesOffset * i,camera.getPos().posY+20, this.heartSize, this.heartSize);
+    g_sprites.alive.drawAtAndEnlarge(ctx, camera.getPos().posX+15 + livesOffset * i,
+                                      camera.getPos().posY+20, this.heartSize, this.heartSize);                              
   }
+
+  for (var j = 0; j < this.dead; j++) {
+    g_sprites.dead.drawAtAndEnlarge(ctx, camera.getPos().posX+15 + livesOffset * i,
+                                      camera.getPos().posY+20, this.heartSize, this.heartSize);
+  }  
+  //onsole.log(this.lives);
+  //console.log(this.dead);
 
 };
 
@@ -371,7 +414,7 @@ Kall.prototype.drawScore = function(ctx) {
   
   // Color of the shadow
   ctx.shadowColor = '#1c5e66';
-  ctx.shadowBlur = 40
+  ctx.shadowBlur = 40;
 
   // Draw the score if the game is not over
   if (!main._isGameOver) {

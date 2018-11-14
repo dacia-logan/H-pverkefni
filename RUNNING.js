@@ -288,7 +288,9 @@ function requestPreloads() {
         Explosion10 : "images/Explosion/exp_010.png",
         Explosion11 : "images/Explosion/exp_011.png",
 
-        Heart : "images/Lives/heart.png",
+        //Heart : "images/Lives/heart.png",
+        Alive : "images/Lives/alive.png",
+        Dead : "images/Lives/dead.png",
         Gameover : "images/Lives/gameover.png",
         Background : "images/background.png",
 
@@ -320,7 +322,9 @@ function preloadDone() {
     g_platforms.small = new Sprite(g_images.small);
     g_platforms.esmall = new Sprite(g_images.esmall);
     g_platforms.large = new Sprite(g_images.large);
-    g_sprites.heart = new Sprite(g_images.Heart);
+    //g_sprites.heart = new Sprite(g_images.Heart);
+    g_sprites.alive = new Sprite(g_images.Alive);
+    g_sprites.dead = new Sprite(g_images.Dead);
 
 /*
     for (var i = 0; i < g_runSprite.length; i++) {
