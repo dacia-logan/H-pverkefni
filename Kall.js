@@ -412,23 +412,6 @@ Kall.prototype.drawLives = function(ctx) {
                                       camera.getPos().posY+20, this.heartSize, this.heartSize);   
                                                                 
   }
-
-/*
-  for (var j = 0; j < this.dead; j++) {
-    if (this.lives === 3) return;
-    else if (this.lives === 2) {
-      g_sprites.dead.drawAtAndEnlarge(ctx, camera.getPos().posX+15 + livesOffset * 3 + this.heartSize * 2,
-                                      camera.getPos().posY+20, this.heartSize, this.heartSize);
-    } else if (this.lives === 1) {
-      g_sprites.dead.drawAtAndEnlarge(ctx, camera.getPos().posX+15 + livesOffset * 2 + this.heartSize,
-                                      camera.getPos().posY+20, this.heartSize, this.heartSize);
-    } else {
-      g_sprites.dead.drawAtAndEnlarge(ctx, camera.getPos().posX+15 + livesOffset,
-                                      camera.getPos().posY+20, this.heartSize, this.heartSize);
-    }
-    
-  }  
-  */
    
   //onsole.log(this.lives);
   //console.log(this.dead);
