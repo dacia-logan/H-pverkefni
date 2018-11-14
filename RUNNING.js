@@ -138,12 +138,12 @@ function renderSimulation(ctx) {
         g_sprites.gameover.drawAtAndEnlarge(ctx,-gameOverOffset,0,g_canvas.width,g_canvas.height);
     } else {
     // Else draw the regular background
-      
+
         g_sprites.Background.drawAtAndEnlarge(ctx,0,-g_canvas.height*5,g_canvas.width*10,g_canvas.height*10);
 
     }
     entityManager.render(ctx);
-    
+
     if (g_renderSpatialDebug) spatialManager.render(ctx);
 }
 
@@ -160,46 +160,34 @@ function requestPreloads() {
         leftPlat : "images/tundraCliffLeft.png",
         midPlat : "images/tundraMid.png",
         rightPlat : "images/tundraCliffRight.png",
-        Run0 :  "images/Unicorn/run/run_000.png",
-        Run1 :  "images/Unicorn/run/run_001.png",
-        Run2 :  "images/Unicorn/run/run_002.png",
-        Run3 :  "images/Unicorn/run/run_003.png",
-        Run4 :  "images/Unicorn/run/run_004.png",
-        Run5 :  "images/Unicorn/run/run_005.png",
-        Run6 :  "images/Unicorn/run/run_006.png",
-        Run7 :  "images/Unicorn/run/run_007.png",
-        Run8 :  "images/Unicorn/run/run_008.png",
-        Run9 :  "images/Unicorn/run/run_009.png",
-        Run10 :  "images/Unicorn/run/Run_010.png",
-        Run11 :  "images/Unicorn/run/run_011.png",
-        Run12 :  "images/Unicorn/run/run_012.png",
-        Run13 :  "images/Unicorn/run/run_013.png",
-        Run14 :  "images/Unicorn/run/run_014.png",
-        Run15 :  "images/Unicorn/run/run_015.png",
-        Run16 :  "images/Unicorn/run/run_016.png",
-        Run17 :  "images/Unicorn/run/run_017.png",
-        Run18 :  "images/Unicorn/run/run_018.png",
-        Run19 :  "images/Unicorn/run/run_019.png",
-        Run20 :  "images/Unicorn/run/Run_020.png",
-        Run21 :  "images/Unicorn/run/run_021.png",
-        Run22 :  "images/Unicorn/run/run_022.png",
+        Run17 :  "images/Unicorn/run/run_000.png",
+        Run16 :  "images/Unicorn/run/run_001.png",
+        Run15 :  "images/Unicorn/run/run_002.png",
+        Run14 :  "images/Unicorn/run/run_003.png",
+        Run13 :  "images/Unicorn/run/run_004.png",
+        Run12 :  "images/Unicorn/run/run_005.png",
+        Run11 :  "images/Unicorn/run/run_006.png",
+        Run10 :  "images/Unicorn/run/run_007.png",
+        Run9 :  "images/Unicorn/run/run_008.png",
+        Run8 :  "images/Unicorn/run/Run_010.png",
+        Run7 :  "images/Unicorn/run/run_011.png",
+        Run6 :  "images/Unicorn/run/run_012.png",
+        Run5 :  "images/Unicorn/run/run_013.png",
+        Run4 :  "images/Unicorn/run/run_014.png",
+        Run3 :  "images/Unicorn/run/run_015.png",
+        Run2 :  "images/Unicorn/run/run_016.png",
+        Run1 :  "images/Unicorn/run/run_017.png",
+        Run0 :  "images/Unicorn/run/run_018.png",
+        Run26 :  "images/Unicorn/run/Run_020.png",
+        Run25 :  "images/Unicorn/run/run_021.png",
+        Run24 :  "images/Unicorn/run/run_022.png",
         Run23 :  "images/Unicorn/run/run_023.png",
-        Run24 :  "images/Unicorn/run/run_024.png",
-        Run25 :  "images/Unicorn/run/run_025.png",
-        Run26 :  "images/Unicorn/run/run_026.png",
-        Run27 :  "images/Unicorn/run/run_027.png",
-        Run28 :  "images/Unicorn/run/run_028.png",
-        Run29 :  "images/Unicorn/run/run_029.png",
-        Run30 :  "images/Unicorn/run/Run_030.png",
-        Run31 :  "images/Unicorn/run/run_031.png",
-        Run32 :  "images/Unicorn/run/run_032.png",
-        Run33 :  "images/Unicorn/run/run_033.png",
-        Run34 :  "images/Unicorn/run/run_034.png",
-        Run35 :  "images/Unicorn/run/run_035.png",
-        Run36 :  "images/Unicorn/run/run_036.png",
-        Run37 :  "images/Unicorn/run/run_037.png",
-        Run38 :  "images/Unicorn/run/run_038.png",
-        Run39 :  "images/Unicorn/run/run_039.png",
+        Run22 :  "images/Unicorn/run/run_024.png",
+        Run21 :  "images/Unicorn/run/run_025.png",
+        Run20 :  "images/Unicorn/run/run_026.png",
+        Run19 :  "images/Unicorn/run/run_027.png",
+        Run18 :  "images/Unicorn/run/run_028.png",
+
         /*Run0 :  "images/Unicorn/run_1.png",
         Run1 :  "images/Unicorn/run_2.png",
         Run2 :  "images/Unicorn/run_3.png",
@@ -218,19 +206,19 @@ function requestPreloads() {
         Run15 :  "images/Unicorn/run_16.png",
         Run16 :  "images/Unicorn/run_17.png",
         Run17 :  "images/Unicorn/run_18.png",*/
-        Jump0 : "images/Unicorn/jump/jump_000.png",
-        Jump1 : "images/Unicorn/jump/jump_001.png",
-        Jump2 : "images/Unicorn/jump/jump_002.png",
-        Jump3 : "images/Unicorn/jump/jump_003.png",
-        Jump4 : "images/Unicorn/jump/jump_004.png",
-        Jump5 : "images/Unicorn/jump/jump_005.png",
+        Jump12 : "images/Unicorn/jump/jump_000.png",
+        Jump11: "images/Unicorn/jump/jump_001.png",
+        Jump10 : "images/Unicorn/jump/jump_002.png",
+        Jump9 : "images/Unicorn/jump/jump_003.png",
+        Jump8 : "images/Unicorn/jump/jump_004.png",
+        Jump7 : "images/Unicorn/jump/jump_005.png",
         Jump6 : "images/Unicorn/jump/jump_006.png",
-        Jump7 : "images/Unicorn/jump/jump_007.png",
-        Jump8 : "images/Unicorn/jump/jump_008.png",
-        Jump9 : "images/Unicorn/jump/jump_009.png",
-        Jump10 : "images/Unicorn/jump/jump_010.png",
-        Jump11 : "images/Unicorn/jump/jump_011.png",
-        Jump12 : "images/Unicorn/jump/jump_012.png",
+        Jump5 : "images/Unicorn/jump/jump_007.png",
+        Jump4 : "images/Unicorn/jump/jump_008.png",
+        Jump3 : "images/Unicorn/jump/jump_009.png",
+        Jump2 : "images/Unicorn/jump/jump_010.png",
+        Jump1 : "images/Unicorn/jump/jump_011.png",
+        Jump0 : "images/Unicorn/jump/jump_012.png",
         // Sprites for when it's dashing
         Dash0 : "images/Unicorn/dash/dash_000.png",
         Dash1 : "images/Unicorn/dash/dash_001.png",
@@ -244,7 +232,7 @@ function requestPreloads() {
         Dash9 : "images/Unicorn/dash/dash_009.png",
         Dash10 : "images/Unicorn/dash/dash_010.png",
         Dash11 : "images/Unicorn/dash/dash_011.png",
-        
+
         // Sprites for when it's going down
         Down0 : "images/Unicorn/down/down_000.png",
         Down1 : "images/Unicorn/down/down_001.png",
@@ -272,6 +260,8 @@ function requestPreloads() {
         small : "images/Platforms/smallSize.png",
         esmall : "images/Platforms/extraSmallSize.png",
         large : "images/Platforms/largeSize.png",
+        long : "images/Platforms/long.png",
+    
         //the still star image
         Star : "images/Star/star.png",
         //the exploding star image
@@ -325,6 +315,7 @@ function preloadDone() {
     //g_sprites.heart = new Sprite(g_images.Heart);
     g_sprites.alive = new Sprite(g_images.Alive);
     g_sprites.dead = new Sprite(g_images.Dead);
+    g_platforms.long = new Sprite(g_images.long);
 
 /*
     for (var i = 0; i < g_runSprite.length; i++) {
@@ -359,19 +350,6 @@ function preloadDone() {
     g_runSprite[24]=new Sprite(g_images.Run24);
     g_runSprite[25]=new Sprite(g_images.Run25);
     g_runSprite[26]=new Sprite(g_images.Run26);
-    g_runSprite[27]=new Sprite(g_images.Run27);
-    g_runSprite[28]=new Sprite(g_images.Run28);
-    g_runSprite[29]=new Sprite(g_images.Run29);
-    g_runSprite[30]=new Sprite(g_images.Run30);
-    g_runSprite[31]=new Sprite(g_images.Run31);
-    g_runSprite[32]=new Sprite(g_images.Run32);
-    g_runSprite[33]=new Sprite(g_images.Run33);
-    g_runSprite[34]=new Sprite(g_images.Run34);
-    g_runSprite[35]=new Sprite(g_images.Run35);
-    g_runSprite[36]=new Sprite(g_images.Run36);
-    g_runSprite[37]=new Sprite(g_images.Run37);
-    g_runSprite[38]=new Sprite(g_images.Run38);
-    g_runSprite[39]=new Sprite(g_images.Run39);
 
     g_jumpSprite[0]=new Sprite(g_images.Jump0);
     g_jumpSprite[1]=new Sprite(g_images.Jump1);
@@ -386,6 +364,25 @@ function preloadDone() {
     g_jumpSprite[10]=new Sprite(g_images.Jump10);
     g_jumpSprite[11]=new Sprite(g_images.Jump11);
     g_jumpSprite[12]=new Sprite(g_images.Jump12);
+    g_jumpSprite[13]=new Sprite(g_images.Down18);
+    g_jumpSprite[14]=new Sprite(g_images.Down17);
+    g_jumpSprite[15]=new Sprite(g_images.Down16);
+    g_jumpSprite[16]=new Sprite(g_images.Down15);
+    g_jumpSprite[17]=new Sprite(g_images.Down14);
+    g_jumpSprite[18]=new Sprite(g_images.Down13);
+    g_jumpSprite[19]=new Sprite(g_images.Down12);
+    g_jumpSprite[20]=new Sprite(g_images.Down11);
+    g_jumpSprite[21]=new Sprite(g_images.Down10);
+    g_jumpSprite[22]=new Sprite(g_images.Down9);
+    g_jumpSprite[23]=new Sprite(g_images.Down8);
+    g_jumpSprite[24]=new Sprite(g_images.Down7);
+    g_jumpSprite[25]=new Sprite(g_images.Down6);
+    g_jumpSprite[26]=new Sprite(g_images.Down5);
+    g_jumpSprite[27]=new Sprite(g_images.Down4);
+    g_jumpSprite[28]=new Sprite(g_images.Down3);
+    g_jumpSprite[29]=new Sprite(g_images.Down2);
+    g_jumpSprite[30]=new Sprite(g_images.Down1);
+    g_jumpSprite[31]=new Sprite(g_images.Down0);
 
     g_dashSprite[0]=new Sprite(g_images.Dash0);
     g_dashSprite[1]=new Sprite(g_images.Dash1);
