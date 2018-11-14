@@ -76,7 +76,7 @@ Kall.prototype.update = function(du){
     //it is dashing or not
     this.setSpeed(du);
 
-    if(this.inAir || this.isThrowing){
+    if(this.inAir){
       this.framecounter+=0.15;
       if (this.framecounter>=9.1) {
         this.framecounter=9.1;

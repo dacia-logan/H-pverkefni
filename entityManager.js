@@ -114,7 +114,8 @@ setPlatforms: function(){
 
         if(primary && platX + platWidth <= camera.getPos().posX+500 && !this._platforms[entity].getPlatformPushed()){
             this._platforms[entity].setPlatformPushed();
-            
+           
+            //set different platsets
             if(plats >= 12) { this.platSet4(); }
             else if( plats >= 8) { this.platSet3(); }
             else if(plats >=4) {this.platSet1(); }
