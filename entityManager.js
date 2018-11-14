@@ -59,9 +59,9 @@ init: function() {
 // Platform functions \\
 platSet1:function(){
     var x = camera.getPos().posX + g_canvas.width;
-    var secX = x+750;
+    var secX = x+550;
     var mainY = 500;
-    var secY = 250;
+    var secY = 180;
     this._platforms.push(new Platform(1,true,x, mainY));
     this._platforms.push(new Platform(4,false,secX,secY));
 },

@@ -28,14 +28,14 @@ function Platform(descr, p, x, y) {
         this.width = g_images.normal2.width*2.3;
         this.height = g_images.normal2.height*2.1;
 
-        
+
     }
 
     else if(descr===4){
 
         this.width = g_images.normal3.width*2.4;
         this.height = g_images.normal3.height*1.8;
-        
+
     }
 
     else if(descr===5){
@@ -56,7 +56,7 @@ function Platform(descr, p, x, y) {
         this.width = g_images.long.width*1.3;
         this.height = g_images.long.height*1.2;
     }
-    
+
 
     this.type = "Platform";
 
@@ -91,16 +91,16 @@ Platform.prototype.update = function(du){
     }
     else  spatialManager.register(this);
 
-    
+
 };
 
 
 Platform.prototype._spawnPlatform = function () {
-   
+
 };
 
 Platform.prototype.drawPlat = function(ctx){
-  
+
 if(this.plat===1){
     g_platforms.large.drawAtAndEnlarge(ctx, this.x, this.y, this.width, this.height);
 }
@@ -128,7 +128,7 @@ else if(this.plat===6) {
 else if(this.plat===7) {
     g_platforms.long.drawAtAndEnlarge(ctx, this.x, this.y, this.width, this.height);
 }
-    
+
 };
 
 Platform.prototype.render = function(ctx){
