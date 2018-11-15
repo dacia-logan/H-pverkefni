@@ -78,7 +78,7 @@ Kall.prototype.update = function(du){
 
     this.comboLifeSpan -= du;
     if (this.lifeSpan < 0) return entityManager.KILL_ME_NOW;
-
+    
     console.log(this.framecounter);
     console.log(this.Jumpframecounter);
     console.log(this.Dashframecounter);
