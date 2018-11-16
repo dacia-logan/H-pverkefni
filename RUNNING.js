@@ -262,9 +262,15 @@ function requestPreloads() {
         large : "images/Platforms/largeSize.png",
         long : "images/Platforms/long.png",
     
-        //the still star image
-        Star : "images/Star/star.png",
-        //the exploding star image
+        // the gem 
+        Gem0 : "images/Gem/gem_000.png",
+        Gem1 : "images/Gem/gem_001.png",
+        Gem2 : "images/Gem/gem_002.png",
+        Gem3 : "images/Gem/gem_003.png",
+        Gem4 : "images/Gem/gem_004.png",
+        Gem5 : "images/Gem/gem_005.png",
+
+        // the explosion
         Explosion0 : "images/Explosion/exp_000.png",
         Explosion1 : "images/Explosion/exp_001.png",
         Explosion2 : "images/Explosion/exp_002.png",
@@ -299,9 +305,9 @@ var g_runSprite=[];
 var g_jumpSprite=[];
 var g_downSprite=[];
 var g_dashSprite=[];
-var g_starSprite=[];        //the still star sprite
-var g_explosionSprite=[];   //the explosion sprite
-var g_rainbowSprite = [];     //the rainbow sprite
+var g_gemSprites = [];      // the gem 
+var g_explosionSprite=[];   // the explosion 
+var g_rainbowSprite = [];   // the rainbow 
 
 function preloadDone() {
     g_sprites.Background = new Sprite(g_images.Background);
@@ -396,9 +402,16 @@ function preloadDone() {
     g_dashSprite[9]=new Sprite(g_images.Dash9);
     g_dashSprite[10]=new Sprite(g_images.Dash10);
     g_dashSprite[11]=new Sprite(g_images.Dash11);
-    //the star sprite
-    g_starSprite=new Sprite(g_images.Star);
-    //the explosion sprite
+    
+    // the gem 
+    g_gemSprites[0] = new Sprite(g_images.Gem0);
+    g_gemSprites[1] = new Sprite(g_images.Gem1);
+    g_gemSprites[2] = new Sprite(g_images.Gem2);
+    g_gemSprites[3] = new Sprite(g_images.Gem3);
+    g_gemSprites[4] = new Sprite(g_images.Gem4);
+    g_gemSprites[5] = new Sprite(g_images.Gem5);
+
+    // the explosion 
     g_explosionSprite[0]=new Sprite(g_images.Explosion0);
     g_explosionSprite[1]=new Sprite(g_images.Explosion1);
     g_explosionSprite[2]=new Sprite(g_images.Explosion2);
@@ -411,11 +424,12 @@ function preloadDone() {
     g_explosionSprite[9]=new Sprite(g_images.Explosion9);
     g_explosionSprite[10]=new Sprite(g_images.Explosion10);
     g_explosionSprite[11]=new Sprite(g_images.Explosion11);
-    //the rainbow
+
+    // the rainbow
     g_rainbowSprite= new Sprite(g_images.Rainbow);
+
     entityManager.init();
     init();
-
     main.init();
 }
 

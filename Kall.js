@@ -37,7 +37,7 @@ function Kall(descr) {
     this.isThrowing=false;
 
     //should explode when colliding with left edge of platform
-    //and when colliding with star entity
+    //and when colliding with gem entity
     this.isExploding = false;
 
     //dashing, extra speed
@@ -79,9 +79,9 @@ Kall.prototype.update = function(du){
     this.comboLifeSpan -= du;
     if (this.lifeSpan < 0) return entityManager.KILL_ME_NOW;
 
-    console.log(this.framecounter);
-    console.log(this.Jumpframecounter);
-    console.log(this.Dashframecounter);
+    //console.log(this.framecounter);
+    //console.log(this.Jumpframecounter);
+    //console.log(this.Dashframecounter);
 
     //set the xVel of the unicorn based on if
     //it is dashing or not
@@ -159,8 +159,8 @@ Kall.prototype.collidesWith = function(du){
         var ent = spatialManager.isHit(this.x+60, this.y+30, this.width-145, this.height-40);                 //Þær gera collideboxið hjá einhyrningnum minna, munu koma 2-3 fyrir aftur í platformcollide
 
         for(i=0 ; i < ent.length; i++){
-          if(ent[i].getType() === "Star"){                //collision with the star
-            this.starCollide(ent[i]);
+          if(ent[i].getType() === "Gem"){                //collision with the gem
+            this.gemCollide(ent[i]);
           } else if (ent[i].getType() === "Platform"){    //collision with the platform
             this.platformCollide(ent[i]);
           } else if (ent[i].getType() === "Rainbow") {    //collision with rainbow
@@ -173,10 +173,10 @@ Kall.prototype.collidesWith = function(du){
 };
 
 
-Kall.prototype.starCollide = function(star){
-    //if we dash into the star the star explodes
+Kall.prototype.gemCollide = function(gem){
+    //if we dash into the gem the gem explodes
     if (this.isDashing) {
-      star.explodes();
+      gem.explodes();
     //else the unicorn loses a life
     } else  {
       this.loseLife();
