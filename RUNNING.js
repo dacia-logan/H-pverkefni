@@ -139,7 +139,7 @@ function renderSimulation(ctx) {
     } else {
     // Else draw the regular background
         
-        g_sprites.Background.drawAtAndEnlarge(ctx,0,0,g_sprites.Background.width, g_sprites.Background.height);
+        g_sprites.Background.drawAtAndEnlarge(ctx,0,-1000,g_sprites.Background.width, g_sprites.Background.height);
 
     }
     entityManager.render(ctx);
