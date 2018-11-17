@@ -80,7 +80,8 @@ Kall.prototype.update = function(du){
     //set the xVel of the unicorn based on ifw
     //it is dashing or not
     this.setSpeed(du);
-
+    this.defVelX+=0.003*du;
+    console.log(this.defVelX);
     if(this.inAir){
       this.Jumpframecounter+=0.378;
       if (this.Jumpframecounter>=26) {
@@ -122,7 +123,7 @@ Kall.prototype.update = function(du){
     }
 
     // Update the score
-    this.score += Math.floor(this.scoreSpeed);
+    this.score += Math.floor(this.scoreSpeed*du);
     //console.log(this.score);
 };
 

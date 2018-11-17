@@ -52,6 +52,22 @@ deferredSetup : function () {
     this._categories = [this._platforms, this._dummies, this._star, this._knifes, this._rainbow];
 },
 
+reset : function(){
+  for (var c = 0; c < this._categories.length; ++c) {
+
+      var aCategory = this._categories[c];
+      var i = 0;
+
+      while (i < aCategory.length) {
+
+          var status = aCategory[i].reset();
+          i++;
+          }
+      }
+    },
+
+
+
 init: function() {
    this.generateMap();
 },
@@ -100,7 +116,7 @@ generatePlat : function(descr,x,y) {
 
 setPlatforms: function(){
     //TODO nota þetta sem viðmið hvaða platform er verið að nota.
-    var a = Math.floor(util.randRange(1,5)); 
+    var a = Math.floor(util.randRange(1,5));
     var plats = Math.floor(util.randRange(0,17));
     //creates a random number, when the number is 1 we create a star and butterfly
     var makeStar =  Math.floor(util.randRange(0,2));
@@ -114,7 +130,7 @@ setPlatforms: function(){
 
         if(primary && platX + platWidth <= camera.getPos().posX+500 && !this._platforms[entity].getPlatformPushed()){
             this._platforms[entity].setPlatformPushed();
-            
+
             if(plats >= 12) { this.platSet4(); }
             else if( plats >= 8) { this.platSet3(); }
             else if(plats >=4) {this.platSet1(); }
