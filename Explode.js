@@ -8,29 +8,42 @@
 
 var explode = {
 
-    speed : 2.2,            // the amount of frames for each pulse
-    frameCounter : 0,       // starting point of the counter
-    extraSize : 70,         // have the explosion be a little bigger than the original
+    speed : 1,                 // the amount of frames for each pulse
+    frameCounterGem : 0,       // starting point of the counter for gem
+    frameCounterUnicorn : 0,   // starting point of the counter for unicorn
 
     // increases the frame on each call to the function
-    frames : function () {
-        this.frameCounter += this.speed;
+    frames : function (type, numberOfFrames) {
+        if (type === "Gem" && this.frameCounterGem <= numberOfFrames-this.speed) {
+            this.frameCounterGem += this.speed;
+        }
+        if (type === "Kall" && this.frameCounterUnicorn <= numberOfFrames-this.speed) {
+            this.frameCounterUnicorn += this.speed; 
+        } 
     },
 
     // returns if the animation for the explosion is over or not
-    done : function (numberOfFrames) {
-        if (this.frameCounter >= numberOfFrames-this.speed) {
-            this.frameCounter = 0; 
+    done : function (numberOfFrames,type) {
+        if (type === "Gem" && this.frameCounterGem >= numberOfFrames) {
+            this.frameCounterGem = 0; 
             return true;
         } 
-        else return false;
+        if (type === "Kall" && this.frameCounterUnicorn >= numberOfFrames) {
+            this.frameCounterUnicorn = 0;
+            return true;
+        }
+
+        return false;
     },
 
     // draws the animation for the explosion
-    draw : function (ctx,x,y,width,height,g_explosionSprite) {
-        g_explosionSprite[Math.floor(this.frameCounter)].drawAtAndEnlarge(
-            ctx,x,y,width+this.extraSize,height+this.extraSize);
-        console.log("hello draw");
+    draw : function (ctx,x,y,width,height,g_explosionSprite,type) {
+        var counter; 
+        if (type === "Gem") counter = this.frameCounterGem;
+        if (type === "Kall") counter = this.frameCounterUnicorn;
+
+        g_explosionSprite[Math.floor(counter)].drawAtAndEnlarge(
+            ctx,x,y,width,width);
     }
 
 }

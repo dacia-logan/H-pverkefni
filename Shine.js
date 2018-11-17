@@ -63,8 +63,7 @@ Shine.prototype.update = function(du) {
     // and
     // If the unicorn goes further than the shine, the player has failed to collect it,
     // and thus loses his shine combo bonus.
-    if (this.x <= camera.getPos().posX - this.width) {
-        //this.lostCombo(); 
+    if (this.x <= camera.getPos().posX - this.width) { 
         this.kill();
         score.gotLastShine = false;
     }

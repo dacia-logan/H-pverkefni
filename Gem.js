@@ -51,10 +51,10 @@ Gem.prototype.render = function(ctx){
     if (!main._isGameOver) {
         // if the gem has been hit, draw the explosion
         if (this.isExploding) { 
-            // this increases the framecount for the explosion animation
-            explode.frames();
             // this draws the explosion
-            explode.draw(ctx,this.x,this.y,this.width,this.height,g_explosionSprite);
+            explode.draw(ctx,this.x,this.y,this.width,this.height,g_explosionSprite,this.type);
+            // this increases the framecount for the explosion animation
+            explode.frames(this.type,g_explosionSprite.length);
         // if the gem has not been hit draw a gem
         } else { 
             g_gemSprites[Math.floor(this.gemToDraw)].drawAtAndEnlarge(
@@ -77,8 +77,8 @@ Gem.prototype.update = function(du) {
             score.gotLastGem = false;
     }
 
-    // when and if the gem is done exploding then kill it
-    if (explode.done(g_explosionSprite.length)) this.kill(); 
+    // if the gem is done exploding then kill it
+    if (explode.done(g_explosionSprite.length, this.type)) this.kill(); 
 
     // re-register to spatial manager
     // if isDead
