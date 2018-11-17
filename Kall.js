@@ -136,8 +136,7 @@ Kall.prototype.setSpeed = function(du) {
   if (this.isDashing && this.dashCounter !== 0)
   { //is the unicorn dashing and is the dashcounter not zero?
     this.dashCounter--;         //dash for only 15 frames
-    this.applyAccel(1,0,du) ;   //set velocity to more speed
-    this.jumpCounter=1;         //unicorn can jump once after it has dashed
+    this.applyAccel(1,0,du) ;   //set velocity to more speed        //unicorn can jump once after it has dashed
     this.velY=0;                // no vertical velocity while dashing
     this.Dashframecounter+=1;
     if (this.Dashframecounter>11) {
@@ -177,6 +176,7 @@ Kall.prototype.starCollide = function(star){
     //if we dash into the star the star explodes
     if (this.isDashing) {
       star.explodes();
+      if(this.jumpCounter<2) this.jumpCounter+=1;
     //else the unicorn loses a life
     } else  {
       this.loseLife();

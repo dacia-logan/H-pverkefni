@@ -74,6 +74,7 @@ platSet2:function(){
     var y1 = 450;
     var y2 = 130;
     var y3 = 1;
+    this._star.push(new Star(x3+100, y3-70));
     this._platforms.push(new Platform(1,false,x1, y1));
     this._platforms.push(new Platform(4,false,x2,y2));
     this._platforms.push(new Platform(4,true,x3,y3));
