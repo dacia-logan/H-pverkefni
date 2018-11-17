@@ -10,8 +10,8 @@ function Kall(descr) {
     this.velY=0;
 
     //hæð og breidd
-    this.width = 200;
-    this.height = 100;
+    this.width = 170;
+    this.height = 85;
 
     // Hæð og breidd á jump-spriteinum
     //this.jumpWidth = g_jumpSprite[0].width;
@@ -110,7 +110,6 @@ Kall.prototype.update = function(du){
     this.applyAccel(0,this.gravity,du);
     this.collidesWith(du);
 
-
      //check if out of canvas
     if (this.y > g_canvas.height) {
       this.loseLife();
@@ -128,10 +127,8 @@ Kall.prototype.update = function(du){
     //else register
     else
       spatialManager.register(this);
-    //check if out of canvas
-    if (this.y > g_canvas.height) {
-      this.loseLife();
-    }
+
+   
 
     // Update the score
     this.score += Math.floor(this.scoreSpeed*du);
@@ -160,8 +157,10 @@ Kall.prototype.setSpeed = function(du) {
 
 Kall.prototype.collidesWith = function(du){
 
-    if (spatialManager.isHit(this.x+60, this.y+30, this.width-145, this.height-40).length != 0){              //þessar tölur fengum við út með því að prófa okkur áfram í render á spatial manager
-        var ent = spatialManager.isHit(this.x+60, this.y+30, this.width-145, this.height-40);                 //Þær gera collideboxið hjá einhyrningnum minna, munu koma 2-3 fyrir aftur í platformcollide
+    if (spatialManager.isHit(this.x+65, this.y+30,
+      this.width-125, this.height-40).length != 0){              //þessar tölur fengum við út með því að prófa okkur áfram í render á spatial manager
+        var ent = spatialManager.isHit(this.x+65, this.y+30,     //Þær gera collideboxið hjá einhyrningnum minna, munu koma 2-3 fyrir aftur í platformcollide
+          this.width-125, this.height-40);                    
 
         for(i=0 ; i < ent.length; i++){
           if(ent[i].getType() === "Gem"){                //collision with the gem
@@ -194,10 +193,10 @@ Kall.prototype.platformCollide = function(entity){
     var posY = entity.getPos().posY*1.035;      //til þess að þetta looki meira smooth
     var eWidth = entity.getWidth()-30;          //Breytti því líka þegar X er togglað
     var eHeight = entity.getHeight()*0.6;
-    var x=this.x+70;
-    var y=this.y+30;
-    var w=this.width-135;
-    var h=this.height-40;
+    var x = this.x+65;
+    var y = this.y+30;
+    var w = this.width-125;
+    var h = this.height-40;
 
     //LEFT EDGE - character should explode and lose a life
     if (x < posX  &&  y+h >= posY+12)  //Gerði y coord til að collisionið sé
@@ -304,10 +303,9 @@ Kall.prototype.loseLife = function () {
 
     else {
       entityManager.reset();
-      this.velX=1;
+      this.defVelX=5;
       this.y =200;
       this.x =500;
-      this.velY=0;
     }
 
 };

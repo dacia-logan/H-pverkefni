@@ -63,6 +63,7 @@ reset : function(){
   for(var Id in this._shine){
     this._shine[Id].kill();
   }
+  Background.reset();
   this._platforms.push(new Platform(1, true, 300, 500));
     },
 
@@ -86,13 +87,13 @@ platSet1:function(makeGem){
 
 platSet2:function(makeGem){
     var x1 = camera.getPos().posX + g_canvas.width;
-    var x2 = x1-100;
+    var x2 = x1;
     var x3 = x1+1000;
     var y1 = 450;
     var y2 = 130;
     var y3 = 1;
-    this._platforms.push(new Platform(1,false,x1, y1));
     this._platforms.push(new Platform(4,false,x2,y2));
+    this._platforms.push(new Platform(1,false,x1, y1));
     this._platforms.push(new Platform(4,true,x3,y3));
     if (makeGem <= 8) this._gem.push(new Gem(x2,y2,4));
     this._shine.push(new Shine(x3,y3,4));

@@ -113,6 +113,25 @@ function processDiagnostics() {
 }
 
 
+// Mini background class gerður til þess 
+// að renderSimulation verði ekki dirty
+var Background = {
+    x : 0,
+    y : -750,
+
+    render : function(ctx){
+        if(this.x+g_sprites.Background.width<camera.getPos().posX){
+            this.x=this.x+g_sprites.Background.width;
+        }
+        g_sprites.Background.drawAtAndEnlarge(ctx,this.x,this.y,g_sprites.Background.width, g_sprites.Background.height);
+        g_sprites.Background.drawAtAndEnlarge(ctx,this.x+g_sprites.Background.width,this.y,g_sprites.Background.width, g_sprites.Background.height);
+    },
+    
+    reset : function(){
+        this.x=0;
+    }
+    
+}
 // =================
 // RENDER SIMULATION
 // =================
@@ -129,6 +148,7 @@ function processDiagnostics() {
 
 var KEY_PLAYAGAIN = keyCode('P');
 
+
 function renderSimulation(ctx) {
 
     var gameOverOffset = 50;
@@ -138,7 +158,9 @@ function renderSimulation(ctx) {
         g_sprites.gameover.drawAtAndEnlarge(ctx,-gameOverOffset,0,g_canvas.width,g_canvas.height);
     } else {
     // Else draw the regular background
-        g_sprites.Background.drawAtAndEnlarge(ctx,0,0,g_sprites.Background.width, g_sprites.Background.height);
+        Background.render(ctx);
+      
+
     }
     entityManager.render(ctx);
 
@@ -493,5 +515,5 @@ function preloadDone() {
 
 // Kick it off
 var song = new Audio("sounds/always.mp3");
-song.play();
+//song.play();
 requestPreloads();
