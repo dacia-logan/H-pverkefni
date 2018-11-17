@@ -31,7 +31,7 @@ _platforms : [],
 _dummies : [],
 _gem : [],
 _knifes :[],
-_rainbow : [],
+_shine : [],
 _combo : [],
 
 
@@ -50,7 +50,7 @@ KILL_ME_NOW : -1,
 // i.e. thing which need `this` to be defined.
 //
 deferredSetup : function () {
-    this._categories = [this._platforms, this._dummies, this._gem, this._knifes, this._rainbow, this._combo];
+    this._categories = [this._platforms, this._dummies, this._gem, this._knifes, this._shine, this._combo];
 },
 
 init: function() {
@@ -66,6 +66,7 @@ platSet1:function(makeGem){
     this._platforms.push(new Platform(1,true,x1, y1));
     this._platforms.push(new Platform(4,false,x2,y2));
     if (makeGem <= 8) this._gem.push(new Gem(x2,y2,4));
+    this._shine.push(new Shine(x1,y1,1));
 },
 
 platSet2:function(makeGem){
@@ -79,6 +80,7 @@ platSet2:function(makeGem){
     this._platforms.push(new Platform(4,false,x2,y2));
     this._platforms.push(new Platform(4,true,x3,y3));
     if (makeGem <= 8) this._gem.push(new Gem(x2,y2,4));
+    this._shine.push(new Shine(x3,y3,4));
 },
 
 platSet3:function(makeGem){
@@ -86,6 +88,7 @@ platSet3:function(makeGem){
     var mainY = 400;
     this._platforms.push(new Platform(1,true,x, mainY));
     if (makeGem <= 8) this._gem.push(new Gem(x,mainY,1));
+    this._shine.push(new Shine(x,mainY,1));
 },
 
 platSet4:function(makeGem){
@@ -99,6 +102,7 @@ platSet4:function(makeGem){
     this._platforms.push(new Platform(5,false,x2, y2));
     this._platforms.push(new Platform(3,true, x3, y3));
     if (makeGem <= 8) this._gem.push(new Gem(x2,y2,5));
+    this._shine.push(new Shine(x3,y3,3));
 },
 
 platSet5:function(makeGem){
@@ -107,10 +111,11 @@ platSet5:function(makeGem){
     var x3 = x1+1000;
     var y1 = 330;
     var y2 = 230;
-    this._platforms.push(new Platform(3,false,x1, y1));
+    this._platforms.push(new Platform(3,false,x1,y1));
     this._platforms.push(new Platform(7,false,x2,y2));
-    this._platforms.push(new Platform(2,true, x3, y2));
+    this._platforms.push(new Platform(2,true, x3,y2));
     if (makeGem <= 8) this._gem.push(new Gem(x2,y2,7));
+    this._shine.push(new Shine(x3,y2,2));
 },
 
 
@@ -120,7 +125,7 @@ setPlatforms: function(){
     var plats = Math.floor(util.randRange(0,16));
     //creates a random number, when the number is 1 we create a gem and butterfly
     var makeGem =  Math.floor(util.randRange(0,10));
-    var makeButterfly =  Math.floor(util.randRange(0,2));
+    //var makeButterfly =  1;/*Math.floor(util.randRange(0,2));*/
 
     for(var entity in this._platforms){
 
@@ -140,12 +145,12 @@ setPlatforms: function(){
             //make a new gem when 'makeGem' is equal to 1
             //if (makeGem <= 8) this._gem.push(new Gem(a));
             //make a new butterfly when 'makeButterfly' is equal to 1
-            if (makeButterfly === 1) {
-                this._rainbow.push(new Rainbow(a));
-                if (Rainbow.isCaught) {
+            //if (makeButterfly === 1) {
+                //this._shine.push(new Shine(a));
+                if (Shine.isCaught) {
                     this._combo.push(new Combo(a));
                 }
-            }
+            //}
 
         }
     }

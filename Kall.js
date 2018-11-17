@@ -60,8 +60,8 @@ function Kall(descr) {
 
     this.type =  "Kall";
 
-    //collision helper with rainbowCollide
-    this.hasRainbowCombo = false;
+    //collision helper with shineCollide
+    this.hasShineCombo = false;
     this.combo = 0;
 };
 
@@ -163,8 +163,8 @@ Kall.prototype.collidesWith = function(du){
             this.gemCollide(ent[i]);
           } else if (ent[i].getType() === "Platform"){    //collision with the platform
             this.platformCollide(ent[i]);
-          } else if (ent[i].getType() === "Rainbow") {    //collision with rainbow
-            this.rainbowCollide(ent[i]);
+          } else if (ent[i].getType() === "Shine") {    //collision with shine
+            this.shineCollide(ent[i]);
           }
         }
     } else {
@@ -242,15 +242,15 @@ Kall.prototype.platformCollide = function(entity){
     }
 };
 
-Kall.prototype.rainbowCollide = function (rainbow) {
+Kall.prototype.shineCollide = function (shine) {
 
   //TODO LAGA ÞETTA ÞANNIG AÐ COMBO DETTI ÚT.
 
-      //console.log(this.hasRainbowCombo);
-      this.hasRainbowCombo = true;
+      //console.log(this.hasShineCombo);
+      this.hasShineCombo = true;
      // console.log(this.score);
-      rainbow.kill();
-      if (this.hasRainbowCombo) {
+      shine.kill();
+      if (this.hasShineCombo) {
         this.combo++;
         this.score += this.combo*10;
       } else {
@@ -378,7 +378,7 @@ Kall.prototype.render = function(ctx){
 
     this.drawLives(ctx);
     this.drawScore(ctx);
-    if (this.hasRainbowCombo) {
+    if (this.hasShineCombo) {
       this.drawCombo(ctx, this.x, this.y);
     }
 };

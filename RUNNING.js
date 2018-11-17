@@ -290,8 +290,12 @@ function requestPreloads() {
         Gameover : "images/Lives/gameover.png",
         Background : "images/background.png",
 
-        //the rainbow image
-        Rainbow : "images/Rainbow/rainbow_000.png"
+        //the shine image
+        Shine0 : "images/Shine/shine_000.png",
+        Shine1 : "images/Shine/shine_001.png",
+        Shine2 : "images/Shine/shine_002.png",
+        Shine3 : "images/Shine/shine_001.png",
+        Shine4 : "images/Shine/shine_000.png"
 
 
     };
@@ -307,7 +311,7 @@ var g_downSprite=[];
 var g_dashSprite=[];
 var g_gemSprites = [];      // the gem 
 var g_explosionSprite=[];   // the explosion 
-var g_rainbowSprite = [];   // the rainbow 
+var g_shineSprite = [];   // the shine 
 
 function preloadDone() {
     g_sprites.Background = new Sprite(g_images.Background);
@@ -412,21 +416,23 @@ function preloadDone() {
     g_gemSprites[5] = new Sprite(g_images.Gem5);
 
     // the explosion 
-    g_explosionSprite[0]=new Sprite(g_images.Explosion0);
-    g_explosionSprite[1]=new Sprite(g_images.Explosion1);
-    g_explosionSprite[2]=new Sprite(g_images.Explosion2);
-    g_explosionSprite[3]=new Sprite(g_images.Explosion3);
-    g_explosionSprite[4]=new Sprite(g_images.Explosion4);
-    g_explosionSprite[5]=new Sprite(g_images.Explosion5);
-    g_explosionSprite[6]=new Sprite(g_images.Explosion6);
-    g_explosionSprite[7]=new Sprite(g_images.Explosion7);
-    g_explosionSprite[8]=new Sprite(g_images.Explosion8);
-    g_explosionSprite[9]=new Sprite(g_images.Explosion9);
-    g_explosionSprite[10]=new Sprite(g_images.Explosion10);
-    g_explosionSprite[11]=new Sprite(g_images.Explosion11);
+    g_explosionSprite[0] = new Sprite(g_images.Explosion0);
+    g_explosionSprite[1] = new Sprite(g_images.Explosion1);
+    g_explosionSprite[2] = new Sprite(g_images.Explosion2);
+    g_explosionSprite[3] = new Sprite(g_images.Explosion3);
+    g_explosionSprite[4] = new Sprite(g_images.Explosion4);
+    g_explosionSprite[5] = new Sprite(g_images.Explosion5);
+    g_explosionSprite[6] = new Sprite(g_images.Explosion6);
+    g_explosionSprite[7] = new Sprite(g_images.Explosion7);
+    g_explosionSprite[8] = new Sprite(g_images.Explosion8);
+    g_explosionSprite[9] = new Sprite(g_images.Explosion9);
+    g_explosionSprite[10] = new Sprite(g_images.Explosion10);
+    g_explosionSprite[11] = new Sprite(g_images.Explosion11);
 
-    // the rainbow
-    g_rainbowSprite= new Sprite(g_images.Rainbow);
+    // the shine
+    g_shineSprite[0] = new Sprite(g_images.Shine0);
+    g_shineSprite[1] = new Sprite(g_images.Shine1);
+    g_shineSprite[2] = new Sprite(g_images.Shine2);
 
     entityManager.init();
     init();

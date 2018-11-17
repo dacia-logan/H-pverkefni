@@ -21,7 +21,7 @@ function Gem(x,y,platNum) {
     this.x = x+offset-(this.width/2);                                             
 
     // set the y position of the gem
-    this.y = y-this.height;        
+    this.y = y-this.height+10;        
 
     // is the gem exploding?
     this.isExploding = false;
