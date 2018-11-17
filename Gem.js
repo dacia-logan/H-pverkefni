@@ -15,10 +15,10 @@ function Gem(x,y,platNum) {
     if (platNum === 4) offset = util.randRange((g_images.normal3.width*2.4)/2, g_images.normal3.width*2.4);
     if (platNum === 1) offset = util.randRange((g_images.large.width*2.6)/2, g_images.large.width*2.6); 
     if (platNum === 5) offset = util.randRange((g_images.small.width*1.5)/2, g_images.small.width*1.5);
-    if (platNum === 7) offset = ((g_images.long.width*1.3)/2)-10;
+    if (platNum === 7) offset = ((g_images.long.width*1.3)/2)-10+(this.width/2);
 
     // set the position of the gem
-    this.x = x+offset-(this.width/2);                                             
+    this.x = x+offset-(this.width);                                             
 
     // set the y position of the gem
     this.y = y-this.height+10;        

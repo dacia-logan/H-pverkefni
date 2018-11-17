@@ -5,7 +5,7 @@ function Kall(descr) {
     //upphafsstaða og upphafshraði
     this.x = 200;
     this.y = 400;
-    this.defVelX = 6;
+    this.defVelX=5;
     this.velX=this.defVelX;
     this.velY=0;
 
@@ -84,11 +84,12 @@ Kall.prototype.update = function(du) {
     //set the xVel of the unicorn based on if
     //it is dashing or not
     this.setSpeed(du);
-
-    if (this.inAir) {
-      this.Jumpframecounter += 0.378;
-      if (this.Jumpframecounter >= 26) {
-        this.Jumpframecounter = 31.1;
+    this.defVelX+=0.003*du;
+    console.log(this.defVelX);
+    if(this.inAir){
+      this.Jumpframecounter+=0.378;
+      if (this.Jumpframecounter>=26) {
+        this.Jumpframecounter=31.1;
       }
     }
     else {
@@ -149,7 +150,7 @@ Kall.prototype.setSpeed = function(du) {
   } else
   {//unicorn is not dashing anymore move as usual
     this.isDashing = false;     //not dashing
-    this.velX=this.defVelX;                //set velocity to normal speed
+    this.velX=this.defVelX;     //set velocity to normal speed
     this.dashCounter = 15;      //reset the dashCounter to 15 again
   }
 };
@@ -203,7 +204,7 @@ Kall.prototype.platformCollide = function(entity){
     var w = this.width-135;
     var h = this.height-40;
 
-    //LEFT EDGE - character should explode and lose a life                         
+    //LEFT EDGE - character should explode and lose a life
     if (x < posX  &&  y+h >= posY+12)  //Gerði y coord til að collisionið sé
     /*&& this.x+this.width-5 < entity.getPos().posX)*/                            //meira forgiving utaf collisionið er stundum ekkert
     {                                                                             // alltor nakvæmt miðað við platforms
@@ -216,7 +217,7 @@ Kall.prototype.platformCollide = function(entity){
       this.loseLife();
       return;
     }
-    
+
     //TOP EDGE - character should run on platform
     else if (y < posY)
     {
@@ -227,7 +228,7 @@ Kall.prototype.platformCollide = function(entity){
           this.y--;
           var y=this.y+30;
         }
-        this.y = posY-this.height-(30-40);   //y and height difference    
+        this.y = posY-this.height-(30-40);   //y and height difference
         this.velY=0;
         this.jumpCounter=2;
         this.inAir=false;
@@ -283,6 +284,8 @@ Kall.prototype.loseLife = function () {
     }
 
     else {
+      entityManager.reset();
+      this.velX=1;
       this.y =200;
       this.x =500;
       this.velY=0;
@@ -367,6 +370,10 @@ Kall.prototype.drawLives = function(ctx) {
   }
 
 };
+Kall.prototype.reset = function(){
+  this.x=200;
+  this.y=400;
+}
 
 Kall.prototype.render = function(ctx){
 

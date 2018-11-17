@@ -138,9 +138,7 @@ function renderSimulation(ctx) {
         g_sprites.gameover.drawAtAndEnlarge(ctx,-gameOverOffset,0,g_canvas.width,g_canvas.height);
     } else {
     // Else draw the regular background
-        
         g_sprites.Background.drawAtAndEnlarge(ctx,0,0,g_sprites.Background.width, g_sprites.Background.height);
-
     }
     entityManager.render(ctx);
 
@@ -261,8 +259,8 @@ function requestPreloads() {
         esmall : "images/Platforms/extraSmallSize.png",
         large : "images/Platforms/largeSize.png",
         long : "images/Platforms/long.png",
-    
-        // the gem 
+
+        // the gem
         Gem0 : "images/Gem/gem_000.png",
         Gem1 : "images/Gem/gem_001.png",
         Gem2 : "images/Gem/gem_002.png",
@@ -309,9 +307,9 @@ var g_runSprite=[];
 var g_jumpSprite=[];
 var g_downSprite=[];
 var g_dashSprite=[];
-var g_gemSprites = [];      // the gem 
-var g_explosionSprite=[];   // the explosion 
-var g_shineSprite = [];   // the shine 
+var g_gemSprites = [];      // the gem
+var g_explosionSprite=[];   // the explosion
+var g_shineSprite = [];   // the shine
 
 function preloadDone() {
     g_sprites.Background = new Sprite(g_images.Background);
@@ -406,8 +404,8 @@ function preloadDone() {
     g_dashSprite[9]=new Sprite(g_images.Dash9);
     g_dashSprite[10]=new Sprite(g_images.Dash10);
     g_dashSprite[11]=new Sprite(g_images.Dash11);
-    
-    // the gem 
+
+    // the gem
     g_gemSprites[0] = new Sprite(g_images.Gem0);
     g_gemSprites[1] = new Sprite(g_images.Gem1);
     g_gemSprites[2] = new Sprite(g_images.Gem2);
@@ -415,7 +413,7 @@ function preloadDone() {
     g_gemSprites[4] = new Sprite(g_images.Gem4);
     g_gemSprites[5] = new Sprite(g_images.Gem5);
 
-    // the explosion 
+    // the explosion
     g_explosionSprite[0] = new Sprite(g_images.Explosion0);
     g_explosionSprite[1] = new Sprite(g_images.Explosion1);
     g_explosionSprite[2] = new Sprite(g_images.Explosion2);
