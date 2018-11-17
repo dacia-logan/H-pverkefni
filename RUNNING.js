@@ -138,9 +138,7 @@ function renderSimulation(ctx) {
         g_sprites.gameover.drawAtAndEnlarge(ctx,-gameOverOffset,0,g_canvas.width,g_canvas.height);
     } else {
     // Else draw the regular background
-
-        g_sprites.Background.drawAtAndEnlarge(ctx,0,-g_canvas.height*5,g_canvas.width*10,g_canvas.height*10);
-
+        g_sprites.Background.drawAtAndEnlarge(ctx,0,0,g_sprites.Background.width, g_sprites.Background.height);
     }
     entityManager.render(ctx);
 
@@ -261,10 +259,16 @@ function requestPreloads() {
         esmall : "images/Platforms/extraSmallSize.png",
         large : "images/Platforms/largeSize.png",
         long : "images/Platforms/long.png",
-    
-        //the still star image
-        Star : "images/Star/star.png",
-        //the exploding star image
+
+        // the gem
+        Gem0 : "images/Gem/gem_000.png",
+        Gem1 : "images/Gem/gem_001.png",
+        Gem2 : "images/Gem/gem_002.png",
+        Gem3 : "images/Gem/gem_003.png",
+        Gem4 : "images/Gem/gem_004.png",
+        Gem5 : "images/Gem/gem_005.png",
+
+        // the explosion
         Explosion0 : "images/Explosion/exp_000.png",
         Explosion1 : "images/Explosion/exp_001.png",
         Explosion2 : "images/Explosion/exp_002.png",
@@ -278,12 +282,18 @@ function requestPreloads() {
         Explosion10 : "images/Explosion/exp_010.png",
         Explosion11 : "images/Explosion/exp_011.png",
 
-        Heart : "images/Lives/heart.png",
+        //Heart : "images/Lives/heart.png",
+        Alive : "images/Lives/alive.png",
+        Dead : "images/Lives/dead.png",
         Gameover : "images/Lives/gameover.png",
         Background : "images/background.png",
 
-        //the rainbow image
-        Rainbow : "images/Rainbow/rainbow_000.png"
+        //the shine image
+        Shine0 : "images/Shine/shine_000.png",
+        Shine1 : "images/Shine/shine_001.png",
+        Shine2 : "images/Shine/shine_002.png",
+        Shine3 : "images/Shine/shine_001.png",
+        Shine4 : "images/Shine/shine_000.png"
 
 
     };
@@ -297,9 +307,9 @@ var g_runSprite=[];
 var g_jumpSprite=[];
 var g_downSprite=[];
 var g_dashSprite=[];
-var g_starSprite=[];        //the still star sprite
-var g_explosionSprite=[];   //the explosion sprite
-var g_rainbowSprite = [];     //the rainbow sprite
+var g_gemSprites = [];      // the gem
+var g_explosionSprite=[];   // the explosion
+var g_shineSprite = [];   // the shine
 
 function preloadDone() {
     g_sprites.Background = new Sprite(g_images.Background);
@@ -310,8 +320,10 @@ function preloadDone() {
     g_platforms.small = new Sprite(g_images.small);
     g_platforms.esmall = new Sprite(g_images.esmall);
     g_platforms.large = new Sprite(g_images.large);
+    //g_sprites.heart = new Sprite(g_images.Heart);
+    g_sprites.alive = new Sprite(g_images.Alive);
+    g_sprites.dead = new Sprite(g_images.Dead);
     g_platforms.long = new Sprite(g_images.long);
-    g_sprites.heart = new Sprite(g_images.Heart);
 
 /*
     for (var i = 0; i < g_runSprite.length; i++) {
@@ -392,26 +404,36 @@ function preloadDone() {
     g_dashSprite[9]=new Sprite(g_images.Dash9);
     g_dashSprite[10]=new Sprite(g_images.Dash10);
     g_dashSprite[11]=new Sprite(g_images.Dash11);
-    //the star sprite
-    g_starSprite=new Sprite(g_images.Star);
-    //the explosion sprite
-    g_explosionSprite[0]=new Sprite(g_images.Explosion0);
-    g_explosionSprite[1]=new Sprite(g_images.Explosion1);
-    g_explosionSprite[2]=new Sprite(g_images.Explosion2);
-    g_explosionSprite[3]=new Sprite(g_images.Explosion3);
-    g_explosionSprite[4]=new Sprite(g_images.Explosion4);
-    g_explosionSprite[5]=new Sprite(g_images.Explosion5);
-    g_explosionSprite[6]=new Sprite(g_images.Explosion6);
-    g_explosionSprite[7]=new Sprite(g_images.Explosion7);
-    g_explosionSprite[8]=new Sprite(g_images.Explosion8);
-    g_explosionSprite[9]=new Sprite(g_images.Explosion9);
-    g_explosionSprite[10]=new Sprite(g_images.Explosion10);
-    g_explosionSprite[11]=new Sprite(g_images.Explosion11);
-    //the rainbow
-    g_rainbowSprite= new Sprite(g_images.Rainbow);
+
+    // the gem
+    g_gemSprites[0] = new Sprite(g_images.Gem0);
+    g_gemSprites[1] = new Sprite(g_images.Gem1);
+    g_gemSprites[2] = new Sprite(g_images.Gem2);
+    g_gemSprites[3] = new Sprite(g_images.Gem3);
+    g_gemSprites[4] = new Sprite(g_images.Gem4);
+    g_gemSprites[5] = new Sprite(g_images.Gem5);
+
+    // the explosion
+    g_explosionSprite[0] = new Sprite(g_images.Explosion0);
+    g_explosionSprite[1] = new Sprite(g_images.Explosion1);
+    g_explosionSprite[2] = new Sprite(g_images.Explosion2);
+    g_explosionSprite[3] = new Sprite(g_images.Explosion3);
+    g_explosionSprite[4] = new Sprite(g_images.Explosion4);
+    g_explosionSprite[5] = new Sprite(g_images.Explosion5);
+    g_explosionSprite[6] = new Sprite(g_images.Explosion6);
+    g_explosionSprite[7] = new Sprite(g_images.Explosion7);
+    g_explosionSprite[8] = new Sprite(g_images.Explosion8);
+    g_explosionSprite[9] = new Sprite(g_images.Explosion9);
+    g_explosionSprite[10] = new Sprite(g_images.Explosion10);
+    g_explosionSprite[11] = new Sprite(g_images.Explosion11);
+
+    // the shine
+    g_shineSprite[0] = new Sprite(g_images.Shine0);
+    g_shineSprite[1] = new Sprite(g_images.Shine1);
+    g_shineSprite[2] = new Sprite(g_images.Shine2);
+
     entityManager.init();
     init();
-
     main.init();
 }
 

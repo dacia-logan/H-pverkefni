@@ -121,6 +121,14 @@ render: function(ctx) {
         
         util.strokeBox(ctx, eposX, eposY, eW, eH);
         }
+        else if(this._entities[ID].getType()==="Kall"){
+            var eposX = this._entities[ID].getPos().posX+70;           //entity's pos
+            var eposY = this._entities[ID].getPos().posY+30;
+            var eW = this._entities[ID].getWidth()-135;           
+            var eH = this._entities[ID].getHeight()-40;
+        
+        util.strokeBox(ctx, eposX, eposY, eW, eH);
+        }
         else{
             var e = this._entities[ID];
             util.strokeBox(ctx, e.getPos().posX, e.getPos().posY, e.getWidth(), e.getHeight());

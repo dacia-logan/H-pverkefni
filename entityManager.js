@@ -29,9 +29,10 @@ var entityManager = {
 
 _platforms : [],
 _dummies : [],
-_star : [],
+_gem : [],
 _knifes :[],
-_rainbow : [],
+_shine : [],
+_combo : [],
 
 
 // "PRIVATE" METHODS
@@ -49,21 +50,20 @@ KILL_ME_NOW : -1,
 // i.e. thing which need `this` to be defined.
 //
 deferredSetup : function () {
-    this._categories = [this._platforms, this._dummies, this._star, this._knifes, this._rainbow];
+    this._categories = [this._platforms, this._dummies, this._gem, this._knifes, this._shine, this._combo];
 },
 
 reset : function(){
-  for (var c = 0; c < this._categories.length; ++c) {
-
-      var aCategory = this._categories[c];
-      var i = 0;
-
-      while (i < aCategory.length) {
-
-          var status = aCategory[i].reset();
-          i++;
-          }
-      }
+  for(var Id in this._platforms){
+    this._platforms[Id].kill();
+  }
+  for(var Id in this._gem){
+    this._gem[Id].kill();
+  }
+  for(var Id in this._shine){
+    this._shine[Id].kill();
+  }
+  this._platforms.push(new Platform(1, true, 300, 500));
     },
 
 
@@ -73,21 +73,40 @@ init: function() {
 },
 
 // Platform functions \\
-platSet1:function(){
-    var x = camera.getPos().posX + g_canvas.width;
-    var secX = x+750;
-    var mainY = 500;
-    var secY = 250;
-    this._platforms.push(new Platform(1,true,x, mainY));
-    this._platforms.push(new Platform(4,false,secX,secY));
+platSet1:function(makeGem){
+    var x1 = camera.getPos().posX + g_canvas.width;
+    var x2 = x1+550;
+    var y1 = 500;
+    var y2 = 180;
+    this._platforms.push(new Platform(1,true,x1, y1));
+    this._platforms.push(new Platform(4,false,x2,y2));
+    if (makeGem <= 8) this._gem.push(new Gem(x2,y2,4));
+    this._shine.push(new Shine(x1,y1,1));
 },
-platSet2:function(){
+
+platSet2:function(makeGem){
+    var x1 = camera.getPos().posX + g_canvas.width;
+    var x2 = x1-100;
+    var x3 = x1+1000;
+    var y1 = 450;
+    var y2 = 130;
+    var y3 = 1;
+    this._platforms.push(new Platform(1,false,x1, y1));
+    this._platforms.push(new Platform(4,false,x2,y2));
+    this._platforms.push(new Platform(4,true,x3,y3));
+    if (makeGem <= 8) this._gem.push(new Gem(x2,y2,4));
+    this._shine.push(new Shine(x3,y3,4));
+},
+
+platSet3:function(makeGem){
     var x = camera.getPos().posX + g_canvas.width;
     var mainY = 400;
     this._platforms.push(new Platform(1,true,x, mainY));
-
+    if (makeGem <= 8) this._gem.push(new Gem(x,mainY,1));
+    this._shine.push(new Shine(x,mainY,1));
 },
-platSet3:function(){
+
+platSet4:function(makeGem){
     var x1 = camera.getPos().posX + g_canvas.width;
     var x2 = x1+800;
     var x3 = x1+1400;
@@ -97,30 +116,31 @@ platSet3:function(){
     this._platforms.push(new Platform(4,false,x1,y1));
     this._platforms.push(new Platform(5,false,x2, y2));
     this._platforms.push(new Platform(3,true, x3, y3));
+    if (makeGem <= 8) this._gem.push(new Gem(x2,y2,5));
+    this._shine.push(new Shine(x3,y3,3));
 },
 
-platSet4:function(){
+platSet5:function(makeGem){
     var x1 = camera.getPos().posX + g_canvas.width;
     var x2 = x1+500;
     var x3 = x1+1000;
     var y1 = 330;
     var y2 = 230;
-    this._platforms.push(new Platform(3,false,x1, y1));
+    this._platforms.push(new Platform(3,false,x1,y1));
     this._platforms.push(new Platform(7,false,x2,y2));
-    this._platforms.push(new Platform(2,true, x3, y2));
+    this._platforms.push(new Platform(2,true, x3,y2));
+    if (makeGem <= 8) this._gem.push(new Gem(x2,y2,7));
+    this._shine.push(new Shine(x3,y2,2));
 },
 
-generatePlat : function(descr,x,y) {
-    this._platforms.push(new Platform(descr,x,y));
-},
 
 setPlatforms: function(){
     //TODO nota þetta sem viðmið hvaða platform er verið að nota.
     var a = Math.floor(util.randRange(1,5));
-    var plats = Math.floor(util.randRange(0,17));
-    //creates a random number, when the number is 1 we create a star and butterfly
-    var makeStar =  Math.floor(util.randRange(0,2));
-    var makeButterfly =  Math.floor(util.randRange(0,2));
+    var plats = Math.floor(util.randRange(0,16));
+    //creates a random number, when the number is 1 we create a gem and butterfly
+    var makeGem =  Math.floor(util.randRange(0,10));
+    //var makeButterfly =  1;/*Math.floor(util.randRange(0,2));*/
 
     for(var entity in this._platforms){
 
@@ -131,15 +151,22 @@ setPlatforms: function(){
         if(primary && platX + platWidth <= camera.getPos().posX+500 && !this._platforms[entity].getPlatformPushed()){
             this._platforms[entity].setPlatformPushed();
 
-            if(plats >= 12) { this.platSet4(); }
-            else if( plats >= 8) { this.platSet3(); }
-            else if(plats >=4) {this.platSet1(); }
-            else { this.platSet2(); }
+            if(plats >= 13) { this.platSet1(makeGem); }
+            else if( plats >= 9) { this.platSet2(makeGem); }
+            else if(plats >=6) { this.platSet3(makeGem); }
+            else if(plats >=3) { this.platSet4(makeGem); }
+            else{ this.platSet5(makeGem); }
 
-            //make a new star when 'makeStar' is equal to 1
-            if (makeStar === 1) this._star.push(new Star(a));
+            //make a new gem when 'makeGem' is equal to 1
+            //if (makeGem <= 8) this._gem.push(new Gem(a));
             //make a new butterfly when 'makeButterfly' is equal to 1
-            if (makeButterfly === 1) this._rainbow.push(new Rainbow(a));
+            //if (makeButterfly === 1) {
+                //this._shine.push(new Shine(a));
+                if (Shine.isCaught) {
+                    this._combo.push(new Combo(a));
+                }
+            //}
+
         }
     }
 },
