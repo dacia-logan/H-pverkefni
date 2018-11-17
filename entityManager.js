@@ -53,6 +53,22 @@ deferredSetup : function () {
     this._categories = [this._platforms, this._dummies, this._gem, this._knifes, this._shine, this._combo];
 },
 
+reset : function(){
+  for(var Id in this._platforms){
+    this._platforms[Id].kill();
+  }
+  for(var Id in this._gem){
+    this._gem[Id].kill();
+  }
+  for(var Id in this._shine){
+    this._shine[Id].kill();
+  }
+  Background.reset();
+  this._platforms.push(new Platform(1, true, 300, 500));
+    },
+
+
+
 init: function() {
    this.generateMap();
 },
@@ -81,6 +97,7 @@ platSet2:function(makeGem){
     this._platforms.push(new Platform(4,true,x3,y3));
     if (makeGem <= 8) this._gem.push(new Gem(x2,y2,4));
     this._shine.push(new Shine(x3,y3,4));
+    this._shine.push(new Shine(x1+1000,y1,1));
 },
 
 platSet3:function(makeGem){
@@ -121,7 +138,7 @@ platSet5:function(makeGem){
 
 setPlatforms: function(){
     //TODO nota þetta sem viðmið hvaða platform er verið að nota.
-    var a = Math.floor(util.randRange(1,5)); 
+    var a = Math.floor(util.randRange(1,5));
     var plats = Math.floor(util.randRange(0,16));
     //creates a random number, when the number is 1 we create a gem and butterfly
     var makeGem =  Math.floor(util.randRange(0,10));
@@ -135,7 +152,7 @@ setPlatforms: function(){
 
         if(primary && platX + platWidth <= camera.getPos().posX+500 && !this._platforms[entity].getPlatformPushed()){
             this._platforms[entity].setPlatformPushed();
-            
+
             if(plats >= 13) { this.platSet1(makeGem); }
             else if( plats >= 9) { this.platSet2(makeGem); }
             else if(plats >=6) { this.platSet3(makeGem); }

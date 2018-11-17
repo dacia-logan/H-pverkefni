@@ -15,10 +15,10 @@ function Gem(x,y,platNum) {
     if (platNum === 4) offset = util.randRange((g_images.normal3.width*2.4)/2, g_images.normal3.width*2.4);
     if (platNum === 1) offset = util.randRange((g_images.large.width*2.6)/2, g_images.large.width*2.6); 
     if (platNum === 5) offset = util.randRange((g_images.small.width*1.5)/2, g_images.small.width*1.5);
-    if (platNum === 7) offset = ((g_images.long.width*1.3)/2)-10;
+    if (platNum === 7) offset = ((g_images.long.width*1.3)/2)-10+(this.width/2);
 
     // set the position of the gem
-    this.x = x+offset-(this.width/2);                                             
+    this.x = x+offset-(this.width);                                             
 
     // set the y position of the gem
     this.y = y-this.height+10;        
@@ -67,13 +67,17 @@ Gem.prototype.update = function(du) {
     // kill Gem if it falls out of the canvas
     // allso has to die if the 'Kall' hits it.
     if (this.x <= camera.getPos().posX - this.width || 
-        this.frameCounter >= this.numberOfFrames) this.kill();
+        this.frameCounter >= this.numberOfFrames) {
+            this.kill();
+            score.gotLastGem = false;
+        }
 
     // if is dead and the frames are not done 
     // change the framecounter for explosion
     if (this.isExploding && 
         this.frameCounter <= this.numberOfFrames) this.frameCounter += 0.2; 
-   
+
+
 
     // re-register to spatial manager
     // if isDead

@@ -5,13 +5,13 @@ function Kall(descr) {
     //upphafsstaða og upphafshraði
     this.x = 200;
     this.y = 400;
-    this.defVelX = 6;
+    this.defVelX=5;
     this.velX=this.defVelX;
     this.velY=0;
 
     //hæð og breidd
-    this.width = 200;
-    this.height = 100;
+    this.width = 170;
+    this.height = 85;
 
     // Hæð og breidd á jump-spriteinum
     //this.jumpWidth = g_jumpSprite[0].width;
@@ -22,22 +22,22 @@ function Kall(descr) {
     //this.dashHeight = g_dashSprite[0].height;
 
     //þyngdarafl og hoppkraftur
-    this.gravity=0.5;
-    this.jumpForce=-15;
+    this.gravity = 0.5;
+    this.jumpForce = -15;
     //boolean breita sem er true þegar hann er í loftinu en false annars
-    this.inAir=true;
+    this.inAir = true;
     //jumpcounter telur hoppin niður
-    this.jumpCounter=2;
+    this.jumpCounter = 2;
     //frameCounter er fyrir rammana í sprite animation
-    this.framecounter=0;
-    this.Jumpframecounter=0;
-    this.Dashframecounter=0;
+    this.framecounter = 0;
+    this.Jumpframecounter = 0;
+    this.Dashframecounter = 0;
 
-    //hraði á kall
-    this.isThrowing=false;
+    // hraði á kall
+    this.isThrowing = false;
 
-    //should explode when colliding with left edge of platform
-    //and when colliding with gem entity
+    // should explode when colliding with left edge of platform
+    // and when colliding with star entity
     this.isExploding = false;
 
     //dashing, extra speed
@@ -46,39 +46,37 @@ function Kall(descr) {
     this.dashCounter = 20;
 
     // Líf
+    this.liveSize = 50;
     this.lives = 3;
-    this.heartSize = 50;
-    this.dead = 0;
-
-    // Score
-    this.score = 0;
-    this.scoreSpeed = 2.5;
-
-    // Highscore
-    this.highscore = [];
-    this.nrOfTries = 0;
+    this.deaths = 0;
 
     this.type =  "Kall";
 
+    //collision helper with rainbowCollide
+    this.shineCollision = false;
+    this.gemCollision = false;
+
     //collision helper with shineCollide
-    this.hasShineCombo = false;
-    this.combo = 0;
 };
 
-Kall.prototype = new Entity();
+// Kall.prototype.zappedSound = new Audio(
+//  "sounds/bulletZapped.ogg");
 
+Kall.prototype = new Entity();
 
 Kall.prototype.KEY_JUMP= 'W'.charCodeAt(0);
 Kall.prototype.KEY_DASH= 'D'.charCodeAt(0); //fast speed forward, dashing
 Kall.prototype.RESET= 'U'.charCodeAt(0);
 
-Kall.prototype.update = function(du){
+// Hacked-in audio
+Kall.prototype.rainbowCatch = new Audio("sounds/rainbow.wav");
+Kall.prototype.die = new Audio("sounds/explosion2.wav");
+
+
+Kall.prototype.update = function(du) {
 
     spatialManager.unregister(this);
-
-    this.comboLifeSpan -= du;
-    if (this.lifeSpan < 0) return entityManager.KILL_ME_NOW;
-
+    
     //console.log(this.framecounter);
     //console.log(this.Jumpframecounter);
     //console.log(this.Dashframecounter);
@@ -86,7 +84,8 @@ Kall.prototype.update = function(du){
     //set the xVel of the unicorn based on if
     //it is dashing or not
     this.setSpeed(du);
-
+    this.defVelX+=0.003*du;
+    console.log(this.defVelX);
     if(this.inAir){
       this.Jumpframecounter+=0.378;
       if (this.Jumpframecounter>=26) {
@@ -94,8 +93,8 @@ Kall.prototype.update = function(du){
       }
     }
     else {
-      this.framecounter+=1;
-      this.framecounter%=25;
+      this.framecounter += 1;
+      this.framecounter %= 25;
     }
 
     // Check for hit entity, if its hit it checks wwhich side it is on and acts accordingly,
@@ -103,7 +102,6 @@ Kall.prototype.update = function(du){
     this.handleKeys(du);
     this.applyAccel(0,this.gravity,du);
     this.collidesWith(du);
-
 
      //check if out of canvas
     if (this.y > g_canvas.height) {
@@ -113,7 +111,7 @@ Kall.prototype.update = function(du){
     // Check for death
     if(this._isDeadNow){
       if (this.nrOfTries < 2) {
-        this.highscore[this.nrOfTries] = this.score;
+        this.highscore[this.nrOfTries] = score.currentScore;
       }
       this.nrOfTries++;
       console.log(this.highscore);
@@ -127,8 +125,11 @@ Kall.prototype.update = function(du){
       this.loseLife();
     }
 
-    // Update the score
-    this.score += Math.floor(this.scoreSpeed);
+    score.updateScore(du);
+
+    if (score.gotLastShine) {
+      score.updateShine(du);
+    }
     //console.log(this.score);
 };
 
@@ -137,26 +138,28 @@ Kall.prototype.setSpeed = function(du) {
   { //is the unicorn dashing and is the dashcounter not zero?
     this.dashCounter--;         //dash for only 15 frames
     this.applyAccel(1,0,du) ;   //set velocity to more speed
-    this.jumpCounter=1;         //unicorn can jump once after it has dashed
-    this.velY=0;                // no vertical velocity while dashing
-    this.Dashframecounter+=1;
-    if (this.Dashframecounter>11) {
-      this.Dashframecounter=11.1;
-      this.Jumpframecounter=6;
+    this.jumpCounter = 1;         //unicorn can jump once after it has dashed
+    this.velY = 0;                // no vertical velocity while dashing
+    this.Dashframecounter += 1;
+    if (this.Dashframecounter > 11) {
+      this.Dashframecounter = 11.1;
+      this.Jumpframecounter = 6;
     }
 
   } else
   {//unicorn is not dashing anymore move as usual
     this.isDashing = false;     //not dashing
-    this.velX=this.defVelX;                //set velocity to normal speed
+    this.velX=this.defVelX;     //set velocity to normal speed
     this.dashCounter = 15;      //reset the dashCounter to 15 again
   }
 };
 
 Kall.prototype.collidesWith = function(du){
 
-    if (spatialManager.isHit(this.x+60, this.y+30, this.width-145, this.height-40).length != 0){              //þessar tölur fengum við út með því að prófa okkur áfram í render á spatial manager
-        var ent = spatialManager.isHit(this.x+60, this.y+30, this.width-145, this.height-40);                 //Þær gera collideboxið hjá einhyrningnum minna, munu koma 2-3 fyrir aftur í platformcollide
+    if (spatialManager.isHit(this.x+65, this.y+30,
+      this.width-125, this.height-40).length != 0){              //þessar tölur fengum við út með því að prófa okkur áfram í render á spatial manager
+        var ent = spatialManager.isHit(this.x+65, this.y+30,     //Þær gera collideboxið hjá einhyrningnum minna, munu koma 2-3 fyrir aftur í platformcollide
+          this.width-125, this.height-40);                    
 
         for(i=0 ; i < ent.length; i++){
           if(ent[i].getType() === "Gem"){                //collision with the gem
@@ -176,11 +179,17 @@ Kall.prototype.collidesWith = function(du){
 Kall.prototype.gemCollide = function(gem){
     //if we dash into the gem the gem explodes
     if (this.isDashing) {
+      this.gemCollision = true;
+      console.log(this.gemCollision);
+      score.gotLastGem = true;
+      score.calculateGemCombo();
       gem.explodes();
+      this.gemCollision = false;
+      console.log(this.gemCollision);
     //else the unicorn loses a life
     } else  {
       this.loseLife();
-    }
+    } 
 };
 
 Kall.prototype.platformCollide = function(entity){
@@ -189,12 +198,12 @@ Kall.prototype.platformCollide = function(entity){
     var posY = entity.getPos().posY*1.035;      //til þess að þetta looki meira smooth
     var eWidth = entity.getWidth()-30;          //Breytti því líka þegar X er togglað
     var eHeight = entity.getHeight()*0.6;
-    var x=this.x+70;
-    var y=this.y+30;
-    var w=this.width-135;
-    var h=this.height-40;
+    var x = this.x+65;
+    var y = this.y+30;
+    var w = this.width-125;
+    var h = this.height-40;
 
-    //LEFT EDGE - character should explode and lose a life                         
+    //LEFT EDGE - character should explode and lose a life
     if (x < posX  &&  y+h >= posY+12)  //Gerði y coord til að collisionið sé
     /*&& this.x+this.width-5 < entity.getPos().posX)*/                            //meira forgiving utaf collisionið er stundum ekkert
     {                                                                             // alltor nakvæmt miðað við platforms
@@ -207,7 +216,7 @@ Kall.prototype.platformCollide = function(entity){
       this.loseLife();
       return;
     }
-    
+
     //TOP EDGE - character should run on platform
     else if (y < posY)
     {
@@ -218,7 +227,7 @@ Kall.prototype.platformCollide = function(entity){
           this.y--;
           var y=this.y+30;
         }
-        this.y = posY-this.height-(30-40);   //y and height difference    
+        this.y = posY-this.height-(30-40);   //y and height difference
         this.velY=0;
         this.jumpCounter=2;
         this.inAir=false;
@@ -244,39 +253,13 @@ Kall.prototype.platformCollide = function(entity){
 
 Kall.prototype.shineCollide = function (shine) {
 
-  //TODO LAGA ÞETTA ÞANNIG AÐ COMBO DETTI ÚT.
+      this.rainbowCatch.play();
 
-      //console.log(this.hasShineCombo);
-      this.hasShineCombo = true;
-     // console.log(this.score);
+      this.shineCollision = true;
+      score.gotLastShine = true;
+      score.calculateShineCombo();
       shine.kill();
-      if (this.hasShineCombo) {
-        this.combo++;
-        this.score += this.combo*10;
-      } else {
-        this.score += 10;
-      }      
-};
-
-Kall.prototype.drawCombo = function (ctx, xPos, yPos) {
-
-    ctx.font = "bold 40px Consolas";
-    ctx.textAlign = "center";
-
-    // Color of the combo text
-    ctx.fillStyle = "white";
-  
-    // Color of the shadow
-    ctx.shadowColor = '#1c5e66';
-    ctx.shadowBlur = 40;
-
-    // Draw the combo text
-    ctx.fillText("10", xPos, yPos);
-    
-    ctx.fill();
-
-    // Make sure the shadow is only applied to the combo
-    ctx.shadowBlur = 0;
+      this.shineCollision = false;
 };
 
 Kall.prototype.loseLife = function () {
@@ -286,8 +269,11 @@ Kall.prototype.loseLife = function () {
     /*
     *Gera reset function sem resettar mappið ofl.
     */
+    this.die.play();
     this.lives--;
-    this.dead++;
+    this.deaths++;
+    console.log("live lost");
+    
 
     if (this.lives === 0) {
         this.kill();
@@ -297,6 +283,8 @@ Kall.prototype.loseLife = function () {
     }
 
     else {
+      entityManager.reset();
+      this.velX=1;
       this.y =200;
       this.x =500;
       this.velY=0;
@@ -347,43 +335,6 @@ Kall.prototype.applyAccel= function(accelX,accelY,du){
   this.x += aveVelX*du;
 };
 
-Kall.prototype.render = function(ctx){
-
-    if (main._isGameOver) return;
-
-    if (this.isThrowing) {
-      g_throwSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
-    } else if (this.inAir && this.isDashing) {
-      g_dashSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x - this.width,this.y,this.dashWidth,this.dashHeight);
-   } else if (this.inAir) {
-      g_jumpSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.jumpWidth,this.jumpHeight);
-    }
-    /*
-    TODO LÁTA ÞETTA VIRKA
-    else if (this.isExploding) {
-      g_explosionSprite[Math.floor(this.frameCounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
-    }
-    */
-    else {
-      g_runSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
-    }
-
-    var fadeThresh = this.comboLifeSpan / 3;
-
-    if (this.comboLifeSpan < fadeThresh) {
-        ctx.globalAlpha = this.comboLifeSpan / fadeThresh;
-    }
-
-    ctx.globalAlpha = 1;
-
-    this.drawLives(ctx);
-    this.drawScore(ctx);
-    if (this.hasShineCombo) {
-      this.drawCombo(ctx, this.x, this.y);
-    }
-};
-
-
 Kall.prototype.getNextY = function(accelY,du){
   // u=original velocity
   var oldVelY= this.velY;
@@ -405,52 +356,23 @@ Kall.prototype.drawLives = function(ctx) {
   // Space between the hearts
   var livesOffset = 55;
 
-  // TODO "dauðu" teiknast núna undir hinum, hægt að gera betur?
-  for (var i = 0; i < 3; i++) {
-    g_sprites.dead.drawAtAndEnlarge(ctx, camera.getPos().posX+15 + livesOffset * i,
-                                      camera.getPos().posY+20, this.heartSize, this.heartSize);   
-                                                                
-  }
-
-  // Draw as many hearts as lives the player has left
+  // Draw as many unicorns as lives the player has left.
   for (var i = 0; i < this.lives; i++) {
     g_sprites.alive.drawAtAndEnlarge(ctx, camera.getPos().posX+15 + livesOffset * i,
-                                      camera.getPos().posY+20, this.heartSize, this.heartSize);   
-                                                                
+                                      camera.getPos().posY+20, this.liveSize, this.liveSize);                                                           
   }
    
-  //onsole.log(this.lives);
-  //console.log(this.dead);
-
-};
-
-Kall.prototype.drawScore = function(ctx) {
-
-  ctx.font = "bold 40px Consolas";
-  ctx.textAlign = "center";
-
-  // Color of the score
-  ctx.fillStyle = "white";
-
-  // Color of the shadow
-  ctx.shadowColor = '#1c5e66';
-  ctx.shadowBlur = 40;
-
-  // Draw the score if the game is not over
-  if (!main._isGameOver) {
-    ctx.fillText(this.score, g_canvas.width / 2 + camera.getPos().posX - 20,
-                            70 + camera.getPos().posY);
-  } else if (main._isGameOver) {
-    // VIRKAR EKKI, IMPLEMENTA Á ANNAN HÁTT
-    ctx.fillText("You got " + this.score + "points", g_canvas.width / 2 - 20, 70);
+   // Draws as many "dead" unicorn as lives the player has lost, next to the ones he has left.
+   for (var j = 0; j < this.deaths; j++) {
+    g_sprites.dead.drawAtAndEnlarge(ctx, camera.getPos().posX+125 - livesOffset * j,
+                                      camera.getPos().posY+20, this.liveSize, this.liveSize);                                                          
   }
 
-  ctx.fill();
-
-  // Make sure the shadow is only applied to the score
-  ctx.shadowBlur = 0;
 };
-
+Kall.prototype.reset = function(){
+  this.x=200;
+  this.y=400;
+}
 
 Kall.prototype.render = function(ctx){
 
@@ -466,6 +388,43 @@ Kall.prototype.render = function(ctx){
   else {
     g_runSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
   }
+
   this.drawLives(ctx);
-  this.drawScore(ctx);
+  score.drawScore(ctx);
+
+  if (this.shineCollision) {
+    score.drawShineCombo(ctx, this.x, this.y);
+  }
+
+  if (this.gemCollision) {
+    score.drawGemCombo(ctx, this.x, this.y);
+  }
+    /*
+    TODO LÁTA ÞETTA VIRKA
+    else if (this.isExploding) {
+      g_explosionSprite[Math.floor(this.frameCounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
+    }
+    */
 };
+
+// :)
+/*
+Kall.prototype.render = function(ctx){
+
+    if (main._isGameOver) return;
+
+    if (this.isThrowing) {
+      g_throwSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
+    } else if (this.inAir && this.isDashing) {
+      g_dashSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x - this.width,this.y,this.dashWidth,this.dashHeight);
+   } else if (this.inAir) {
+      g_jumpSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.jumpWidth,this.jumpHeight);
+    }
+    
+    else {
+      g_runSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
+    }
+
+    
+};
+*/
