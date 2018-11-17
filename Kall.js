@@ -10,8 +10,8 @@ function Kall(descr) {
     this.velY=0;
 
     //hæð og breidd
-    this.width = 200;
-    this.height = 100;
+    this.width = 170;
+    this.height = 85;
 
     // Hæð og breidd á jump-spriteinum
     //this.jumpWidth = g_jumpSprite[0].width;
@@ -37,7 +37,7 @@ function Kall(descr) {
     this.isThrowing=false;
 
     //should explode when colliding with left edge of platform
-    //and when colliding with star entity
+    //and when colliding with gem entity
     this.isExploding = false;
 
     //dashing, extra speed
@@ -48,7 +48,7 @@ function Kall(descr) {
     // Líf
     this.lives = 3;
     this.heartSize = 50;
-    this.dead = 0;
+
 
     // Score
     this.score = 0;
@@ -60,8 +60,8 @@ function Kall(descr) {
 
     this.type =  "Kall";
 
-    //collision helper with rainbowCollide
-    this.hasRainbowCombo = false;
+    //collision helper with shineCollide
+    this.hasShineCombo = false;
     this.combo = 0;
 };
 
@@ -79,9 +79,9 @@ Kall.prototype.update = function(du){
     this.comboLifeSpan -= du;
     if (this.lifeSpan < 0) return entityManager.KILL_ME_NOW;
 
-    console.log(this.framecounter);
-    console.log(this.Jumpframecounter);
-    console.log(this.Dashframecounter);
+    //console.log(this.framecounter);
+    //console.log(this.Jumpframecounter);
+    //console.log(this.Dashframecounter);
 
     //set the xVel of the unicorn based on if
     //it is dashing or not
@@ -158,12 +158,12 @@ Kall.prototype.collidesWith = function(du){
         var ent = spatialManager.isHit(this.x+60, this.y+30, this.width-145, this.height-40);                 //Þær gera collideboxið hjá einhyrningnum minna, munu koma 2-3 fyrir aftur í platformcollide
 
         for(i=0 ; i < ent.length; i++){
-          if(ent[i].getType() === "Star"){                //collision with the star
-            this.starCollide(ent[i]);
+          if(ent[i].getType() === "Gem"){                //collision with the gem
+            this.gemCollide(ent[i]);
           } else if (ent[i].getType() === "Platform"){    //collision with the platform
             this.platformCollide(ent[i]);
-          } else if (ent[i].getType() === "Rainbow") {    //collision with rainbow
-            this.rainbowCollide(ent[i]);
+          } else if (ent[i].getType() === "Shine") {    //collision with shine
+            this.shineCollide(ent[i]);
           }
         }
     } else {
@@ -172,10 +172,10 @@ Kall.prototype.collidesWith = function(du){
 };
 
 
-Kall.prototype.starCollide = function(star){
-    //if we dash into the star the star explodes
+Kall.prototype.gemCollide = function(gem){
+    //if we dash into the gem the gem explodes
     if (this.isDashing) {
-      star.explodes();
+      gem.explodes();
       if(this.jumpCounter<2) this.jumpCounter+=1;
     //else the unicorn loses a life
     } else  {
@@ -189,19 +189,19 @@ Kall.prototype.platformCollide = function(entity){
     var posY = entity.getPos().posY*1.035;      //til þess að þetta looki meira smooth
     var eWidth = entity.getWidth()-30;          //Breytti því líka þegar X er togglað
     var eHeight = entity.getHeight()*0.6;
-    var x=this.x+70;
+    var x=this.x+65;
     var y=this.y+30;
-    var w=this.width-135;
+    var w=this.width-125;
     var h=this.height-40;
 
     //LEFT EDGE - character should explode and lose a life                         
-    if (x < posX  &&  y+h >= posY+12)  //Gerði y coord til að collisionið sé
+    if (x < posX  &&  y+h >= posY+12)                                             //Gerði y coord til að collisionið sé
     /*&& this.x+this.width-5 < entity.getPos().posX)*/                            //meira forgiving utaf collisionið er stundum ekkert
     {                                                                             // alltor nakvæmt miðað við platforms
       //this.isExploding = true;
       while (Math.floor(x+w) > posX) {
         this.x--;
-        x=this.x+70;
+        x=this.x+65;
       }
       //this.x -=5
       this.loseLife();
@@ -242,15 +242,15 @@ Kall.prototype.platformCollide = function(entity){
     }
 };
 
-Kall.prototype.rainbowCollide = function (rainbow) {
+Kall.prototype.shineCollide = function (shine) {
 
   //TODO LAGA ÞETTA ÞANNIG AÐ COMBO DETTI ÚT.
 
-      //console.log(this.hasRainbowCombo);
-      this.hasRainbowCombo = true;
+      //console.log(this.hasShineCombo);
+      this.hasShineCombo = true;
      // console.log(this.score);
-      rainbow.kill();
-      if (this.hasRainbowCombo) {
+      shine.kill();
+      if (this.hasShineCombo) {
         this.combo++;
         this.score += this.combo*10;
       } else {
@@ -287,7 +287,6 @@ Kall.prototype.loseLife = function () {
     *Gera reset function sem resettar mappið ofl.
     */
     this.lives--;
-    this.dead++;
 
     if (this.lives === 0) {
         this.kill();
@@ -378,7 +377,7 @@ Kall.prototype.render = function(ctx){
 
     this.drawLives(ctx);
     this.drawScore(ctx);
-    if (this.hasRainbowCombo) {
+    if (this.hasShineCombo) {
       this.drawCombo(ctx, this.x, this.y);
     }
 };
@@ -455,17 +454,35 @@ Kall.prototype.drawScore = function(ctx) {
 Kall.prototype.render = function(ctx){
 
   if (main._isGameOver) return;
-  else if (this.isDashing) {
-    g_dashSprite[Math.floor(this.Dashframecounter)].drawAtAndEnlarge(ctx,this.x-150,this.y,this.width+150,this.height);
-  } else if (this.inAir) {
-    g_jumpSprite[Math.floor(this.Jumpframecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width-20,this.height+20);
+
+  if (this.isThrowing) {
+    g_throwSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
+  } else if (this.inAir && this.isDashing) {
+    g_dashSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x - this.width,this.y,this.dashWidth,this.dashHeight);
+ } else if (this.inAir) {
+    g_jumpSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.jumpWidth,this.jumpHeight);
   }
+  /*
+  TODO LÁTA ÞETTA VIRKA
   else if (this.isExploding) {
     g_explosionSprite[Math.floor(this.frameCounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
   }
+  */
   else {
     g_runSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
   }
+
+  var fadeThresh = this.comboLifeSpan / 3;
+
+  if (this.comboLifeSpan < fadeThresh) {
+      ctx.globalAlpha = this.comboLifeSpan / fadeThresh;
+  }
+
+  ctx.globalAlpha = 1;
+
   this.drawLives(ctx);
   this.drawScore(ctx);
+  if (this.hasShineCombo) {
+    this.drawCombo(ctx, this.x, this.y);
+  }
 };
