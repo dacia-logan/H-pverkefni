@@ -81,6 +81,7 @@ platSet2:function(makeGem){
     this._platforms.push(new Platform(4,true,x3,y3));
     if (makeGem <= 8) this._gem.push(new Gem(x2,y2,4));
     this._shine.push(new Shine(x3,y3,4));
+    this._shine.push(new Shine(x1+1000,y1,1));
 },
 
 platSet3:function(makeGem){
