@@ -1,44 +1,21 @@
 function Shine(x,y,platNum) {
-    //common inherited setup logic from Entity
+    // common inherited setup logic from Entity
     this.setup(x);
 
-    //set width and height
+    // set width and height
     this.width = 150;
     this.height = 150;
 
-    /*
-    var numberOfLivePlats = entityManager._platforms.length;            //the number of platforms that are not dead
-    var newestPlat = entityManager._platforms[numberOfLivePlats-1];     //the platform that is newest of them all
-
-    //random staðsetningar for now, meðan að platformarnir eru ekki final.
-    //set x position based on newest platform x-position
-    this.x = util.randRange(newestPlat.getPos().posX, newestPlat.getPos().posX+newestPlat.getWidth()+150);            //set the x position of the Shine
-
-    //set y position based on newest platform y-position
-    this.y = util.randRange(newestPlat.getPos().posY-40, newestPlat.getPos().posY-150);;                              //set the y position of the Shine
-    
-    //set the velosity to the same as the platfoms
-    this.vx = newestPlat.vx;
-    */
-
-    var offset = 20; 
-    /*
-    if (platNum === 1) offset = g_images.large.width*2.6;
-    if (platNum === 4) offset = g_images.normal3.width*2.4; 
-    if (platNum === 3) offset = g_images.normal2.width*2.3;
-    */
-
     // set the position of the gem
-    this.x = x-offset-this.width;                                             
+    this.x = x;
 
     // set the y position of the gem
-    this.y = y-offset-this.height;        
+    this.y = y - this.height;
 
-
-    //has the Shine been caught or not?
+    // has the Shine been caught or not?
     this.isCaught = false;
 
-    //combo
+    // combo
     this.combo = false; 
 
     // framecounter for explosion
@@ -57,7 +34,7 @@ function Shine(x,y,platNum) {
     this.up = true; 
     this.down = false;   
 
-    //the name of the entity 
+    // the name of the entity 
     this.type = "Shine";
 };
 
