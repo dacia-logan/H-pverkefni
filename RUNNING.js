@@ -269,6 +269,7 @@ function requestPreloads() {
         Gem5 : "images/Gem/gem_005.png",
 
         // the explosion
+        /*
         Explosion0 : "images/Explosion/exp_000.png",
         Explosion1 : "images/Explosion/exp_001.png",
         Explosion2 : "images/Explosion/exp_002.png",
@@ -281,6 +282,39 @@ function requestPreloads() {
         Explosion9 : "images/Explosion/exp_009.png",
         Explosion10 : "images/Explosion/exp_010.png",
         Explosion11 : "images/Explosion/exp_011.png",
+        */
+        Explosion0 : "images/Explosion/tile000.png",
+        Explosion1 : "images/Explosion/tile001.png",
+        Explosion2 : "images/Explosion/tile002.png",
+        Explosion3 : "images/Explosion/tile003.png",
+        Explosion4 : "images/Explosion/tile004.png",
+        Explosion5 : "images/Explosion/tile005.png",
+        Explosion6 : "images/Explosion/tile006.png",
+        Explosion7 : "images/Explosion/tile007.png",
+        Explosion8 : "images/Explosion/tile008.png",
+        Explosion9 : "images/Explosion/tile009.png",
+        Explosion10 : "images/Explosion/tile010.png",
+        Explosion11 : "images/Explosion/tile011.png",
+        Explosion12 : "images/Explosion/tile012.png",
+        Explosion13 : "images/Explosion/tile013.png",
+        Explosion14 : "images/Explosion/tile014.png",
+        Explosion15 : "images/Explosion/tile015.png",
+        Explosion16 : "images/Explosion/tile016.png",
+        Explosion17 : "images/Explosion/tile017.png",
+        Explosion18 : "images/Explosion/tile018.png",
+        Explosion19 : "images/Explosion/tile019.png",
+        Explosion20 : "images/Explosion/tile020.png",
+        Explosion21 : "images/Explosion/tile021.png",
+        Explosion22 : "images/Explosion/tile022.png",
+        Explosion23 : "images/Explosion/tile023.png",
+        Explosion24 : "images/Explosion/tile024.png",
+        Explosion25 : "images/Explosion/tile025.png",
+        Explosion26 : "images/Explosion/tile026.png",
+        Explosion27 : "images/Explosion/tile027.png",
+        Explosion28 : "images/Explosion/tile028.png",
+        Explosion29 : "images/Explosion/tile029.png",
+        Explosion30 : "images/Explosion/tile030.png",
+        Explosion31 : "images/Explosion/tile031.png",
 
         //Heart : "images/Lives/heart.png",
         Alive : "images/Lives/alive.png",
@@ -426,6 +460,26 @@ function preloadDone() {
     g_explosionSprite[9] = new Sprite(g_images.Explosion9);
     g_explosionSprite[10] = new Sprite(g_images.Explosion10);
     g_explosionSprite[11] = new Sprite(g_images.Explosion11);
+    g_explosionSprite[12] = new Sprite(g_images.Explosion12);
+    g_explosionSprite[13] = new Sprite(g_images.Explosion13);
+    g_explosionSprite[14] = new Sprite(g_images.Explosion14);
+    g_explosionSprite[15] = new Sprite(g_images.Explosion15);
+    g_explosionSprite[16] = new Sprite(g_images.Explosion16);
+    g_explosionSprite[17] = new Sprite(g_images.Explosion17);
+    g_explosionSprite[18] = new Sprite(g_images.Explosion18);
+    g_explosionSprite[19] = new Sprite(g_images.Explosion19);
+    g_explosionSprite[20] = new Sprite(g_images.Explosion20);
+    g_explosionSprite[21] = new Sprite(g_images.Explosion21);
+    g_explosionSprite[22] = new Sprite(g_images.Explosion22);
+    g_explosionSprite[23] = new Sprite(g_images.Explosion23);
+    g_explosionSprite[24] = new Sprite(g_images.Explosion24);
+    g_explosionSprite[25] = new Sprite(g_images.Explosion25);
+    g_explosionSprite[26] = new Sprite(g_images.Explosion26);
+    g_explosionSprite[27] = new Sprite(g_images.Explosion27);
+    g_explosionSprite[28] = new Sprite(g_images.Explosion28);
+    g_explosionSprite[29] = new Sprite(g_images.Explosion29);
+    g_explosionSprite[30] = new Sprite(g_images.Explosion30);
+    g_explosionSprite[31] = new Sprite(g_images.Explosion31);
 
     // the shine
     g_shineSprite[0] = new Sprite(g_images.Shine0);

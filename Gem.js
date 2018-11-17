@@ -49,11 +49,14 @@ Gem.prototype.explodes = function(){
 Gem.prototype.render = function(ctx){
     // only draw the gem/explosion while the game is still ongoing
     if (!main._isGameOver) {
-        if (this.isExploding) { // if the gem has been hit, draw the explosion
-            g_explosionSprite[Math.floor(this.frameCounter)].drawAtAndEnlarge(
-                ctx,this.x,this.y,this.width,this.height);
-       
-        } else { // if the gem has not been hit draw a gem
+        // if the gem has been hit, draw the explosion
+        if (this.isExploding) { 
+            // this increases the framecount for the explosion animation
+            explode.frames();
+            // this draws the explosion
+            explode.draw(ctx,this.x,this.y,this.width,this.height,g_explosionSprite);
+        // if the gem has not been hit draw a gem
+        } else { 
             g_gemSprites[Math.floor(this.gemToDraw)].drawAtAndEnlarge(
                 ctx,this.x,this.y,this.width,this.height);
         }
@@ -69,18 +72,13 @@ Gem.prototype.update = function(du) {
     // and
     // If the x coords of the unicorn go further than the gem, the player has
     // failed to destroy it, and thus loses his gem combo bonus.
-    if (this.x <= camera.getPos().posX - this.width || 
-        this.frameCounter >= this.numberOfFrames) {
+    if (this.x <= camera.getPos().posX - this.width) {
             this.kill();
             score.gotLastGem = false;
     }
 
-    // if is dead and the frames are not done 
-    // change the framecounter for explosion
-    if (this.isExploding && 
-        this.frameCounter <= this.numberOfFrames) this.frameCounter += 0.2; 
-
-
+    // when and if the gem is done exploding then kill it
+    if (explode.done(g_explosionSprite.length)) this.kill(); 
 
     // re-register to spatial manager
     // if isDead
