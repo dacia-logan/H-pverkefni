@@ -420,4 +420,6 @@ function preloadDone() {
 }
 
 // Kick it off
+var song = new Audio("sounds/always.mp3");
+song.play();
 requestPreloads();
