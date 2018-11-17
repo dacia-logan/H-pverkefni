@@ -66,11 +66,14 @@ Gem.prototype.update = function(du) {
 
     // kill Gem if it falls out of the canvas
     // allso has to die if the 'Kall' hits it.
+    // and
+    // If the x coords of the unicorn go further than the gem, the player has
+    // failed to destroy it, and thus loses his gem combo bonus.
     if (this.x <= camera.getPos().posX - this.width || 
         this.frameCounter >= this.numberOfFrames) {
             this.kill();
             score.gotLastGem = false;
-        }
+    }
 
     // if is dead and the frames are not done 
     // change the framecounter for explosion
