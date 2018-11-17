@@ -53,9 +53,10 @@ function Kall(descr) {
     this.type =  "Kall";
 
     //collision helper with rainbowCollide
-    this.hasRainbowCombo = false;
-    this.rainbowCollision = false;
+    this.shineCollision = false;
+    this.gemCollision = false;
 
+    //collision helper with shineCollide
 };
 
 // Kall.prototype.zappedSound = new Audio(
@@ -124,7 +125,11 @@ Kall.prototype.update = function(du) {
       this.loseLife();
     }
 
-    score.update(du);
+    score.updateScore(du);
+
+    if (score.gotLastShine) {
+      score.updateShine(du);
+    }
     //console.log(this.score);
 };
 
@@ -157,12 +162,12 @@ Kall.prototype.collidesWith = function(du){
           this.width-145, this.height-40);                    
 
         for(i=0 ; i < ent.length; i++){
-          if(ent[i].getType() === "Star"){                //collision with the star
-            this.starCollide(ent[i]);
+          if(ent[i].getType() === "Gem"){                //collision with the gem
+            this.gemCollide(ent[i]);
           } else if (ent[i].getType() === "Platform"){    //collision with the platform
             this.platformCollide(ent[i]);
-          } else if (ent[i].getType() === "Rainbow") {    //collision with rainbow
-            this.rainbowCollide(ent[i]);
+          } else if (ent[i].getType() === "Shine") {    //collision with shine
+            this.shineCollide(ent[i]);
           }
         }
     } else {
@@ -171,14 +176,20 @@ Kall.prototype.collidesWith = function(du){
 };
 
 
-Kall.prototype.starCollide = function(star){
-    //if we dash into the star the star explodes
+Kall.prototype.gemCollide = function(gem){
+    //if we dash into the gem the gem explodes
     if (this.isDashing) {
-      star.explodes();
+      this.gemCollision = true;
+      console.log(this.gemCollision);
+      score.gotLastGem = true;
+      score.calculateGemCombo();
+      gem.explodes();
+      this.gemCollision = false;
+      console.log(this.gemCollision);
     //else the unicorn loses a life
     } else  {
       this.loseLife();
-    }
+    } 
 };
 
 Kall.prototype.platformCollide = function(entity){
@@ -240,23 +251,15 @@ Kall.prototype.platformCollide = function(entity){
     }
 };
 
-Kall.prototype.rainbowCollide = function (rainbow) {
+Kall.prototype.shineCollide = function (shine) {
 
-  //TODO LAGA ÞETTA ÞANNIG AÐ COMBO DETTI ÚT.
-
-      //console.log(this.hasRainbowCombo);
-      this.rainbowCollision = true;
-      this.hasRainbowCombo = true;
       this.rainbowCatch.play();
-      console.log("got rainbow!");
-      rainbow.kill();
-      if (this.hasRainbowCombo) {
-        this.combo++;
-        score.currentScore += this.combo*10;
-      } else {
-        console.log("has rainbow combo");
-        score.currentScore += 10;
-      }      
+
+      this.shineCollision = true;
+      score.gotLastShine = true;
+      score.calculateShineCombo();
+      shine.kill();
+      this.shineCollision = false;
 };
 
 Kall.prototype.loseLife = function () {
@@ -358,13 +361,12 @@ Kall.prototype.drawLives = function(ctx) {
   }
    
    // Draws as many "dead" unicorn as lives the player has lost, next to the ones he has left.
-   for (var i = 0; i < this.deaths; i++) {
-    g_sprites.dead.drawAtAndEnlarge(ctx, camera.getPos().posX+125 - livesOffset * i,
+   for (var j = 0; j < this.deaths; j++) {
+    g_sprites.dead.drawAtAndEnlarge(ctx, camera.getPos().posX+125 - livesOffset * j,
                                       camera.getPos().posY+20, this.liveSize, this.liveSize);                                                          
   }
 
 };
-
 
 Kall.prototype.render = function(ctx){
 
@@ -380,21 +382,17 @@ Kall.prototype.render = function(ctx){
   else {
     g_runSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
   }
+
   this.drawLives(ctx);
-  this.drawScore(ctx);
-  /*if (this.hasRainbowCombo) {
-    this.drawCombo(ctx);
-    this.rainbowCollision = false;
-  }*/
+  score.drawScore(ctx);
 
-    this.drawLives(ctx);
-    this.drawScore(ctx);
-    if (this.hasRainbowCombo) {
-      score.drawCombo(ctx, this.x, this.y);
-    }
+  if (this.shineCollision) {
+    score.drawShineCombo(ctx, this.x, this.y);
+  }
 
-
-
+  if (this.gemCollision) {
+    score.drawGemCombo(ctx, this.x, this.y);
+  }
     /*
     TODO LÁTA ÞETTA VIRKA
     else if (this.isExploding) {
