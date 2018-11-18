@@ -75,6 +75,8 @@ Gem.prototype.update = function(du) {
     if (this.x <= camera.getPos().posX - this.width) {
             this.kill();
             score.gotLastGem = false;
+            score.gemCombo = 0;
+            score.gemsInRow = 0;
     }
 
     // if the gem is done exploding then kill it

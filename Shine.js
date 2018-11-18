@@ -55,18 +55,25 @@ Shine.prototype.update = function(du) {
     //unregister from spatial manager
     spatialManager.unregister(this);
 
+    //score.updateShine(du);
+
     // if the unicorn has caught the Shine it should die
     if (this.isCaught) this._isDeadNow;
 
     // kill Shine if it falls out of the canvas
     // allso has to die if the 'Kall' hits it.
     // and
-    // If the unicorn goes further than the shine, the player has failed to collect it,
+    // If the shine goes out of the canvas, the player has failed to collect it,
     // and thus loses his shine combo bonus.
     if (this.x <= camera.getPos().posX - this.width) { 
         this.kill();
         score.gotLastShine = false;
+        score.shineCombo = 0;
+        score.shineInRow = 0;
     }
+
+    //console.log(score.gotLastShine);
+    //console.log(score.lifeSpan);
 
     // this controlls how fast we change frames on the shine
     if (this.frameCounter < this.numberOfFrames-1) this.frameCounter += 0.05;
