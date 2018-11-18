@@ -117,7 +117,7 @@ function processDiagnostics() {
 // að renderSimulation verði ekki dirty
 var Background = {
     x : 0,
-    y : -750,
+    y : -1000,
 
     render : function(ctx){
         if(this.x+g_sprites.Background.width<camera.getPos().posX){
@@ -308,7 +308,7 @@ function requestPreloads() {
         Alive : "images/Lives/alive.png",
         Dead : "images/Lives/dead.png",
         Gameover : "images/Lives/gameover.png",
-        Background : "images/background.png",
+        Background : "images/background1.png",
 
         //the shine image
         Shine0 : "images/Shine/shine_000.png",
