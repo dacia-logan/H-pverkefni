@@ -186,6 +186,7 @@ Kall.prototype.collidesWith = function(du){
             this.gemCollide(ent[i]);                     // handle collision
             this.jumpCounter = 1;                        // you get one more jump
             this.dashDelay = 0;                          // dash is not limited
+            this.isDashing = false;                      // stop dashing if we hit Gem
           } else if (ent[i].getType() === "Platform"){   // collision with the platform
             this.platformCollide(ent[i]);                // handle collision
             this.dashDelay = 0;                          // dash is not limited
