@@ -86,7 +86,7 @@ Kall.prototype.update = function(du){
     //it is dashing or not
     this.setSpeed(du);
     this.defVelX+=0.003*du;
-    console.log(this.defVelX);
+    //console.log(this.defVelX);
     if(this.inAir){
       this.Jumpframecounter+=0.378;
       if (this.Jumpframecounter>=26) {
@@ -96,6 +96,13 @@ Kall.prototype.update = function(du){
     else {
       this.framecounter+=1;
       this.framecounter%=25;
+    }
+
+    // if the unicorn is done exploding then kill it
+    if (explode.done(g_explosionSprite.length, this.type)) {
+      //this.kill();
+      this.loseLife();
+      //this.isExploding = false; 
     }
 
     // Check for hit entity, if its hit it checks wwhich side it is on and acts accordingly,
@@ -175,9 +182,11 @@ Kall.prototype.gemCollide = function(gem){
     //if we dash into the gem the gem explodes
     if (this.isDashing) {
       gem.explodes();
-    //else the unicorn loses a life
+    //else the unicorn is exploding and will lose life
     } else  {
-      this.loseLife();
+      this.defVelX = 0;         // "stop" the game
+      this.velY = 0;            // -''-
+      this.isExploding = true;  // the unicorn is exploding
     }
 };
 
@@ -196,14 +205,16 @@ Kall.prototype.platformCollide = function(entity){
     if (x < posX  &&  y+h >= posY+12)  //Gerði y coord til að collisionið sé
     /*&& this.x+this.width-5 < entity.getPos().posX)*/                            //meira forgiving utaf collisionið er stundum ekkert
     {                                                                             // alltor nakvæmt miðað við platforms
-      //this.isExploding = true;
       while (Math.floor(x+w) > posX) {
         this.x--;
-        x=this.x+70;
+        x = this.x + 70;
       }
-      //this.x -=5
-      this.loseLife();
+
+      this.defVelX = 0;         // "stop" the game
+      this.velY = 0;            // -''-
+      this.isExploding = true;  // the unicorn is exploding
       return;
+      
     }
 
     //TOP EDGE - character should run on platform
@@ -299,6 +310,7 @@ Kall.prototype.loseLife = function () {
       this.defVelX=5;
       this.y =200;
       this.x =500;
+      this.isExploding = false; 
     }
 
 };
@@ -345,43 +357,6 @@ Kall.prototype.applyAccel= function(accelX,accelY,du){
   this.y += aveVelY*du;
   this.x += aveVelX*du;
 };
-
-Kall.prototype.render = function(ctx){
-
-    if (main._isGameOver) return;
-
-    if (this.isThrowing) {
-      g_throwSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
-    } else if (this.inAir && this.isDashing) {
-      g_dashSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x - this.width,this.y,this.dashWidth,this.dashHeight);
-   } else if (this.inAir) {
-      g_jumpSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.jumpWidth,this.jumpHeight);
-    }
-    /*
-    TODO LÁTA ÞETTA VIRKA
-    else if (this.isExploding) {
-      g_explosionSprite[Math.floor(this.frameCounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
-    }
-    */
-    else {
-      g_runSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
-    }
-
-    var fadeThresh = this.comboLifeSpan / 3;
-
-    if (this.comboLifeSpan < fadeThresh) {
-        ctx.globalAlpha = this.comboLifeSpan / fadeThresh;
-    }
-
-    ctx.globalAlpha = 1;
-
-    this.drawLives(ctx);
-    this.drawScore(ctx);
-    if (this.hasShineCombo) {
-      this.drawCombo(ctx, this.x, this.y);
-    }
-};
-
 
 Kall.prototype.getNextY = function(accelY,du){
   // u=original velocity
@@ -449,6 +424,8 @@ Kall.prototype.drawScore = function(ctx) {
   // Make sure the shadow is only applied to the score
   ctx.shadowBlur = 0;
 };
+
+
 Kall.prototype.reset = function(){
   this.x=200;
   this.y=400;
@@ -458,17 +435,62 @@ Kall.prototype.reset = function(){
 Kall.prototype.render = function(ctx){
 
   if (main._isGameOver) return;
-  else if (this.isDashing) {
-    g_dashSprite[Math.floor(this.Dashframecounter)].drawAtAndEnlarge(ctx,this.x-150,this.y,this.width+150,this.height);
-  } else if (this.inAir) {
-    g_jumpSprite[Math.floor(this.Jumpframecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width-20,this.height+20);
+
+  if (this.isExploding) {
+      // this draws the explosion
+      explode.draw(ctx,this.x,this.y,this.width,this.height,g_explosionSprite, this.type);
+      // this increases the framecount for the explosion animation
+      explode.frames(this.type,g_explosionSprite.length);
+  } else {
+
+    if (this.isDashing) {
+      g_dashSprite[Math.floor(this.Dashframecounter)].drawAtAndEnlarge(ctx,this.x-150,this.y,this.width+150,this.height);
+    } else if (this.inAir) {
+      g_jumpSprite[Math.floor(this.Jumpframecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width-20,this.height+20);
+    } else {
+      g_runSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
+    }
+
   }
-  else if (this.isExploding) {
-    g_explosionSprite[Math.floor(this.frameCounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
-  }
-  else {
-    g_runSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
-  }
+  
   this.drawLives(ctx);
   this.drawScore(ctx);
 };
+
+/*
+Kall.prototype.render = function(ctx){
+
+  if (main._isGameOver) return;
+
+  if (this.isThrowing) {
+    g_throwSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
+  } else if (this.inAir && this.isDashing) {
+    g_dashSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x - this.width,this.y,this.dashWidth,this.dashHeight);
+ } else if (this.inAir) {
+    g_jumpSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.jumpWidth,this.jumpHeight);
+  }
+  
+  TODO LÁTA ÞETTA VIRKA
+  else if (this.isExploding) {
+    g_explosionSprite[Math.floor(this.frameCounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
+  }
+  
+  else {
+    g_runSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
+  }
+
+  var fadeThresh = this.comboLifeSpan / 3;
+
+  if (this.comboLifeSpan < fadeThresh) {
+      ctx.globalAlpha = this.comboLifeSpan / fadeThresh;
+  }
+
+  ctx.globalAlpha = 1;
+
+  this.drawLives(ctx);
+  this.drawScore(ctx);
+  if (this.hasShineCombo) {
+    this.drawCombo(ctx, this.x, this.y);
+  }
+};
+*/
