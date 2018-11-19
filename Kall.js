@@ -49,6 +49,7 @@ function Kall(descr) {
     this.liveSize = 50;
     this.lives = 3;
     this.deaths = 0;
+    this.hasLostLife = false;
 
     // Score
     //this.score = 0;
@@ -275,6 +276,18 @@ Kall.prototype.loseLife = function () {
     *Gera reset function sem resettar mappið ofl.
     */
     this.die.play();
+    //this.drawFailScreen();
+    entityManager.didDie = true;
+    Background.hasLostLife = true;
+
+    console.log(this.deaths);
+
+    // Put the score the player got for the current try in the
+    //  array that holds all three scores for the three tries.
+    score.allScores[this.deaths] = score.currentScore;
+    score.currentScore = 0;
+    console.log(score.allScores);
+
     this.lives--;
     this.deaths++;
 
@@ -286,6 +299,7 @@ Kall.prototype.loseLife = function () {
 
     if (this.lives === 0) {
         this.kill();
+        //hasGameEnded = true;
         main.gameOver();
       // TODO
       // Play game over sound
@@ -298,6 +312,74 @@ Kall.prototype.loseLife = function () {
       this.x =500;
       this.isExploding = false; 
     }
+
+};
+
+Kall.prototype.drawFailScreen = function () {
+  console.log("hello");
+
+  //if (eatKey(this.KEEP_PLAYING)) return;
+  var ctx = g_ctx;
+
+  g_sprites.gameover.drawAtAndEnlarge(ctx,0,0,g_canvas.width,g_canvas.height);
+        //font-family: 'Patrick Hand', cursive;
+        //font-family: 'Neucha', cursive;
+        ctx.font = "bold 36px Goudy Old Style";
+        ctx.fillStyle = "white";
+        ctx.shadowColor = '#333333';
+        ctx.shadowBlur = 10;
+        ctx.fillText("Failed! Press any key to keep playing", g_canvas.width / 2, 70);
+        ctx.fillStyle = "pink";
+        ctx.strokeStyle = "hot pink";
+        ctx.lineJoin = "round";
+        ctx.lineWidth = 20;
+        var borderRadius = 10;
+        ctx.globalAlpha = 0.6;
+
+        // Color of the shadow
+        ctx.shadowColor = '#4C4C4C';
+        ctx.shadowBlur = 15;
+
+        var boxWidth = 600;
+        var boxHeight = 55;
+
+        var boxX = 200;
+        var boxY = 110;
+        var boxOffset = 60;
+
+        ctx.font = "bold 24px Goudy Old Style";
+
+        ctx.fillRect(boxX + (borderRadius / 2), boxY + (borderRadius / 2),
+        boxWidth - borderRadius, boxHeight - borderRadius);
+
+        ctx.fillRect(boxX + (borderRadius / 2), boxY + boxOffset + (borderRadius / 2),
+        boxWidth - borderRadius, boxHeight - borderRadius);
+
+        ctx.fillRect(boxX + (borderRadius / 2), boxY + boxOffset * 2 + (borderRadius / 2),
+        boxWidth - borderRadius, boxHeight - borderRadius);
+
+        ctx.fillRect(boxX + (borderRadius / 2), boxY + boxOffset * 3 + (borderRadius / 2),
+        boxWidth - borderRadius, boxHeight * 1.5 - borderRadius);
+        ctx.globalAlpha = 1;
+        // Make sure the shadow is only applied to the boxes.
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = "white";
+        ctx.textAlign = "left";
+        ctx.shadowColor = '#A9A9A9';
+        ctx.shadowBlur = 5;
+
+        var textX = boxX + 50;
+        var textY = boxY + 35;
+        var textOffset = boxOffset;
+        var finalScore = score.allScores[0] + score.allScores[1] + score.allScores[2];
+        ctx.fillText("1st try: " + score.allScores[0], textX, textY);
+        ctx.fillText("2nd try: " + score.allScores[1], textX, textY + textOffset);
+        ctx.fillText("3rd try: " + score.allScores[2], textX, textY + textOffset * 2);
+
+        ctx.font = "bold 36px Goudy Old Style";
+        ctx.shadowColor = '#CCCCCC';
+        ctx.shadowBlur = 10;
+        ctx.fillText("Final score: " + finalScore, textX, textY + textOffset * 3 + textOffset / 3);
 
 };
 

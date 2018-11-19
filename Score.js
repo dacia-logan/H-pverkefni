@@ -11,6 +11,10 @@ var score = {
     currentScore : 0,
     scoreSpeed : 2.5,
 
+    // Array that stores the score for each of the three tries the player gets.
+    allScores : [],
+    highScores : [],
+
     // Variables for the combos, what the current combo is, how many combos the
     //    player has got in a row.
     shineCombo : 0,
@@ -53,8 +57,8 @@ var score = {
         this.shineInRow++;
         this.shineCombo += 10;
         this.currentScore += this.shineCombo;
-        console.log(this.shineInRow);
-        console.log(this.shineCombo);
+        //console.log(this.shineInRow);
+        //console.log(this.shineCombo);
       } else if (!this.gotLastShine) {
         //this.shineInRow = 1;
         //this.shineCombo = 0; // 10?

@@ -34,6 +34,10 @@ _knifes :[],
 _shine : [],
 _combo : [],
 
+// TODO
+
+didDie : false,
+
 
 // "PRIVATE" METHODS
 
@@ -183,9 +187,13 @@ getMainCharacter : function(){
 },
 
 update: function(du) {
+
+    // TODO
+    if (this.didDie) return;
     //Range of numbers that give u different platform
     //Check if to push new platform or not
     //this.setObstacle();
+
     this.setPlatforms();
 
     for (var c = 0; c < this._categories.length; ++c) {
@@ -209,6 +217,8 @@ update: function(du) {
 },
 
 render: function(ctx) {
+
+    if (this.didDie) return;
 
     var debugX = 10, debugY = 100;
 
