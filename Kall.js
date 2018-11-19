@@ -82,7 +82,6 @@ Kall.prototype.KEY_DASH= 'D'.charCodeAt(0); //fast speed forward, dashing
 Kall.prototype.RESET= 'U'.charCodeAt(0);
 
 Kall.prototype.shineCatch = new Audio("sounds/rainbow.wav");
-
 // Helga færði þetta hljóð inn í explosion þá virkar þetta fyrir gem og unicorn
 // þetta er núna spilað hér í kalli bara þegar hann fer niður fyrir canvas
 Kall.prototype.die = new Audio("sounds/explosion2.wav"); 
