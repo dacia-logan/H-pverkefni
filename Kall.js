@@ -203,6 +203,28 @@ Kall.prototype.collidesWith = function(du){
     }
 };
 
+
+Kall.prototype.gemCollide = function(gem){
+  //if we dash into the gem the gem explodes
+  
+  if (this.isDashing) {
+    g_sounds.starExplosion.play();
+    g_sounds.starExplosionExtra.play();
+
+    score.gemCollision = true;
+    score.gotLastGem = true;
+    score.calculateGemCombo();
+    gem.explodes();
+    //score.gemCollision = false;
+  //else the unicorn is exploding and will lose life
+  } else  {
+    this.defVelX = 0;         // "stop" the game
+    this.velY = 0;            // -''-
+    this.isExploding = true;  // the unicorn is exploding
+    g_sounds.uniExplosion.play();
+  }
+};
+
 Kall.prototype.platformCollide = function(entity){
     //where are we colliding with platform?
     var posX = entity.getPos().posX+20;         //Ég breytti platform collide boxinu
@@ -227,6 +249,7 @@ Kall.prototype.platformCollide = function(entity){
       this.defVelX = 0;         // "stop" the game
       this.velY = 0;            // -''-
       this.isExploding = true;  // the unicorn is exploding
+      g_sounds.uniExplosion.play();
       return;
       
     }
@@ -265,33 +288,23 @@ Kall.prototype.platformCollide = function(entity){
     }
 };
 
-Kall.prototype.gemCollide = function(gem){
-  //if we dash into the gem the gem explodes
-  
-  if (this.isDashing) {
-    score.gemCollision = true;
-    score.gotLastGem = true;
-    score.calculateGemCombo();
-    gem.explodes();
-    //score.gemCollision = false;
-  //else the unicorn is exploding and will lose life
-  } else  {
-    this.defVelX = 0;         // "stop" the game
-    this.velY = 0;            // -''-
-    this.isExploding = true;  // the unicorn is exploding
-  }
+Kall.prototype.shineCollide = function (shine) {
+
+  //TODO LAGA ÞETTA ÞANNIG AÐ COMBO DETTI ÚT.
+
+      //console.log(this.hasShineCombo);
+      this.hasShineCombo = true;
+      
+     // console.log(this.score);
+    g_sounds.rainbow.play(); 
+
+    score.shineCollision = true;
+    score.gotLastShine = true;
+    score.calculateShineCombo();
+    shine.kill();
 };
 
-Kall.prototype.shineCollide = function (shine, du) {
 
-  this.shineCatch.play();
-  //score.updateShine(du);
-
-  score.shineCollision = true;
-  score.gotLastShine = true;
-  score.calculateShineCombo();
-  shine.kill();
-};
 
 Kall.prototype.loseLife = function () {
       //----\\
@@ -323,6 +336,7 @@ Kall.prototype.loseLife = function () {
     score.gemsInRow = 0;
 
     if (this.lives === 0) {
+        g_sounds.gameOver.play();
         this.kill();
         //hasGameEnded = true;
         main.gameOver();
@@ -413,6 +427,7 @@ Kall.prototype.handleKeys = function(du){
 
     if (eatKey(this.KEY_JUMP)) {
       if (this.jumpCounter!==0) {
+        if(!this.inAir) g_sounds.jump.play();
         this.Jumpframecounter=0;
         this.velY=0;
         this.jumpCounter-=1;
@@ -429,8 +444,10 @@ Kall.prototype.handleKeys = function(du){
     // element. There is slight delay for the 
     // next possible dash.
     if (eatKey(this.KEY_DASH) && this.dashDelay === 0) {
+      g_sounds.dash.play();
+      
       this.isDashing = true;      //more speed access
-      this.Dashframecounter = 0;
+      this.Dashframecounter=0;
       this.dashDelay = 70;        // the frames to wait for next dash 
     }
 };
