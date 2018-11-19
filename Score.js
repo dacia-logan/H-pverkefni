@@ -101,7 +101,8 @@ var score = {
 
       // Draw the combo text
       if (this.lifeSpan > 0) {
-        ctx.fillText(this.shineCombo, xPos, yPos);
+        if (this.shineCombo === 0) ctx.fillText("", xPos, yPos);
+        else ctx.fillText(this.shineCombo, xPos, yPos);
       }
       
       ctx.fill();
@@ -133,7 +134,8 @@ var score = {
 
       // Draw the combo text
       if (this.lifeSpan > 0) {*/
-        ctx.fillText(this.gemCombo, xPos, yPos);
+        if (this.gemCombo===0) ctx.fillText("", xPos, yPos);
+        else ctx.fillText(this.gemCombo, xPos, yPos);
       //}
       
       ctx.fill();
