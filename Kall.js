@@ -24,6 +24,10 @@ function Kall(descr) {
     //þyngdarafl og hoppkraftur
     this.gravity = 0.5;
     this.jumpForce =- 15;
+
+    // if unicorn goes over max jum height he loses jump powers
+    this.maxJumpHeight = -230;
+
     //boolean breita sem er true þegar hann er í loftinu en false annars
     this.inAir = true;
     //jumpcounter telur hoppin niður
@@ -33,15 +37,17 @@ function Kall(descr) {
     this.Jumpframecounter = 0;
     this.Dashframecounter = 0;
 
-    //hraði á kall
-    this.isThrowing = false;
+    // dash delay to make a short brake between dashes
+    this.dashDelay = 0;        
 
-    //should explode when colliding with left edge of platform
-    //and when colliding with gem entity
+    //this.isThrowing = false;
+
+    // is the unicorn exploding?
     this.isExploding = false;
 
     //dashing, extra speed
     this.isDashing = false;
+
     //number of frames we want to be dashing
     this.dashCounter = 20;
 
@@ -61,6 +67,11 @@ function Kall(descr) {
 
     this.type =  "Kall";
 
+    // collision helper with shineCollide
+    /*
+    this.hasShineCombo = false;
+    this.combo = 0;
+    */
 };
 
 Kall.prototype = new Entity();
@@ -79,6 +90,12 @@ Kall.prototype.update = function(du){
 
     this.comboLifeSpan -= du;
     if (this.lifeSpan < 0) return entityManager.KILL_ME_NOW;
+
+    // controlling the dash delay
+    // lowering the delay on each frame
+    if (this.dashDelay > 0) {
+      this.dashDelay--;
+    }
 
     //set the xVel of the unicorn based on if
     //it is dashing or not
@@ -140,7 +157,7 @@ Kall.prototype.update = function(du){
 
 Kall.prototype.setSpeed = function(du) {
   //is the unicorn dashing and is the dashcounter not zero?
-    if (this.isDashing && this.dashCounter !== 0) { 
+    if (this.isDashing && this.dashCounter !== 0) {
       this.dashCounter--;         //dash for only 15 frames
       this.applyAccel(1,0,du) ;   //set velocity to more speed
       this.jumpCounter=1;         //unicorn can jump once after it has dashed
@@ -166,12 +183,16 @@ Kall.prototype.collidesWith = function(du){
           this.width-125, this.height-40);                    
 
         for(i=0 ; i < ent.length; i++){
-          if(ent[i].getType() === "Gem"){                //collision with the gem
-            this.gemCollide(ent[i]);
-          } else if (ent[i].getType() === "Platform"){    //collision with the platform
-            this.platformCollide(ent[i]);
-          } else if (ent[i].getType() === "Shine") {    //collision with shine
-            this.shineCollide(ent[i], du); // ATH
+          if(ent[i].getType() === "Gem"){                // collision with the gem
+            this.gemCollide(ent[i]);                     // handle collision
+            this.jumpCounter = 1;                        // you get one more jump
+            this.dashDelay = 0;                          // dash is not limited
+            this.isDashing = false;                      // stop dashing if we hit Gem
+          } else if (ent[i].getType() === "Platform"){   // collision with the platform
+            this.platformCollide(ent[i]);                // handle collision
+            this.dashDelay = 0;                          // dash is not limited
+          } else if (ent[i].getType() === "Shine") {     // collision with shine
+            this.shineCollide(ent[i]);                   // handle collision
           }
         }
     } else {
@@ -400,9 +421,13 @@ Kall.prototype.handleKeys = function(du){
       this.y=400;
       this.velY=0;
     }
-    if (eatKey(this.KEY_DASH)) {
+    // the dashDelay stops 'abuse' of the dash
+    // element. There is slight delay for the 
+    // next possible dash.
+    if (eatKey(this.KEY_DASH) && this.dashDelay === 0) {
       this.isDashing = true;      //more speed access
-      this.Dashframecounter=0;
+      this.Dashframecounter = 0;
+      this.dashDelay = 70;        // the frames to wait for next dash 
     }
 };
 

@@ -447,20 +447,6 @@ function requestPreloads() {
         Gem5 : "images/Gem/gem_005.png",
 
         // the explosion
-        /*
-        Explosion0 : "images/Explosion/exp_000.png",
-        Explosion1 : "images/Explosion/exp_001.png",
-        Explosion2 : "images/Explosion/exp_002.png",
-        Explosion3 : "images/Explosion/exp_003.png",
-        Explosion4 : "images/Explosion/exp_004.png",
-        Explosion5 : "images/Explosion/exp_005.png",
-        Explosion6 : "images/Explosion/exp_006.png",
-        Explosion7 : "images/Explosion/exp_007.png",
-        Explosion8 : "images/Explosion/exp_008.png",
-        Explosion9 : "images/Explosion/exp_009.png",
-        Explosion10 : "images/Explosion/exp_010.png",
-        Explosion11 : "images/Explosion/exp_011.png",
-        */
         Explosion0 : "images/Explosion/tile000.png",
         Explosion1 : "images/Explosion/tile001.png",
         Explosion2 : "images/Explosion/tile002.png",
@@ -494,13 +480,13 @@ function requestPreloads() {
         Explosion30 : "images/Explosion/tile030.png",
         Explosion31 : "images/Explosion/tile031.png",
 
-        //Heart : "images/Lives/heart.png",
+        // Heart : "images/Lives/heart.png",
         Alive : "images/Lives/alive.png",
         Dead : "images/Lives/dead.png",
         Gameover : "images/playagain.png",
         Background : "images/background.png",
 
-        //the shine image
+        // the shine image
         Shine0 : "images/Shine/shine_000.png",
         Shine1 : "images/Shine/shine_001.png",
         Shine2 : "images/Shine/shine_002.png",
@@ -537,12 +523,6 @@ function preloadDone() {
     g_sprites.dead = new Sprite(g_images.Dead);
     g_platforms.long = new Sprite(g_images.long);
 
-/*
-    for (var i = 0; i < g_runSprite.length; i++) {
-        var run = "g_images.Run" + i;
-        g_runSprite[i]=new Sprite(run);
-    }
-*/
     g_runSprite[0]=new Sprite(g_images.Run0);
     g_runSprite[1]=new Sprite(g_images.Run1);
     g_runSprite[2]=new Sprite(g_images.Run2);

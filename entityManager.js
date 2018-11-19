@@ -54,7 +54,7 @@ KILL_ME_NOW : -1,
 // i.e. thing which need `this` to be defined.
 //
 deferredSetup : function () {
-    this._categories = [this._platforms, this._dummies, this._gem, this._knifes, this._shine, this._combo];
+    this._categories = [this._platforms, this._gem, this._dummies, this._knifes, this._shine, this._combo];
 },
 
 reset : function(){
