@@ -79,10 +79,12 @@ init: function() {
 
 // Platform functions \\
 platSet1:function(makeGem){
+    var xExtra = this.getMainCharacter().getDefVelX()*10;
+    console.log(this.getMainCharacter().getDefVelX()*10)
     var x1 = camera.getPos().posX + g_canvas.width;
-    var x2 = x1+550;
+    var x2 = x1 + 550 + xExtra;
     var y1 = 500;
-    var y2 = 180;
+    var y2 = 220;
     this._platforms.push(new Platform(1,true,x1, y1));
     this._platforms.push(new Platform(4,false,x2,y2));
     if (makeGem <= 8) this._gem.push(new Gem(x2,y2,4));
@@ -90,9 +92,10 @@ platSet1:function(makeGem){
 },
 
 platSet2:function(makeGem){
+    var xExtra = this.getMainCharacter().getDefVelX()*10;
     var x1 = camera.getPos().posX + g_canvas.width;
     var x2 = x1;
-    var x3 = x1+1000;
+    var x3 = x1+1000 + xExtra;
     var y1 = 450;
     var y2 = 130;
     var y3 = 1;
@@ -113,9 +116,10 @@ platSet3:function(makeGem){
 },
 
 platSet4:function(makeGem){
+    var xExtra = this.getMainCharacter().getDefVelX()*10;
     var x1 = camera.getPos().posX + g_canvas.width;
-    var x2 = x1+800;
-    var x3 = x1+1400;
+    var x2 = x1+800+xExtra;
+    var x3 = x1+1400+xExtra;
     var y1 = 450;
     var y2 = 350;
     var y3 = 250;
@@ -127,9 +131,10 @@ platSet4:function(makeGem){
 },
 
 platSet5:function(makeGem){
+    var xExtra = this.getMainCharacter().getDefVelX()*10;
     var x1 = camera.getPos().posX + g_canvas.width;
-    var x2 = x1+500;
-    var x3 = x1+1000;
+    var x2 = x1+500+xExtra;
+    var x3 = x1+1000+xExtra;
     var y1 = 330;
     var y2 = 230;
     this._platforms.push(new Platform(3,false,x1,y1));
@@ -153,8 +158,10 @@ setPlatforms: function(){
         var platX = this._platforms[entity].getPos().posX;
         var platWidth =this._platforms[entity].getWidth();
         var primary = this._platforms[entity].getPrimary();
-
-        if(primary && platX + platWidth <= camera.getPos().posX+500 && !this._platforms[entity].getPlatformPushed()){
+        if(primary 
+           && platX + platWidth <= camera.getPos().posX+500-(this.getMainCharacter().getDefVelX()*10)
+           && !this._platforms[entity].getPlatformPushed())
+           {
             this._platforms[entity].setPlatformPushed();
 
             if(plats >= 13) { this.platSet1(makeGem); }
