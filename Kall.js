@@ -182,11 +182,14 @@ Kall.prototype.gemCollide = function(gem){
     //if we dash into the gem the gem explodes
     if (this.isDashing) {
       gem.explodes();
+      g_sounds.starExplosion.play();
+      g_sounds.starExplosionExtra.play();
     //else the unicorn is exploding and will lose life
     } else  {
       this.defVelX = 0;         // "stop" the game
       this.velY = 0;            // -''-
       this.isExploding = true;  // the unicorn is exploding
+      g_sounds.uniExplosion.play();
     }
 };
 
@@ -213,6 +216,7 @@ Kall.prototype.platformCollide = function(entity){
       this.defVelX = 0;         // "stop" the game
       this.velY = 0;            // -''-
       this.isExploding = true;  // the unicorn is exploding
+      g_sounds.uniExplosion.play();
       return;
       
     }
@@ -257,6 +261,7 @@ Kall.prototype.shineCollide = function (shine) {
 
       //console.log(this.hasShineCombo);
       this.hasShineCombo = true;
+      g_sounds.rainbow.play();
      // console.log(this.score);
       shine.kill();
       if (this.hasShineCombo) {
@@ -297,8 +302,8 @@ Kall.prototype.loseLife = function () {
     */
     this.lives--;
 
-
     if (this.lives === 0) {
+        g_sounds.gameOver.play();
         this.kill();
         main.gameOver();
       // TODO
@@ -320,6 +325,7 @@ Kall.prototype.handleKeys = function(du){
 
     if (eatKey(this.KEY_JUMP)) {
       if (this.jumpCounter!==0) {
+        if(!this.inAir) g_sounds.jump.play();
         this.Jumpframecounter=0;
         this.velY=0;
         this.jumpCounter-=1;
@@ -335,6 +341,7 @@ Kall.prototype.handleKeys = function(du){
     if (eatKey(this.KEY_DASH)) {
       this.isDashing = true;      //more speed access
       this.Dashframecounter=0;
+      g_sounds.dash.play();
     }
 };
 
@@ -457,40 +464,4 @@ Kall.prototype.render = function(ctx){
   this.drawScore(ctx);
 };
 
-/*
-Kall.prototype.render = function(ctx){
 
-  if (main._isGameOver) return;
-
-  if (this.isThrowing) {
-    g_throwSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
-  } else if (this.inAir && this.isDashing) {
-    g_dashSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x - this.width,this.y,this.dashWidth,this.dashHeight);
- } else if (this.inAir) {
-    g_jumpSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.jumpWidth,this.jumpHeight);
-  }
-  
-  TODO LÁTA ÞETTA VIRKA
-  else if (this.isExploding) {
-    g_explosionSprite[Math.floor(this.frameCounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
-  }
-  
-  else {
-    g_runSprite[Math.floor(this.framecounter)].drawAtAndEnlarge(ctx,this.x,this.y,this.width,this.height);
-  }
-
-  var fadeThresh = this.comboLifeSpan / 3;
-
-  if (this.comboLifeSpan < fadeThresh) {
-      ctx.globalAlpha = this.comboLifeSpan / fadeThresh;
-  }
-
-  ctx.globalAlpha = 1;
-
-  this.drawLives(ctx);
-  this.drawScore(ctx);
-  if (this.hasShineCombo) {
-    this.drawCombo(ctx, this.x, this.y);
-  }
-};
-*/

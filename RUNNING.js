@@ -155,7 +155,7 @@ function renderSimulation(ctx) {
     // If the game is over, display the game over screen
     if (main._isGameOver) {
         camera.reset(ctx);
-        g_sprites.gameover.drawAtAndEnlarge(ctx,-gameOverOffset,0,g_canvas.width,g_canvas.height);
+        g_sprites.gameover.drawAtAndEnlarge(ctx,0,0,g_canvas.width,g_canvas.height);
     } else {
     // Else draw the regular background
         Background.render(ctx);
@@ -171,10 +171,54 @@ function renderSimulation(ctx) {
 // =============
 // PRELOAD STUFF
 // =============
+var requiredAudio = [
+        
+    "sounds/always.mp3",
+    "sounds/explosion2.mp3",
+    "sounds/explodeExtra.mp3",
+    "sounds/gameover.mp3",
+    "sounds/rainbow.mp3",
+    "sounds/dash.mp3",
+    "sounds/starExplosion.mp3",
+    "sounds/explosion2extra.mp3",
+    "sounds/jump.mp3"
+
+];
+
+
+    
+function preloadAudio(url) {
+    var audio = new Audio();
+    // once this file loads, it will call loadedAudio()
+    // the file will be kept by the browser as cache
+    audio.addEventListener('canplaythrough', loadedAudio, false);
+    audio.src = url;
+}
+    
+var loaded = 0;
+function loadedAudio() {
+    // this will be called every time an audio file is loaded
+    // we keep track of the loaded files vs the requested files
+    loaded++;
+    if (loaded == requiredAudio.length){
+        // all have loaded
+        console.log("audio complete")
+    	requestImagePreloads();
+    }
+}
+    
+
+    
+// we start preloading all the audio files
+function audioPreload(){
+    for (var i in requiredAudio) {
+        preloadAudio(requiredAudio[i]);
+    }
+}
 
 var g_images = {};
 
-function requestPreloads() {
+function requestImagePreloads() {
 
     var requiredImages = {
         leftPlat : "images/tundraCliffLeft.png",
@@ -350,13 +394,17 @@ function requestPreloads() {
         Shine2 : "images/Shine/shine_002.png",
         Shine3 : "images/Shine/shine_001.png",
         Shine4 : "images/Shine/shine_000.png"
-
-
     };
 
+    
     imagesPreload(requiredImages, g_images, preloadDone);
+    
+    
 }
 
+var preloaded = 0;
+
+var g_sounds = {};
 var g_sprites={};
 var g_platforms = {};
 var g_runSprite=[];
@@ -368,6 +416,20 @@ var g_explosionSprite=[];   // the explosion
 var g_shineSprite = [];   // the shine
 
 function preloadDone() {
+
+    // Audio \\ 
+
+    g_sounds.song = new Audio(requiredAudio[0]);
+    g_sounds.uniExplosion = new Audio(requiredAudio[1]);
+    g_sounds.eExtra = new Audio(requiredAudio[2]);
+    g_sounds.gameOver = new Audio(requiredAudio[3]);
+    g_sounds.rainbow = new Audio(requiredAudio[4]);
+    g_sounds.dash = new Audio(requiredAudio[5]);
+    g_sounds.starExplosion = new Audio(requiredAudio[6]);
+    g_sounds.starExplosionExtra = new Audio(requiredAudio[2]);
+    g_sounds.jump = new Audio(requiredAudio[8]);
+    // Images \\
+
     g_sprites.Background = new Sprite(g_images.Background);
     g_sprites.gameover = new Sprite(g_images.Gameover);
     g_platforms.normal1 = new Sprite(g_images.normal1);
@@ -511,9 +573,8 @@ function preloadDone() {
     entityManager.init();
     init();
     main.init();
+
 }
 
 // Kick it off
-var song = new Audio("sounds/always.mp3");
-//song.play();
-requestPreloads();
+audioPreload();
