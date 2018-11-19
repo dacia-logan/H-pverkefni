@@ -1,3 +1,7 @@
+//=============
+// SHINE SPRITE
+//=============
+
 function Shine(x,y,platNum) {
     // common inherited setup logic from Entity
     this.setup(x);
@@ -43,16 +47,16 @@ Shine.prototype = new Entity();
 
 
 Shine.prototype.render = function(ctx){
-    //only draw if game is not over and the Shine has not been caught
+    // only draw if game is not over and the Shine has not been caught
     if (!main._isGameOver && !this.isCaught) {
-        //if the Shine has not been hit draw a Shine
+        // if the Shine has not been hit draw a Shine
         g_shineSprite[Math.floor(this.frameCounter)].drawAtAndEnlarge(
             ctx,this.x,this.y,this.width,this.height);
     }
 };
 
 Shine.prototype.update = function(du) {
-    //unregister from spatial manager
+    // unregister from spatial manager
     spatialManager.unregister(this);
 
     //score.updateShine(du);
@@ -61,19 +65,16 @@ Shine.prototype.update = function(du) {
     if (this.isCaught) this._isDeadNow;
 
     // kill Shine if it falls out of the canvas
-    // allso has to die if the 'Kall' hits it.
+    // Shine has to die if the 'Kall' hits it.
     // and
-    // If the shine goes out of the canvas, the player has failed to collect it,
-    // and thus loses his shine combo bonus.
+    // If the shine goes out of the canvas, the player has failed 
+    // to collect it, and thus loses his shine combo bonus.
     if (this.x <= camera.getPos().posX - this.width) { 
         this.kill();
         score.gotLastShine = false;
         score.shineCombo = 0;
         score.shineInRow = 0;
     }
-
-    //console.log(score.gotLastShine);
-    //console.log(score.lifeSpan);
 
     // this controlls how fast we change frames on the shine
     if (this.frameCounter < this.numberOfFrames-1) this.frameCounter += 0.05;
@@ -88,7 +89,7 @@ Shine.prototype.update = function(du) {
         this.down = true; 
     }
 
-    // and this also
+    // and this to
     if (this.down === true && this.moveCounter <= this.dist) {
         this.moveCounter += 0.5;
         this.y--;
@@ -97,12 +98,14 @@ Shine.prototype.update = function(du) {
         this.up = true; 
     }
 
-    //if isDead
+    // if the shine is dead return to entityManager
+    // that it should remove it from the game
     if (this._isDeadNow) {
         return entityManager.KILL_ME_NOW;
     }
 
-    //re-register to spatial manager
+    // re-register to spatial manager if shine
+    // has not died
     if (!this._isDeadNow) spatialManager.register(this);
 };
 

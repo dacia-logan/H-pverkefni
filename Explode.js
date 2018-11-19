@@ -8,14 +8,14 @@
 
 var explode = {
 
-    speed : 1,                 // the amount of frames for each pulse
-    frameCounterGem : 0,       // starting point of the counter for gem
-    frameCounterUnicorn : 0,   // starting point of the counter for unicorn
-    counter : 0,
-    extraSize : 0,
-    playSoundGem : true,
-    playSoundUnicorn : true,
-    sound : new Audio("sounds/explosion2.wav"),
+    speed : 1,                                      // the amount of frames for each pulse
+    frameCounterGem : 0,                            // starting point of the counter for gem
+    frameCounterUnicorn : 0,                        // starting point of the counter for unicorn
+    counter : 0,                                    // defines the index for the draw function
+    extraSize : 0,                                  // the pixels to add to the explosion when drawing
+    playSoundGem : true,                            // if this is true the sound for gem can be played
+    playSoundUnicorn : true,                        // if this is true the sound for unicorn can be played
+    sound : new Audio("sounds/explosion2.wav"),     // the explosion sound
 
     // increases the frame on each call to the function
     frames : function (type, numberOfFrames) {
@@ -60,5 +60,4 @@ var explode = {
         g_explosionSprite[Math.floor(this.counter)].drawAtAndEnlarge(
             ctx,x,y,width+this.extraSize,width+this.extraSize);
     }
-
 }
