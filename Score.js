@@ -102,7 +102,7 @@ var score = {
       // Draw the combo text
       if (this.lifeSpan > 0) {
         ctx.fillText(this.shineCombo, xPos, yPos);
-       }
+      }
       
       ctx.fill();
 

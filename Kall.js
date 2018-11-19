@@ -82,7 +82,10 @@ Kall.prototype.KEY_DASH= 'D'.charCodeAt(0); //fast speed forward, dashing
 Kall.prototype.RESET= 'U'.charCodeAt(0);
 
 Kall.prototype.shineCatch = new Audio("sounds/rainbow.wav");
-Kall.prototype.die = new Audio("sounds/explosion2.wav");
+
+// Helga færði þetta hljóð inn í explosion þá virkar þetta fyrir gem og unicorn
+// þetta er núna spilað hér í kalli bara þegar hann fer niður fyrir canvas
+Kall.prototype.die = new Audio("sounds/explosion2.wav"); 
 
 Kall.prototype.update = function(du){
 
@@ -128,6 +131,7 @@ Kall.prototype.update = function(du){
 
      //check if out of canvas
     if (this.y > g_canvas.height) {
+      this.die.play();
       this.loseLife();
     }
 
@@ -220,6 +224,7 @@ Kall.prototype.platformCollide = function(entity){
         x = this.x + 70;
       }
 
+      //this.die.play();
       this.defVelX = 0;         // "stop" the game
       this.velY = 0;            // -''-
       this.isExploding = true;  // the unicorn is exploding
@@ -296,7 +301,7 @@ Kall.prototype.loseLife = function () {
     /*
     *Gera reset function sem resettar mappið ofl.
     */
-    this.die.play();
+    //this.die.play();
     //this.drawFailScreen();
     entityManager.didDie = true;
     Background.hasLostLife = true;
