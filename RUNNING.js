@@ -91,10 +91,17 @@ var g_useGravity = false;
 var g_useAveVel = true;
 var g_renderSpatialDebug = false;
 
-var KEY_MIXED   = keyCode('M');;
+var KEY_MIXED   = keyCode('M');
 var KEY_GRAVITY = keyCode('G');
 var KEY_AVE_VEL = keyCode('V');
 var KEY_SPATIAL = keyCode('X');
+var KEY_MUTE = keyCode('1');
+
+// TODO
+var KEY_PLAYON = keyCode('Z');
+var KEY_PLAYAGAIN = keyCode('Y');
+
+var hasGameEnded = false;
 
 function processDiagnostics() {
 
@@ -107,17 +114,40 @@ function processDiagnostics() {
 
     if (eatKey(KEY_SPATIAL)) g_renderSpatialDebug = !g_renderSpatialDebug;
 
+    if (eatKey(KEY_MUTE)){
+        volumeOnOff();
+    } 
 
+    if (eatKey(KEY_PLAYON)) {
+        Background.hasLostLife = false;
+        entityManager.didDie = false;
+    }
 
+    if (eatKey(KEY_PLAYAGAIN)) {
+        console.log("heyyy");
+        Background.hasLostLife = false;
+        entityManager.didDie = false;
+        score.highScores.length = 0;
+    }
 
 }
 
+
+function volumeOnOff() {
+    for(var i in g_sounds){
+        if(g_sounds.hasOwnProperty(i)){
+            g_sounds[i].muted = !g_sounds[i].muted;
+        }
+    }
+}
 
 // Mini background class gerður til þess 
 // að renderSimulation verði ekki dirty
 var Background = {
     x : 0,
     y : -1000,
+
+    hasLostLife : false,
 
     render : function(ctx){
         if(this.x+g_sprites.Background.width<camera.getPos().posX){
@@ -146,27 +176,180 @@ var Background = {
 
 // GAME-SPECIFIC RENDERING
 
-var KEY_PLAYAGAIN = keyCode('P');
-
 
 function renderSimulation(ctx) {
 
     var gameOverOffset = 50;
     // If the game is over, display the game over screen
-    if (main._isGameOver) {
+    if (Background.hasLostLife) {
+        g_sounds.song.pause();
+        g_sounds.song.currentTime=0;
+        g_sounds.alwaysInstru.play();
+        //if (eatKey(KEFY_PLAYAGAIN)) return;
         camera.reset(ctx);
         g_sprites.gameover.drawAtAndEnlarge(ctx,0,0,g_canvas.width,g_canvas.height);
+        //font-family: 'Patrick Hand', cursive;
+        //font-family: 'Neucha', cursive;
+        ctx.font = "bold 36px Goudy Old Style";
+        ctx.fillStyle = "white";
+        ctx.shadowColor = '#333333';
+        ctx.shadowBlur = 10;
+        ctx.textAlign = "center";
+        if (!main._isGameOver) {
+            ctx.fillText("Failed! Press Z to keep playing", 500, 50);
+        } else if (main._isGameOver) {
+            ctx.fillText("Game over! Press Y to play again", 500, 50);
+        }
+        ctx.fillStyle = "#FFD1DC";
+
+        var boxExtra = 10;
+        ctx.globalAlpha = 0.6;
+
+        // Color of the shadow
+        ctx.shadowColor = '#4C4C4C';
+        ctx.shadowBlur = 15;
+
+        var boxWidth = 600;
+        var boxHeight = 55;
+
+        var boxX = 200;
+        var boxY = 80;
+        var boxOffset = 60;
+
+        ctx.font = "bold 24px Goudy Old Style";
+
+        ctx.fillRect(boxX + (boxExtra / 2), boxY + (boxExtra / 2),
+        boxWidth - boxExtra, boxHeight - boxExtra);
+
+        ctx.fillRect(boxX + (boxExtra / 2), boxY + boxOffset + (boxExtra / 2),
+        boxWidth - boxExtra, boxHeight - boxExtra);
+
+        ctx.fillRect(boxX + (boxExtra / 2), boxY + boxOffset * 2 + (boxExtra / 2),
+        boxWidth - boxExtra, boxHeight - boxExtra);
+
+        ctx.globalAlpha = 1;
+        // Make sure the shadow is only applied to the boxes.
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = "white";
+        ctx.textAlign = "left";
+        ctx.shadowColor = '#A9A9A9';
+        ctx.shadowBlur = 5;
+
+        var textX = boxX + 50;
+        var textY = boxY + 35;
+        var textOffset = boxOffset;
+        var finalScore = score.allScores[0] + score.allScores[1] + score.allScores[2];
+
+        // Counter fyrir skiptin sem maður hefur spilað.
+        var counter = 0;
+
+        score.highScores[counter] = finalScore;
+
+        for (var i = 0; i < score.highScores.length; i++) {
+            if (finalScore > score.highScores[i]) {
+                var temp = finalScore;
+                finalScore = score.highScores[i];
+                score.highScores = temp;
+            }
+        }
+
+        // If the specific score is yet to be assigned, display an empty string instead of 'undefined'.
+        for (var i = 0; i < 3; i++) {
+            if (score.allScores[i] == undefined) {
+                score.allScores[i] = "";
+            }
+        }
+
+        ctx.fillText("1st try: " + score.allScores[0], textX, textY);
+        ctx.fillText("2nd try: " + score.allScores[1], textX, textY + textOffset);
+        ctx.fillText("3rd try: " + score.allScores[2], textX, textY + textOffset * 2);
+
+        if (!main._isGameOver) return;
+
+        ctx.fillStyle = "#FFD1DC";
+        // Color of the shadow
+        ctx.shadowColor = '#4C4C4C';
+        ctx.shadowBlur = 15;
+        ctx.globalAlpha = 0.6;
+
+        ctx.fillRect(boxX + (boxExtra / 2), boxY + boxOffset * 3 + (boxExtra / 2),
+        boxWidth - boxExtra, boxHeight * 1.3 - boxExtra);
+        ctx.globalAlpha = 1;
+
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = "white";
+        ctx.textAlign = "left";
+        ctx.shadowColor = '#A9A9A9';
+        ctx.shadowBlur = 5;
+
+        ctx.font = "bold 30px Goudy Old Style";
+        ctx.shadowColor = '#CCCCCC';
+        ctx.shadowBlur = 10;
+        ctx.fillText("Final score: " + finalScore, textX, textY + textOffset * 3 + boxExtra);
+
+        ctx.fillStyle = "#FFFFFF";
+
+        var boxExtra = 10;
+        ctx.globalAlpha = 0.6;
+
+        // Color of the shadow
+        ctx.shadowColor = '#4C4C4C';
+        ctx.shadowBlur = 15;
+
+        ctx.fillRect(boxX + (boxExtra / 2), boxY + boxOffset * 5 - boxExtra * 2,
+        boxWidth - boxExtra, boxHeight - boxExtra);
+        ctx.globalAlpha = 1;
+        // Make sure the shadow is only applied to the boxes.
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = "white";
+        ctx.textAlign = "center";
+        ctx.shadowColor = '#A9A9A9';
+        ctx.shadowBlur = 5;
+        ctx.fillText("High scores", 500, boxY + boxOffset * 5 + boxExtra * 1.5);
+        
+        ctx.fillStyle = "#FFD1DC";
+
+        ctx.globalAlpha = 0.6;
+        ctx.fillRect(boxX + (boxExtra / 2), boxY + boxOffset * 6 - boxExtra * 2,
+        boxWidth - boxExtra, boxHeight * 1 - boxExtra);
+        ctx.fillRect(boxX + (boxExtra / 2), boxY + boxOffset * 7 - boxExtra * 2,
+        boxWidth - boxExtra, boxHeight * 1 - boxExtra);
+        ctx.fillRect(boxX + (boxExtra / 2), boxY + boxOffset * 8 - boxExtra * 2,
+        boxWidth - boxExtra, boxHeight * 1 - boxExtra);
+
+        
+        ctx.globalAlpha = 1;
+        // Make sure the shadow is only applied to the boxes.
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = "white";
+        ctx.shadowColor = '#A9A9A9';
+        ctx.shadowBlur = 5;
+
+        for (var i = 0; i < score.highScores.length; i++) {
+            ctx.fillText(score.highScores[i], 500, textY + textOffset * 5 + textOffset + i * textOffset - boxExtra * 2);
+        }
+
+
     } else {
     // Else draw the regular background
         Background.render(ctx);
-      
+        entityManager.render(ctx);
+
+        if (g_renderSpatialDebug) spatialManager.render(ctx);
+        
+        // Audio
+        g_sounds.song.play();
+        if(g_sounds.alwaysInstru.currentTime > 0){+
+            g_sounds.alwaysInstru.pause();
+            g_sounds.alwaysInstru.currentTime=0;
+        }
+        
 
     }
-    entityManager.render(ctx);
-
-    if (g_renderSpatialDebug) spatialManager.render(ctx);
+    
 }
 
+ 
 
 // =============
 // PRELOAD STUFF
@@ -181,7 +364,8 @@ var requiredAudio = [
     "sounds/dash.mp3",
     "sounds/starExplosion.mp3",
     "sounds/explosion2extra.mp3",
-    "sounds/jump.mp3"
+    "sounds/jump.mp3",
+    "sounds/alwaysInstru.mp3"
 
 ];
 
@@ -335,20 +519,6 @@ function requestImagePreloads() {
         Gem5 : "images/Gem/gem_005.png",
 
         // the explosion
-        /*
-        Explosion0 : "images/Explosion/exp_000.png",
-        Explosion1 : "images/Explosion/exp_001.png",
-        Explosion2 : "images/Explosion/exp_002.png",
-        Explosion3 : "images/Explosion/exp_003.png",
-        Explosion4 : "images/Explosion/exp_004.png",
-        Explosion5 : "images/Explosion/exp_005.png",
-        Explosion6 : "images/Explosion/exp_006.png",
-        Explosion7 : "images/Explosion/exp_007.png",
-        Explosion8 : "images/Explosion/exp_008.png",
-        Explosion9 : "images/Explosion/exp_009.png",
-        Explosion10 : "images/Explosion/exp_010.png",
-        Explosion11 : "images/Explosion/exp_011.png",
-        */
         Explosion0 : "images/Explosion/tile000.png",
         Explosion1 : "images/Explosion/tile001.png",
         Explosion2 : "images/Explosion/tile002.png",
@@ -382,13 +552,13 @@ function requestImagePreloads() {
         Explosion30 : "images/Explosion/tile030.png",
         Explosion31 : "images/Explosion/tile031.png",
 
-        //Heart : "images/Lives/heart.png",
+        // Heart : "images/Lives/heart.png",
         Alive : "images/Lives/alive.png",
         Dead : "images/Lives/dead.png",
-        Gameover : "images/Lives/gameover.png",
-        Background : "images/background1.png",
+        Gameover : "images/playagain.png",
+        Background : "images/background.png",
 
-        //the shine image
+        // the shine image
         Shine0 : "images/Shine/shine_000.png",
         Shine1 : "images/Shine/shine_001.png",
         Shine2 : "images/Shine/shine_002.png",
@@ -428,6 +598,19 @@ function preloadDone() {
     g_sounds.starExplosion = new Audio(requiredAudio[6]);
     g_sounds.starExplosionExtra = new Audio(requiredAudio[2]);
     g_sounds.jump = new Audio(requiredAudio[8]);
+    g_sounds.alwaysInstru = new Audio(requiredAudio[9]);
+    
+    // Volume of all the non-song sounds
+    g_sounds.uniExplosion.volume = 0.5; 
+    g_sounds.eExtra.volume = 0.5; 
+    g_sounds.gameOver.volume = 0.5; 
+    g_sounds.rainbow.volume = 0.5;  
+    g_sounds.dash.volume = 0.5;  
+    g_sounds.starExplosion.volume = 0.5; 
+    g_sounds.starExplosionExtra.volume = 0.9; 
+    g_sounds.jump.volume = 0.9; 
+
+    
     // Images \\
 
     g_sprites.Background = new Sprite(g_images.Background);
@@ -443,12 +626,6 @@ function preloadDone() {
     g_sprites.dead = new Sprite(g_images.Dead);
     g_platforms.long = new Sprite(g_images.long);
 
-/*
-    for (var i = 0; i < g_runSprite.length; i++) {
-        var run = "g_images.Run" + i;
-        g_runSprite[i]=new Sprite(run);
-    }
-*/
     g_runSprite[0]=new Sprite(g_images.Run0);
     g_runSprite[1]=new Sprite(g_images.Run1);
     g_runSprite[2]=new Sprite(g_images.Run2);

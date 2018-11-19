@@ -11,6 +11,10 @@ var score = {
     currentScore : 0,
     scoreSpeed : 2.5,
 
+    // Array that stores the score for each of the three tries the player gets.
+    allScores : [],
+    highScores : [],
+
     // Variables for the combos, what the current combo is, how many combos the
     //    player has got in a row.
     shineCombo : 0,
@@ -23,6 +27,10 @@ var score = {
     gotLastShine : false,
     gotLastGem : false,
 
+    // TODO
+    shineCollision : false,
+    gemCollision : false,
+
     // Convert times from milliseconds to "nominal" time units.
     lifeSpan : 1000 / NOMINAL_UPDATE_INTERVAL,
 
@@ -33,7 +41,14 @@ var score = {
 
     updateShine : function (du) {
       // Decrease the lifespan.
-      this.lifeSpan -= du;
+      while (this.lifeSpan >= 0) {
+        this.lifeSpan -= du;
+      }
+
+      if (this.lifeSpan < 0) { // óþörf if-setning?
+        this.lifeSpan = 1000 / NOMINAL_UPDATE_INTERVAL;
+        return;
+      }
       //console.log(this.lifeSpan);
     },
 
@@ -42,11 +57,11 @@ var score = {
         this.shineInRow++;
         this.shineCombo += 10;
         this.currentScore += this.shineCombo;
-        console.log(this.shineInRow);
-        console.log(this.shineCombo);
+        //console.log(this.shineInRow);
+        //console.log(this.shineCombo);
       } else if (!this.gotLastShine) {
-        this.shineInRow = 1;
-        this.shineCombo = 0;
+        //this.shineInRow = 1;
+        //this.shineCombo = 0; // 10?
         this.currentScore += this.shineCombo;
       }
     },
@@ -56,17 +71,19 @@ var score = {
         this.gemsInRow++;
         this.gemCombo += 100;
         this.currentScore += this.gemCombo;
-        console.log(this.gemsInRow);
-        console.log(this.gemCombo);
+        //console.log(this.gemsInRow);
+        //console.log(this.gemCombo);
       } else if (!this.gotLastGem) {
-        this.gemsInRow = 1;
-        this.gemCombo = 0;
+       //  this.gemsInRow = 1;
+       // this.gemCombo = 0;
         this.currentScore += this.gemCombo;
       }
     },
 
     drawShineCombo : function (ctx, xPos, yPos) {
-      ctx.font = "bold 40px Consolas";
+      //console.log("komst hingað!!");
+      //console.log(this.shineCombo);
+      ctx.font = "bold 30px Consolas";
       ctx.textAlign = "center";
 
       // Color of the combo text
@@ -93,10 +110,12 @@ var score = {
 
       // Make sure the shadow is only applied to the combo
       ctx.shadowBlur = 0;
+// ef það er liðin sekúnda, þá gerist þetta ->
+      //this.shineCollision = false;
     },
 
     drawGemCombo : function (ctx, xPos, yPos) {
-      ctx.font = "bold 40px Consolas";
+      ctx.font = "bold 30px Consolas";
       ctx.textAlign = "center";
 
       // Color of the combo text
@@ -105,7 +124,7 @@ var score = {
       // Color of the shadow
       ctx.shadowColor = '#1c5e66';
       ctx.shadowBlur = 40;
-
+/*
       var fadeThresh = this.lifeSpan / 3;
 
       if (this.lifeSpan < fadeThresh) {
@@ -113,16 +132,18 @@ var score = {
       }
 
       // Draw the combo text
-      if (this.lifeSpan > 0) {
+      if (this.lifeSpan > 0) {*/
         ctx.fillText(this.gemCombo, xPos, yPos);
-      }
+      //}
       
       ctx.fill();
 
-      ctx.globalAlpha = 1;
+      //ctx.globalAlpha = 1;
 
       // Make sure the shadow is only applied to the combo
       ctx.shadowBlur = 0;
+
+      //this.shineCollision = false;
     },
 
     drawScore : function (ctx) {

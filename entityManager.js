@@ -34,6 +34,10 @@ _knifes :[],
 _shine : [],
 _combo : [],
 
+// TODO
+
+didDie : false,
+
 
 // "PRIVATE" METHODS
 
@@ -50,7 +54,7 @@ KILL_ME_NOW : -1,
 // i.e. thing which need `this` to be defined.
 //
 deferredSetup : function () {
-    this._categories = [this._platforms, this._dummies, this._gem, this._knifes, this._shine, this._combo];
+    this._categories = [this._platforms, this._gem, this._dummies, this._knifes, this._shine, this._combo];
 },
 
 reset : function(){
@@ -183,9 +187,13 @@ getMainCharacter : function(){
 },
 
 update: function(du) {
+
+    // TODO
+    if (this.didDie) return;
     //Range of numbers that give u different platform
     //Check if to push new platform or not
     //this.setObstacle();
+
     this.setPlatforms();
 
     for (var c = 0; c < this._categories.length; ++c) {
@@ -209,6 +217,8 @@ update: function(du) {
 },
 
 render: function(ctx) {
+
+    if (this.didDie) return;
 
     var debugX = 10, debugY = 100;
 

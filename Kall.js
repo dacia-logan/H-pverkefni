@@ -24,6 +24,10 @@ function Kall(descr) {
     //þyngdarafl og hoppkraftur
     this.gravity = 0.5;
     this.jumpForce =- 15;
+
+    // if unicorn goes over max jum height he loses jump powers
+    this.maxJumpHeight = -230;
+
     //boolean breita sem er true þegar hann er í loftinu en false annars
     this.inAir = true;
     //jumpcounter telur hoppin niður
@@ -33,25 +37,29 @@ function Kall(descr) {
     this.Jumpframecounter = 0;
     this.Dashframecounter = 0;
 
-    //hraði á kall
-    this.isThrowing = false;
+    // dash delay to make a short brake between dashes
+    this.dashDelay = 0;        
 
-    //should explode when colliding with left edge of platform
-    //and when colliding with gem entity
+    //this.isThrowing = false;
+
+    // is the unicorn exploding?
     this.isExploding = false;
 
     //dashing, extra speed
     this.isDashing = false;
+
     //number of frames we want to be dashing
     this.dashCounter = 20;
 
     // Líf
+    this.liveSize = 50;
     this.lives = 3;
-    this.heartSize = 50;
+    this.deaths = 0;
+    this.hasLostLife = false;
 
     // Score
-    this.score = 0;
-    this.scoreSpeed = 2.5;
+    //this.score = 0;
+    //this.scoreSpeed = 2.5;
 
     // Highscore
     this.highscore = [];
@@ -59,9 +67,11 @@ function Kall(descr) {
 
     this.type =  "Kall";
 
-    //collision helper with shineCollide
+    // collision helper with shineCollide
+    /*
     this.hasShineCombo = false;
     this.combo = 0;
+    */
 };
 
 Kall.prototype = new Entity();
@@ -71,6 +81,12 @@ Kall.prototype.KEY_JUMP= 'W'.charCodeAt(0);
 Kall.prototype.KEY_DASH= 'D'.charCodeAt(0); //fast speed forward, dashing
 Kall.prototype.RESET= 'U'.charCodeAt(0);
 
+Kall.prototype.shineCatch = new Audio("sounds/rainbow.wav");
+
+// Helga færði þetta hljóð inn í explosion þá virkar þetta fyrir gem og unicorn
+// þetta er núna spilað hér í kalli bara þegar hann fer niður fyrir canvas
+Kall.prototype.die = new Audio("sounds/explosion2.wav"); 
+
 Kall.prototype.update = function(du){
 
     spatialManager.unregister(this);
@@ -78,9 +94,11 @@ Kall.prototype.update = function(du){
     this.comboLifeSpan -= du;
     if (this.lifeSpan < 0) return entityManager.KILL_ME_NOW;
 
-    //console.log(this.framecounter);
-    //console.log(this.Jumpframecounter);
-    //console.log(this.Dashframecounter);
+    // controlling the dash delay
+    // lowering the delay on each frame
+    if (this.dashDelay > 0) {
+      this.dashDelay--;
+    }
 
     //set the xVel of the unicorn based on if
     //it is dashing or not
@@ -113,32 +131,37 @@ Kall.prototype.update = function(du){
 
      //check if out of canvas
     if (this.y > g_canvas.height) {
+      this.die.play();
       this.loseLife();
     }
 
     // Check for death
     if(this._isDeadNow){
       if (this.nrOfTries < 2) {
-        this.highscore[this.nrOfTries] = this.score;
+        this.highscore[this.nrOfTries] = score.currentScore;
       }
       this.nrOfTries++;
-      console.log(this.highscore);
+     // console.log(this.highscore);
       return entityManager.KILL_ME_NOW
     }
     //else register
     else
       spatialManager.register(this);
 
-   
-
     // Update the score
-    this.score += Math.floor(this.scoreSpeed*du);
+    score.updateScore(du);
+
+    // skoða þetta!!
+    if (score.gotLastShine) {
+      score.updateShine(du);
+    }
+    //this.score += Math.floor(this.scoreSpeed*du);
     //console.log(this.score);
 };
 
 Kall.prototype.setSpeed = function(du) {
   //is the unicorn dashing and is the dashcounter not zero?
-    if (this.isDashing && this.dashCounter !== 0) { 
+    if (this.isDashing && this.dashCounter !== 0) {
       this.dashCounter--;         //dash for only 15 frames
       this.applyAccel(1,0,du) ;   //set velocity to more speed
       this.jumpCounter=1;         //unicorn can jump once after it has dashed
@@ -164,12 +187,16 @@ Kall.prototype.collidesWith = function(du){
           this.width-125, this.height-40);                    
 
         for(i=0 ; i < ent.length; i++){
-          if(ent[i].getType() === "Gem"){                //collision with the gem
-            this.gemCollide(ent[i]);
-          } else if (ent[i].getType() === "Platform"){    //collision with the platform
-            this.platformCollide(ent[i]);
-          } else if (ent[i].getType() === "Shine") {    //collision with shine
-            this.shineCollide(ent[i]);
+          if(ent[i].getType() === "Gem"){                // collision with the gem
+            this.gemCollide(ent[i]);                     // handle collision
+            this.jumpCounter = 1;                        // you get one more jump
+            this.dashDelay = 0;                          // dash is not limited
+            this.isDashing = false;                      // stop dashing if we hit Gem
+          } else if (ent[i].getType() === "Platform"){   // collision with the platform
+            this.platformCollide(ent[i]);                // handle collision
+            this.dashDelay = 0;                          // dash is not limited
+          } else if (ent[i].getType() === "Shine") {     // collision with shine
+            this.shineCollide(ent[i]);                   // handle collision
           }
         }
     } else {
@@ -179,18 +206,24 @@ Kall.prototype.collidesWith = function(du){
 
 
 Kall.prototype.gemCollide = function(gem){
-    //if we dash into the gem the gem explodes
-    if (this.isDashing) {
-      gem.explodes();
-      g_sounds.starExplosion.play();
-      g_sounds.starExplosionExtra.play();
-    //else the unicorn is exploding and will lose life
-    } else  {
-      this.defVelX = 0;         // "stop" the game
-      this.velY = 0;            // -''-
-      this.isExploding = true;  // the unicorn is exploding
-      g_sounds.uniExplosion.play();
-    }
+  //if we dash into the gem the gem explodes
+  
+  if (this.isDashing) {
+    g_sounds.starExplosion.play();
+    g_sounds.starExplosionExtra.play();
+
+    score.gemCollision = true;
+    score.gotLastGem = true;
+    score.calculateGemCombo();
+    gem.explodes();
+    //score.gemCollision = false;
+  //else the unicorn is exploding and will lose life
+  } else  {
+    this.defVelX = 0;         // "stop" the game
+    this.velY = 0;            // -''-
+    this.isExploding = true;  // the unicorn is exploding
+    g_sounds.uniExplosion.play();
+  }
 };
 
 Kall.prototype.platformCollide = function(entity){
@@ -213,6 +246,7 @@ Kall.prototype.platformCollide = function(entity){
         x = this.x + 70;
       }
 
+      //this.die.play();
       this.defVelX = 0;         // "stop" the game
       this.velY = 0;            // -''-
       this.isExploding = true;  // the unicorn is exploding
@@ -261,37 +295,17 @@ Kall.prototype.shineCollide = function (shine) {
 
       //console.log(this.hasShineCombo);
       this.hasShineCombo = true;
-      g_sounds.rainbow.play();
+      
      // console.log(this.score);
-      shine.kill();
-      if (this.hasShineCombo) {
-        this.combo++;
-        this.score += this.combo*10;
-      } else {
-        this.score += 10;
-      }
+    g_sounds.rainbow.play(); 
+
+    score.shineCollision = true;
+    score.gotLastShine = true;
+    score.calculateShineCombo();
+    shine.kill();
 };
 
-Kall.prototype.drawCombo = function (ctx, xPos, yPos) {
 
-    ctx.font = "bold 40px Consolas";
-    ctx.textAlign = "center";
-
-    // Color of the combo text
-    ctx.fillStyle = "white";
-
-    // Color of the shadow
-    ctx.shadowColor = '#1c5e66';
-    ctx.shadowBlur = 40;
-
-    // Draw the combo text
-    ctx.fillText("10", xPos, yPos);
-
-    ctx.fill();
-
-    // Make sure the shadow is only applied to the combo
-    ctx.shadowBlur = 0;
-};
 
 Kall.prototype.loseLife = function () {
       //----\\
@@ -300,11 +314,32 @@ Kall.prototype.loseLife = function () {
     /*
     *Gera reset function sem resettar mappið ofl.
     */
+    //this.die.play();
+    //this.drawFailScreen();
+    entityManager.didDie = true;
+    Background.hasLostLife = true;
+
+    console.log(this.deaths);
+
+    // Put the score the player got for the current try in the
+    //  array that holds all three scores for the three tries.
+    score.allScores[this.deaths] = score.currentScore;
+    score.currentScore = 0;
+    console.log(score.allScores);
+
     this.lives--;
+    this.deaths++;
+
+    score.shineCombo = 0;
+    score.gemCombo = 0;
+
+    score.shineInRow = 0;
+    score.gemsInRow = 0;
 
     if (this.lives === 0) {
         g_sounds.gameOver.play();
         this.kill();
+        //hasGameEnded = true;
         main.gameOver();
       // TODO
       // Play game over sound
@@ -317,6 +352,74 @@ Kall.prototype.loseLife = function () {
       this.x =500;
       this.isExploding = false; 
     }
+
+};
+
+Kall.prototype.drawFailScreen = function () {
+  console.log("hello");
+
+  //if (eatKey(this.KEEP_PLAYING)) return;
+  var ctx = g_ctx;
+
+  g_sprites.gameover.drawAtAndEnlarge(ctx,0,0,g_canvas.width,g_canvas.height);
+        //font-family: 'Patrick Hand', cursive;
+        //font-family: 'Neucha', cursive;
+        ctx.font = "bold 36px Goudy Old Style";
+        ctx.fillStyle = "white";
+        ctx.shadowColor = '#333333';
+        ctx.shadowBlur = 10;
+        ctx.fillText("Failed! Press any key to keep playing", g_canvas.width / 2, 70);
+        ctx.fillStyle = "pink";
+        ctx.strokeStyle = "hot pink";
+        ctx.lineJoin = "round";
+        ctx.lineWidth = 20;
+        var borderRadius = 10;
+        ctx.globalAlpha = 0.6;
+
+        // Color of the shadow
+        ctx.shadowColor = '#4C4C4C';
+        ctx.shadowBlur = 15;
+
+        var boxWidth = 600;
+        var boxHeight = 55;
+
+        var boxX = 200;
+        var boxY = 110;
+        var boxOffset = 60;
+
+        ctx.font = "bold 24px Goudy Old Style";
+
+        ctx.fillRect(boxX + (borderRadius / 2), boxY + (borderRadius / 2),
+        boxWidth - borderRadius, boxHeight - borderRadius);
+
+        ctx.fillRect(boxX + (borderRadius / 2), boxY + boxOffset + (borderRadius / 2),
+        boxWidth - borderRadius, boxHeight - borderRadius);
+
+        ctx.fillRect(boxX + (borderRadius / 2), boxY + boxOffset * 2 + (borderRadius / 2),
+        boxWidth - borderRadius, boxHeight - borderRadius);
+
+        ctx.fillRect(boxX + (borderRadius / 2), boxY + boxOffset * 3 + (borderRadius / 2),
+        boxWidth - borderRadius, boxHeight * 1.5 - borderRadius);
+        ctx.globalAlpha = 1;
+        // Make sure the shadow is only applied to the boxes.
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = "white";
+        ctx.textAlign = "left";
+        ctx.shadowColor = '#A9A9A9';
+        ctx.shadowBlur = 5;
+
+        var textX = boxX + 50;
+        var textY = boxY + 35;
+        var textOffset = boxOffset;
+        var finalScore = score.allScores[0] + score.allScores[1] + score.allScores[2];
+        ctx.fillText("1st try: " + score.allScores[0], textX, textY);
+        ctx.fillText("2nd try: " + score.allScores[1], textX, textY + textOffset);
+        ctx.fillText("3rd try: " + score.allScores[2], textX, textY + textOffset * 2);
+
+        ctx.font = "bold 36px Goudy Old Style";
+        ctx.shadowColor = '#CCCCCC';
+        ctx.shadowBlur = 10;
+        ctx.fillText("Final score: " + finalScore, textX, textY + textOffset * 3 + textOffset / 3);
 
 };
 
@@ -338,10 +441,15 @@ Kall.prototype.handleKeys = function(du){
       this.y=400;
       this.velY=0;
     }
-    if (eatKey(this.KEY_DASH)) {
+    // the dashDelay stops 'abuse' of the dash
+    // element. There is slight delay for the 
+    // next possible dash.
+    if (eatKey(this.KEY_DASH) && this.dashDelay === 0) {
+      g_sounds.dash.play();
+      
       this.isDashing = true;      //more speed access
       this.Dashframecounter=0;
-      g_sounds.dash.play();
+      this.dashDelay = 70;        // the frames to wait for next dash 
     }
 };
 
@@ -381,65 +489,33 @@ Kall.prototype.getNextY = function(accelY,du){
 };
 
 
-// Draw the hearts on the screen.
+// Draw the unicorns at the top left corner of the screen which represents
+//  how many lives the player has left.
 Kall.prototype.drawLives = function(ctx) {
-  // Space between the hearts
+  // Space between the unicorns.
   var livesOffset = 55;
 
-  // TODO "dauðu" teiknast núna undir hinum, hægt að gera betur?
-  for (var i = 0; i < 3; i++) {
-    g_sprites.dead.drawAtAndEnlarge(ctx, camera.getPos().posX+15 + livesOffset * i,
-                                      camera.getPos().posY+20, this.heartSize, this.heartSize);
-
-  }
-
-  // Draw as many hearts as lives the player has left
+  // Draw as many unicorns as lives the player has left.
   for (var i = 0; i < this.lives; i++) {
     g_sprites.alive.drawAtAndEnlarge(ctx, camera.getPos().posX+15 + livesOffset * i,
-                                      camera.getPos().posY+20, this.heartSize, this.heartSize);
-
+                                      camera.getPos().posY+20, this.liveSize, this.liveSize);
   }
 
-  //onsole.log(this.lives);
-  //console.log();
-
-};
-
-Kall.prototype.drawScore = function(ctx) {
-
-  ctx.font = "bold 40px Consolas";
-  ctx.textAlign = "center";
-
-  // Color of the score
-  ctx.fillStyle = "white";
-
-  // Color of the shadow
-  ctx.shadowColor = '#1c5e66';
-  ctx.shadowBlur = 40;
-
-  // Draw the score if the game is not over
-  if (!main._isGameOver) {
-    ctx.fillText(this.score, g_canvas.width / 2 + camera.getPos().posX - 20,
-                            70 + camera.getPos().posY);
-  } else if (main._isGameOver) {
-    // VIRKAR EKKI, IMPLEMENTA Á ANNAN HÁTT
-    ctx.fillText("You got " + this.score + "points", g_canvas.width / 2 - 20, 70);
+  // Draws as many "dead" unicorn as lives the player has lost, next to the ones he has left.
+  for (var j = 0; j < this.deaths; j++) {
+    g_sprites.dead.drawAtAndEnlarge(ctx, camera.getPos().posX+125 - livesOffset * j,
+                                      camera.getPos().posY+20, this.liveSize, this.liveSize);                                                          
   }
-
-  ctx.fill();
-
-  // Make sure the shadow is only applied to the score
-  ctx.shadowBlur = 0;
 };
 
 
-Kall.prototype.reset = function(){
+Kall.prototype.reset = function() {
   this.x=200;
   this.y=400;
-}
+};
 
 
-Kall.prototype.render = function(ctx){
+Kall.prototype.render = function(ctx) {
 
   if (main._isGameOver) return;
 
@@ -461,7 +537,14 @@ Kall.prototype.render = function(ctx){
   }
   
   this.drawLives(ctx);
-  this.drawScore(ctx);
+  score.drawScore(ctx);
+
+  //console.log(score.gotLastShine);
+  if (score.shineCollision) {
+    score.drawShineCombo(ctx, this.x, this.y);
+    //score.shineCollision = false;
+  }
+   if (score.gemCollision) {
+    score.drawGemCombo(ctx, this.x, this.y);
+  }
 };
-
-
