@@ -34,14 +34,17 @@ var score = {
     // Convert times from milliseconds to "nominal" time units.
     lifeSpan : 1000 / NOMINAL_UPDATE_INTERVAL,
 
-    gemCounter : 0,
+    // controlls the position handling when we want to draw
+    gemCounter : 0,      
     shineCounter : 0,
 
-    shineX : 0,   //sort of an offset position
-    shineY : 0,  //sort of an offset position
+    // the positions for the scores when the counters 
+    // are zero 
+    shineX : 0,   
+    shineY : 0,  
 
-    gemX : 0,     //sort of an offset position
-    gemY : 0,    //sort of an offset position
+    gemX : 0,     
+    gemY : 0,    
 
     updateScore : function (du) {
       // Update the score
@@ -91,12 +94,17 @@ var score = {
 
     drawShineCombo : function (ctx, xPos, yPos) {
   
+      // if the conter is 0 we want to fetch the 
+      // position sent to the function, else we
+      // ceep the previous position (that is 0)
       if (this.shineCounter === 0) {
         this.shineX = xPos + 400; 
         this.shineY = yPos - 60; 
       }
 
-      this.shineCounter++;
+      // increment the counter so next time 
+      // we dont fetch a new position
+      this.shineCounter++; 
 
       ctx.font = "bold 30px Consolas";
       ctx.textAlign = "center";
@@ -115,6 +123,9 @@ var score = {
           ctx.globalAlpha = this.lifeSpan / fadeThresh;
       }
       */
+
+      // if the combo is 0 we dont want to draw 
+      // else we want to draw the combo points
       if (this.shineCombo === 0) ctx.fillText("", this.shineX, this.shineY);
       else ctx.fillText("+" + this.shineCombo, this.shineX, this.shineY);
       
@@ -129,11 +140,17 @@ var score = {
     },
 
     drawGemCombo : function (ctx, xPos, yPos) {
+
+      // if the conter is 0 we want to fetch the 
+      // position sent to the function, else we
+      // ceep the previous position (that is 0)
       if (this.gemCounter === 0) {
         this.gemX = xPos + 400; 
         this.gemY = yPos - 60; 
       }
 
+      // increment the counter so next time 
+      // we dont fetch a new position
       this.gemCounter++;
 
 
@@ -155,7 +172,8 @@ var score = {
       }
       */
 
-
+      // if the combo is 0 we dont want to draw 
+      // else we want to draw the combo points
       if (this.gemCombo === 0) ctx.fillText("", this.gemX, this.gemY);
       else ctx.fillText("+" + this.gemCombo, this.gemX, this.gemY);
       

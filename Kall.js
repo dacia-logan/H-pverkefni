@@ -181,7 +181,7 @@ Kall.prototype.collidesWith = function(du){
 
         for(i=0 ; i < ent.length; i++){
           if(ent[i].getType() === "Gem"){                // collision with the gem
-            score.gemCounter = 0;
+            score.gemCounter = 0;                        // controlls the position handling for the score
             this.gemCollide(ent[i]);                     // handle collision
             this.jumpCounter = 1;                        // you get one more jump
             this.dashDelay = 0;                          // dash is not limited
@@ -190,7 +190,7 @@ Kall.prototype.collidesWith = function(du){
             this.platformCollide(ent[i]);                // handle collision
             this.dashDelay = 0;                          // dash is not limited
           } else if (ent[i].getType() === "Shine") {     // collision with shine
-            score.shineCounter = 0; 
+            score.shineCounter = 0;                      // controlls the position handling for the score
             this.shineCollide(ent[i]);                   // handle collision
           }
         }
