@@ -34,6 +34,15 @@ var score = {
     // Convert times from milliseconds to "nominal" time units.
     lifeSpan : 1000 / NOMINAL_UPDATE_INTERVAL,
 
+    gemCounter : 0,
+    shineCounter : 0,
+
+    shineX : 0,   //sort of an offset position
+    shineY : 0,  //sort of an offset position
+
+    gemX : 0,     //sort of an offset position
+    gemY : 0,    //sort of an offset position
+
     updateScore : function (du) {
       // Update the score
       this.currentScore += Math.floor(this.scoreSpeed * du);
@@ -81,8 +90,14 @@ var score = {
     },
 
     drawShineCombo : function (ctx, xPos, yPos) {
-      //console.log("komst hingað!!");
-      //console.log(this.shineCombo);
+  
+      if (this.shineCounter === 0) {
+        this.shineX = xPos + 250; 
+        this.shineY = yPos - 70; 
+      }
+
+      this.shineCounter++;
+
       ctx.font = "bold 30px Consolas";
       ctx.textAlign = "center";
 
@@ -93,29 +108,35 @@ var score = {
       ctx.shadowColor = '#1c5e66';
       ctx.shadowBlur = 40;
 
-      var fadeThresh = this.lifeSpan / 3;
+      //var fadeThresh = this.lifeSpan / 3;
 
+      /*
       if (this.lifeSpan < fadeThresh) {
           ctx.globalAlpha = this.lifeSpan / fadeThresh;
       }
-
-      // Draw the combo text
-      if (this.lifeSpan > 0) {
-        if (this.shineCombo === 0) ctx.fillText("", xPos, yPos);
-        else ctx.fillText(this.shineCombo, xPos, yPos);
-      }
+      */
+      if (this.shineCombo === 0) ctx.fillText("", this.shineX, this.shineY);
+      else ctx.fillText("+" + this.shineCombo, this.shineX, this.shineY);
       
       ctx.fill();
 
-      ctx.globalAlpha = 1;
+      //ctx.globalAlpha = 1;
 
       // Make sure the shadow is only applied to the combo
       ctx.shadowBlur = 0;
-// ef það er liðin sekúnda, þá gerist þetta ->
+      // ef það er liðin sekúnda, þá gerist þetta ->
       //this.shineCollision = false;
     },
 
     drawGemCombo : function (ctx, xPos, yPos) {
+      if (this.gemCounter === 0) {
+        this.gemX = xPos + 250; 
+        this.gemY = yPos - 70; 
+      }
+
+      this.gemCounter++;
+
+
       ctx.font = "bold 30px Consolas";
       ctx.textAlign = "center";
 
@@ -125,18 +146,18 @@ var score = {
       // Color of the shadow
       ctx.shadowColor = '#1c5e66';
       ctx.shadowBlur = 40;
-/*
-      var fadeThresh = this.lifeSpan / 3;
 
+      //var fadeThresh = this.lifeSpan / 3;
+
+      /*
       if (this.lifeSpan < fadeThresh) {
           ctx.globalAlpha = this.lifeSpan / fadeThresh;
       }
+      */
 
-      // Draw the combo text
-      if (this.lifeSpan > 0) {*/
-        if (this.gemCombo===0) ctx.fillText("", xPos, yPos);
-        else ctx.fillText(this.gemCombo, xPos, yPos);
-      //}
+
+      if (this.gemCombo === 0) ctx.fillText("", this.gemX, this.gemY);
+      else ctx.fillText("+" + this.gemCombo, this.gemX, this.gemY);
       
       ctx.fill();
 

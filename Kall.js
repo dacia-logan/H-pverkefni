@@ -1,4 +1,5 @@
 function Kall(descr) {
+
     // Common inherited setup logic from Entity
     this.setup(descr);
 
@@ -12,14 +13,6 @@ function Kall(descr) {
     // width and height
     this.width = 170;
     this.height = 85;
-
-    // Hæð og breidd á jump-spriteinum
-    //this.jumpWidth = g_jumpSprite[0].width;
-    //this.jumpHeight = g_jumpSprite[0].height;
-
-    // Hæð og breidd á dash-spriteinum
-    //this.dashWidth = g_dashSprite[0].width;
-    //this.dashHeight = g_dashSprite[0].height;
 
     // gravity and force
     this.gravity = 0.5;
@@ -54,21 +47,12 @@ function Kall(descr) {
     this.deaths = 0;
     this.hasLostLife = false;
 
-    // Score
-    //this.score = 0;
-    //this.scoreSpeed = 2.5;
-
     // highscore
     this.highscore = [];
     this.nrOfTries = 0;
 
     this.type =  "Kall";
 
-    // collision helper with shineCollide
-    /*
-    this.hasShineCombo = false;
-    this.combo = 0;
-    */
 };
 
 
@@ -113,7 +97,6 @@ Kall.prototype.update = function(du){
     //it is dashing or not
     this.setSpeed(du);
     this.defVelX+=0.003*du;
-    //console.log(this.defVelX);
     if(this.inAir){
       this.Jumpframecounter+=0.378;
       if (this.Jumpframecounter>=26) {
@@ -150,7 +133,6 @@ Kall.prototype.update = function(du){
         this.highscore[this.nrOfTries] = score.currentScore;
       }
       this.nrOfTries++;
-     // console.log(this.highscore);
       return entityManager.KILL_ME_NOW
     }
     //else register
@@ -164,8 +146,7 @@ Kall.prototype.update = function(du){
     if (score.gotLastShine) {
       score.updateShine(du);
     }
-    //this.score += Math.floor(this.scoreSpeed*du);
-    //console.log(this.score);
+
 };
 
 
@@ -209,6 +190,7 @@ Kall.prototype.collidesWith = function(du){
 
         for(i=0 ; i < ent.length; i++){
           if(ent[i].getType() === "Gem"){                // collision with the gem
+            score.gemCounter = 0;
             this.gemCollide(ent[i]);                     // handle collision
             this.jumpCounter = 1;                        // you get one more jump
             this.dashDelay = 0;                          // dash is not limited
@@ -217,6 +199,7 @@ Kall.prototype.collidesWith = function(du){
             this.platformCollide(ent[i]);                // handle collision
             this.dashDelay = 0;                          // dash is not limited
           } else if (ent[i].getType() === "Shine") {     // collision with shine
+            score.shineCounter = 0; 
             this.shineCollide(ent[i]);                   // handle collision
           }
         }
@@ -239,7 +222,7 @@ Kall.prototype.gemCollide = function(gem){
     score.gotLastGem = true;
     score.calculateGemCombo();
     gem.explodes();
-    //score.gemCollision = false;
+
   //else the unicorn is exploding and will lose life
   } else  {
     this.defVelX = 0;         // "stop" the game
@@ -271,7 +254,6 @@ Kall.prototype.platformCollide = function(entity){
         x = this.x + 70;
       }
 
-      //this.die.play();
       this.defVelX = 0;         // "stop" the game
       this.velY = 0;            // -''-
       this.isExploding = true;  // the unicorn is exploding
@@ -318,15 +300,8 @@ Kall.prototype.platformCollide = function(entity){
 // this handles collision with the shine
 // and unicorn
 Kall.prototype.shineCollide = function (shine) {
-
-  //TODO LAGA ÞETTA ÞANNIG AÐ COMBO DETTI ÚT.
-
-      //console.log(this.hasShineCombo);
-      this.hasShineCombo = true;
-      
-     // console.log(this.score);
+    this.hasShineCombo = true; 
     g_sounds.rainbow.play(); 
-
     score.shineCollision = true;
     score.gotLastShine = true;
     score.calculateShineCombo();
@@ -341,12 +316,8 @@ Kall.prototype.shineCollide = function (shine) {
 // LOSE LIFE
 //==========
 Kall.prototype.loseLife = function () {
-      
-    //this.die.play();
-    //this.drawFailScreen();
     entityManager.didDie = true;
     Background.hasLostLife = true;
-
     console.log(this.deaths);
 
     // Put the score the player got for the current try in the
@@ -367,10 +338,7 @@ Kall.prototype.loseLife = function () {
     if (this.lives === 0) {
         g_sounds.gameOver.play();
         this.kill();
-        //hasGameEnded = true;
         main.gameOver();
-      // TODO
-      // Play game over sound
     }
 
     else {
@@ -507,10 +475,8 @@ Kall.prototype.render = function(ctx) {
   this.drawLives(ctx);
   score.drawScore(ctx);
 
-  //console.log(score.gotLastShine);
   if (score.shineCollision) {
     score.drawShineCombo(ctx, this.x, this.y);
-    //score.shineCollision = false;
   }
    if (score.gemCollision) {
     score.drawGemCombo(ctx, this.x, this.y);
