@@ -97,8 +97,7 @@ var KEY_AVE_VEL = keyCode('V');
 var KEY_SPATIAL = keyCode('X');
 var KEY_MUTE = keyCode('1');
 
-// TODO
-var KEY_PLAYON = keyCode('Z');
+
 var KEY_PLAYAGAIN = keyCode('Y');
 
 var hasGameEnded = false;
@@ -117,9 +116,6 @@ function processDiagnostics() {
     if (eatKey(KEY_MUTE)){
         volumeOnOff();
     } 
-
-    // Put the following keyhandles here for convenience
-
 
    /* if (eatKey(KEY_PLAYAGAIN) && entityManager.getMainCharacter().getLives()===0) {
         console.log("heyyy");
