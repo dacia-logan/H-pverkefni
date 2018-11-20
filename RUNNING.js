@@ -118,17 +118,22 @@ function processDiagnostics() {
         volumeOnOff();
     } 
 
-    if (eatKey(KEY_PLAYON)) {
+    // Put the following keyhandles here for convenience
+
+    if (eatKey(KEY_PLAYON) && entityManager.getMainCharacter().getLives()!=0) {
         Background.hasLostLife = false;
         entityManager.didDie = false;
     }
 
-    if (eatKey(KEY_PLAYAGAIN)) {
+    if (eatKey(KEY_PLAYAGAIN) && entityManager.getMainCharacter().getLives()===0) {
         console.log("heyyy");
-        Background.hasLostLife = false;
+        entityManager.gameOver=false;
+        entityManager.resetGameOver();
+        score.reset();
         entityManager.didDie = false;
-        score.highScores.length = 0;
+        Background.hasLostLife = false;
     }
+
 
 }
 

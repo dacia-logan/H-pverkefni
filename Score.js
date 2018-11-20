@@ -27,12 +27,6 @@ var score = {
     gotLastShine : false,
     gotLastGem : false,
 
-    // TODO
-    shineCollision : false,
-    gemCollision : false,
-
-    // Convert times from milliseconds to "nominal" time units.
-    lifeSpan : 1000 / NOMINAL_UPDATE_INTERVAL,
 
     // controlls the position handling when we want to draw
     gemCounter : 0,      
@@ -62,6 +56,24 @@ var score = {
         return;
       }
       //console.log(this.lifeSpan);
+    },
+
+    reset : function(){
+        this.currentScore=0;
+        this.scoreSpeed=2.5;
+        this.allScores=[];
+        this.shineCombo=0;
+        this.shineInRow=0;
+        this.gemCombo=0;
+        this.gemsInRow=0;
+        this.gotLastShine=false;
+        this.gotLastGem=false;
+        this.gemCounter=0;
+        this.shineCounter=0;
+        this.shineX=0;
+        this.shineY=0;
+        this.gemX=0;
+        this.gemY=0;
     },
 
     calculateShineCombo : function () {
@@ -199,10 +211,10 @@ var score = {
       ctx.shadowBlur = 40;
     
       // Draw the score if the game is not over
-      if (!main._isGameOver) {
+      if (!entityManager.gameOver) {
         ctx.fillText(this.currentScore, g_canvas.width / 2 + camera.getPos().posX - 20,
                                 70 + camera.getPos().posY);
-      } else if (main._isGameOver) {
+      } else if (entityManager.gameOver) {
         // VIRKAR EKKI, IMPLEMENTA Á ANNAN HÁTT
         ctx.fillText("You got " + this.currentScore + "points", g_canvas.width / 2 - 20, 70);
       }
@@ -225,9 +237,9 @@ var score = {
         ctx.shadowColor = '#333333';
         ctx.shadowBlur = 10;
         ctx.textAlign = "center";
-        if (!main._isGameOver) {
+        if (!entityManager.gameOver) {
             ctx.fillText("Failed! Press Z to keep playing", 500, 50);
-        } else if (main._isGameOver) {
+        } else if (entityManager.gameOver) {
             ctx.fillText("Game over! Press Y to play again", 500, 50);
         }
         ctx.fillStyle = "#FFD1DC";
@@ -294,7 +306,7 @@ var score = {
         ctx.fillText("2nd try: " + this.allScores[1], textX, textY + textOffset);
         ctx.fillText("3rd try: " + this.allScores[2], textX, textY + textOffset * 2);
 
-        if (!main._isGameOver) return;
+        if (!entityManager.gameOver) return;
 
         ctx.fillStyle = "#FFD1DC";
         // Color of the shadow
