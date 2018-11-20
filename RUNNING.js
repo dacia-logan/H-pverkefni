@@ -165,23 +165,10 @@ var Background = {
 // =================
 // RENDER SIMULATION
 // =================
-
-// We take a very layered approach here...
-//
-// The primary `render` routine handles generic stuff such as
-// the diagnostic toggles (including screen-clearing).
-//
-// It then delegates the game-specific logic to `gameRender`
-
-
-// GAME-SPECIFIC RENDERING
-
-
 function renderSimulation(ctx) {
 
     // If the game is over, display the game over screen
     if (Background.hasLostLife) {
-       
         // Audio
         g_sounds.song.pause();
         g_sounds.song.currentTime=0;
@@ -202,10 +189,7 @@ function renderSimulation(ctx) {
             g_sounds.alwaysInstru.pause();
             g_sounds.alwaysInstru.currentTime=0;
         }
-        
-
-    }
-    
+    } 
 }
 
  
@@ -264,9 +248,8 @@ var g_images = {};
 function requestImagePreloads() {
 
     var requiredImages = {
-        leftPlat : "images/tundraCliffLeft.png",
-        midPlat : "images/tundraMid.png",
-        rightPlat : "images/tundraCliffRight.png",
+
+        // Sprites for when unicorn is running
         Run17 :  "images/Unicorn/run/run_000.png",
         Run16 :  "images/Unicorn/run/run_001.png",
         Run15 :  "images/Unicorn/run/run_002.png",
@@ -295,24 +278,7 @@ function requestImagePreloads() {
         Run19 :  "images/Unicorn/run/run_027.png",
         Run18 :  "images/Unicorn/run/run_028.png",
 
-        /*Run0 :  "images/Unicorn/run_1.png",
-        Run1 :  "images/Unicorn/run_2.png",
-        Run2 :  "images/Unicorn/run_3.png",
-        Run3 :  "images/Unicorn/run_4.png",
-        Run4 :  "images/Unicorn/run_5.png",
-        Run5 :  "images/Unicorn/run_6.png",
-        Run6 :  "images/Unicorn/run_7.png",
-        Run7 :  "images/Unicorn/run_8.png",
-        Run8 :  "images/Unicorn/run_9.png",
-        Run9 :  "images/Unicorn/run_10.png",
-        Run10 :  "images/Unicorn/run_11.png",
-        Run11 :  "images/Unicorn/run_12.png",
-        Run12 :  "images/Unicorn/run_13.png",
-        Run13 :  "images/Unicorn/run_14.png",
-        Run14 :  "images/Unicorn/run_15.png",
-        Run15 :  "images/Unicorn/run_16.png",
-        Run16 :  "images/Unicorn/run_17.png",
-        Run17 :  "images/Unicorn/run_18.png",*/
+        // Sprites for when unicorn is jumping
         Jump12 : "images/Unicorn/jump/jump_000.png",
         Jump11: "images/Unicorn/jump/jump_001.png",
         Jump10 : "images/Unicorn/jump/jump_002.png",
@@ -326,7 +292,8 @@ function requestImagePreloads() {
         Jump2 : "images/Unicorn/jump/jump_010.png",
         Jump1 : "images/Unicorn/jump/jump_011.png",
         Jump0 : "images/Unicorn/jump/jump_012.png",
-        // Sprites for when it's dashing
+
+        // Sprites for when unicorn is dashing
         Dash0 : "images/Unicorn/dash/dash_000.png",
         Dash1 : "images/Unicorn/dash/dash_001.png",
         Dash2 : "images/Unicorn/dash/dash_002.png",
@@ -340,7 +307,7 @@ function requestImagePreloads() {
         Dash10 : "images/Unicorn/dash/dash_010.png",
         Dash11 : "images/Unicorn/dash/dash_011.png",
 
-        // Sprites for when it's going down
+        // Sprites for when unicorn is going down
         Down0 : "images/Unicorn/down/down_000.png",
         Down1 : "images/Unicorn/down/down_001.png",
         Down2 : "images/Unicorn/down/down_002.png",
@@ -361,6 +328,7 @@ function requestImagePreloads() {
         Down17 :  "images/Unicorn/down/down_017.png",
         Down18 :  "images/Unicorn/down/down_018.png",
 
+        // Platforms
         normal1 : "images/Platforms/normalSize.png",
         normal2 : "images/Platforms/normalSize2.png",
         normal3 : "images/Platforms/normalSize3.png",
@@ -369,7 +337,7 @@ function requestImagePreloads() {
         large : "images/Platforms/largeSize.png",
         long : "images/Platforms/long.png",
 
-        // the gem
+        // Gems
         Gem0 : "images/Gem/gem_000.png",
         Gem1 : "images/Gem/gem_001.png",
         Gem2 : "images/Gem/gem_002.png",
@@ -377,7 +345,7 @@ function requestImagePreloads() {
         Gem4 : "images/Gem/gem_004.png",
         Gem5 : "images/Gem/gem_005.png",
 
-        // the explosion
+        // Explosion
         Explosion0 : "images/Explosion/tile000.png",
         Explosion1 : "images/Explosion/tile001.png",
         Explosion2 : "images/Explosion/tile002.png",
@@ -411,13 +379,17 @@ function requestImagePreloads() {
         Explosion30 : "images/Explosion/tile030.png",
         Explosion31 : "images/Explosion/tile031.png",
 
-        // Heart : "images/Lives/heart.png",
+        // Hearts/lives
         Alive : "images/Lives/alive.png",
         Dead : "images/Lives/dead.png",
+
+        // Gameover screen
         Gameover : "images/playagain.png",
+
+        // Background screen
         Background : "images/background.png",
 
-        // the shine image
+        // Shine
         Shine0 : "images/Shine/shine_000.png",
         Shine1 : "images/Shine/shine_001.png",
         Shine2 : "images/Shine/shine_002.png",
@@ -425,9 +397,7 @@ function requestImagePreloads() {
         Shine4 : "images/Shine/shine_000.png"
     };
 
-    
     imagesPreload(requiredImages, g_images, preloadDone);
-    
     
 }
 
@@ -446,8 +416,7 @@ var g_shineSprite = [];   // the shine
 
 function preloadDone() {
 
-    // Audio \\ 
-
+    // Audio 
     g_sounds.song = new Audio(requiredAudio[0]);
     g_sounds.uniExplosion = new Audio(requiredAudio[1]);
     g_sounds.eExtra = new Audio(requiredAudio[2]);
@@ -470,21 +439,28 @@ function preloadDone() {
     g_sounds.jump.volume = 0.9; 
 
     
-    // Images \\
+    // Images
 
+    // background
     g_sprites.Background = new Sprite(g_images.Background);
+
+    // game over screen
     g_sprites.gameover = new Sprite(g_images.Gameover);
+
+    // platforms
     g_platforms.normal1 = new Sprite(g_images.normal1);
     g_platforms.normal2 = new Sprite(g_images.normal2);
     g_platforms.normal3 = new Sprite(g_images.normal3);
     g_platforms.small = new Sprite(g_images.small);
     g_platforms.esmall = new Sprite(g_images.esmall);
     g_platforms.large = new Sprite(g_images.large);
-    //g_sprites.heart = new Sprite(g_images.Heart);
+
+    // lives
     g_sprites.alive = new Sprite(g_images.Alive);
     g_sprites.dead = new Sprite(g_images.Dead);
     g_platforms.long = new Sprite(g_images.long);
 
+    // unicorn related
     g_runSprite[0]=new Sprite(g_images.Run0);
     g_runSprite[1]=new Sprite(g_images.Run1);
     g_runSprite[2]=new Sprite(g_images.Run2);
@@ -559,7 +535,7 @@ function preloadDone() {
     g_dashSprite[10]=new Sprite(g_images.Dash10);
     g_dashSprite[11]=new Sprite(g_images.Dash11);
 
-    // the gem
+    // gem
     g_gemSprites[0] = new Sprite(g_images.Gem0);
     g_gemSprites[1] = new Sprite(g_images.Gem1);
     g_gemSprites[2] = new Sprite(g_images.Gem2);
@@ -567,7 +543,7 @@ function preloadDone() {
     g_gemSprites[4] = new Sprite(g_images.Gem4);
     g_gemSprites[5] = new Sprite(g_images.Gem5);
 
-    // the explosion
+    // explosion
     g_explosionSprite[0] = new Sprite(g_images.Explosion0);
     g_explosionSprite[1] = new Sprite(g_images.Explosion1);
     g_explosionSprite[2] = new Sprite(g_images.Explosion2);
@@ -601,7 +577,7 @@ function preloadDone() {
     g_explosionSprite[30] = new Sprite(g_images.Explosion30);
     g_explosionSprite[31] = new Sprite(g_images.Explosion31);
 
-    // the shine
+    // shine
     g_shineSprite[0] = new Sprite(g_images.Shine0);
     g_shineSprite[1] = new Sprite(g_images.Shine1);
     g_shineSprite[2] = new Sprite(g_images.Shine2);
@@ -609,7 +585,6 @@ function preloadDone() {
     entityManager.init();
     init();
     main.init();
-
 }
 
 // Kick it off
