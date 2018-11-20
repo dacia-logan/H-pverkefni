@@ -1,4 +1,5 @@
 function Kall(descr) {
+
     // Common inherited setup logic from Entity
     this.setup(descr);
 
@@ -12,14 +13,6 @@ function Kall(descr) {
     // width and height
     this.width = 170;
     this.height = 85;
-
-    // Hæð og breidd á jump-spriteinum
-    //this.jumpWidth = g_jumpSprite[0].width;
-    //this.jumpHeight = g_jumpSprite[0].height;
-
-    // Hæð og breidd á dash-spriteinum
-    //this.dashWidth = g_dashSprite[0].width;
-    //this.dashHeight = g_dashSprite[0].height;
 
     // gravity and force
     this.gravity = 0.5;
@@ -54,21 +47,12 @@ function Kall(descr) {
     this.deaths = 0;
     this.hasLostLife = false;
 
-    // Score
-    //this.score = 0;
-    //this.scoreSpeed = 2.5;
-
     // highscore
     this.highscore = [];
     this.nrOfTries = 0;
 
     this.type =  "Kall";
 
-    // collision helper with shineCollide
-    /*
-    this.hasShineCombo = false;
-    this.combo = 0;
-    */
 };
 
 
@@ -78,19 +62,10 @@ function Kall(descr) {
 Kall.prototype = new Entity();
 
 
-//=====
-// KEYS 
-//=====
-Kall.prototype.KEY_JUMP= 'W'.charCodeAt(0); // jump up 
-Kall.prototype.KEY_DASH= 'D'.charCodeAt(0); // fast speed forward, dashing
-Kall.prototype.RESET= 'U'.charCodeAt(0);    // resets the game to starting position
-
-
-//======
-// AUDIO
-//======
-Kall.prototype.shineCatch = new Audio("sounds/rainbow.wav");
-Kall.prototype.die = new Audio("sounds/explosion2.wav"); 
+Kall.prototype.KEY_JUMP= 'W'.charCodeAt(0);
+Kall.prototype.KEY_DASH= 'D'.charCodeAt(0); //fast speed forward, dashing
+Kall.prototype.RESET= 'U'.charCodeAt(0);
+ 
 
 
 //===============
@@ -109,11 +84,10 @@ Kall.prototype.update = function(du){
       this.dashDelay--;
     }
 
-    //set the xVel of the unicorn based on if
+    //set the xVel of rethe unicorn based on if
     //it is dashing or not
     this.setSpeed(du);
     this.defVelX+=0.003*du;
-    //console.log(this.defVelX);
     if(this.inAir){
       this.Jumpframecounter+=0.378;
       if (this.Jumpframecounter>=26) {
@@ -140,7 +114,7 @@ Kall.prototype.update = function(du){
 
      //check if out of canvas
     if (this.y > g_canvas.height) {
-      this.die.play();
+      g_sounds.uniExplosion.play();
       this.loseLife();
     }
 
@@ -150,7 +124,6 @@ Kall.prototype.update = function(du){
         this.highscore[this.nrOfTries] = score.currentScore;
       }
       this.nrOfTries++;
-     // console.log(this.highscore);
       return entityManager.KILL_ME_NOW
     }
     //else register
@@ -171,9 +144,6 @@ Kall.prototype.update = function(du){
       score.lifeSpan = 1000 / NOMINAL_UPDATE_INTERVAL;
       score.shineCollision = false;
     }
-    //this.score += Math.floor(this.scoreSpeed*du);
-    //console.log(this.score);
-    console.log(score.lifeSpan);
 };
 
 
@@ -184,7 +154,7 @@ Kall.prototype.setSpeed = function(du) {
   //is the unicorn dashing and is the dashcounter not zero?
     if (this.isDashing && this.dashCounter !== 0) {
       this.dashCounter--;         //dash for only 15 frames
-      this.applyAccel(1,0,du) ;   //set velocity to more speed
+      this.applyAccel(1,0,du);   //set velocity to more speed
       this.jumpCounter=1;         //unicorn can jump once after it has dashed
       this.velY=0;                // no vertical velocity while dashing
       this.Dashframecounter+=1;
@@ -217,6 +187,7 @@ Kall.prototype.collidesWith = function(du){
 
         for(i=0 ; i < ent.length; i++){
           if(ent[i].getType() === "Gem"){                // collision with the gem
+            score.gemCounter = 0;
             this.gemCollide(ent[i]);                     // handle collision
             this.jumpCounter = 1;                        // you get one more jump
             this.dashDelay = 0;                          // dash is not limited
@@ -225,7 +196,8 @@ Kall.prototype.collidesWith = function(du){
             this.platformCollide(ent[i]);                // handle collision
             this.dashDelay = 0;                          // dash is not limited
           } else if (ent[i].getType() === "Shine") {     // collision with shine
-            this.shineCollide(ent[i], du);                   // handle collision
+            score.shineCounter = 0; 
+            this.shineCollide(ent[i]);                   // handle collision
           }
         }
     } else {
@@ -249,7 +221,7 @@ Kall.prototype.gemCollide = function(gem){
     score.gotLastGem = true;
     score.calculateGemCombo();
     gem.explodes();
-    //score.gemCollision = false;
+
   //else the unicorn is exploding and will lose life
   } else  {
     this.defVelX = 0;         // "stop" the game
@@ -281,7 +253,6 @@ Kall.prototype.platformCollide = function(entity){
         x = this.x + 70;
       }
 
-      //this.die.play();
       this.defVelX = 0;         // "stop" the game
       this.velY = 0;            // -''-
       this.isExploding = true;  // the unicorn is exploding
@@ -300,6 +271,7 @@ Kall.prototype.platformCollide = function(entity){
           this.y--;
           var y=this.y+30;
         }
+        this.dashDelay=0;
         this.y = posY-this.height-(30-40);   //y and height difference
         this.velY=0;
         this.jumpCounter=2;
@@ -327,29 +299,9 @@ Kall.prototype.platformCollide = function(entity){
 
 // this handles collision with the shine
 // and unicorn
-Kall.prototype.shineCollide = function (shine, du) {
-
-  //TODO LAGA ÞETTA ÞANNIG AÐ COMBO DETTI ÚT.
-
-      //console.log(this.hasShineCombo);
-      this.hasShineCombo = true;
-
-      var xNow = this.x;
-      var yNow = this.y;
-
-      score.counter = 0;
-
-    //if (score.shineCollision) {
-     //score.drawShineCombo(g_ctx, xNow, yNow);
-
-     score.drawGemCombo(g_ctx, xNow, yNow);
-    //score.shineCollision = false;
-  //}
-      score.lifeSpan -= du;
-      
-     // console.log(this.score);
+Kall.prototype.shineCollide = function (shine) {
+    this.hasShineCombo = true; 
     g_sounds.rainbow.play(); 
-
     score.shineCollision = true;
     score.gotLastShine = true;
     score.calculateShineCombo();
@@ -364,12 +316,8 @@ Kall.prototype.shineCollide = function (shine, du) {
 // LOSE LIFE
 //==========
 Kall.prototype.loseLife = function () {
-      
-    //this.die.play();
-    //this.drawFailScreen();
     entityManager.didDie = true;
     Background.hasLostLife = true;
-
     console.log(this.deaths);
 
     // Put the score the player got for the current try in the
@@ -390,10 +338,7 @@ Kall.prototype.loseLife = function () {
     if (this.lives === 0) {
         g_sounds.gameOver.play();
         this.kill();
-        //hasGameEnded = true;
         main.gameOver();
-      // TODO
-      // Play game over sound
     }
 
     else {
@@ -494,7 +439,12 @@ Kall.prototype.reset = function() {
   this.y=400;
 };
 
-
+Kall.prototype.resetGameOver = function() {
+  this.x=200;
+  this.y=400;
+  this.lives=3;
+  this.deaths=0;
+};
 //============
 // GET defVelX
 //============
@@ -530,11 +480,9 @@ Kall.prototype.render = function(ctx) {
   this.drawLives(ctx);
   score.drawScore(ctx);
 
-  //console.log(score.gotLastShine);
-
-  var xNow = camera.getPos().PosX;
-  var yNow = camera.getPos().posY;
-
+  if (score.shineCollision) {
+    score.drawShineCombo(ctx, this.x, this.y);
+  }
    if (score.gemCollision) {
     score.drawGemCombo(ctx, xNow, yNow);
   }
