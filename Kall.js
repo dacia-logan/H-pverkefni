@@ -161,11 +161,19 @@ Kall.prototype.update = function(du){
     score.updateScore(du);
 
     // skoða þetta!!
-    if (score.gotLastShine) {
+    /*if (score.gotLastShine) {
       score.updateShine(du);
+    }*/
+    if (score.shineCollision) {
+      while (score.lifeSpan < 0) {
+        score.lifeSpan -= du;
+      }
+      score.lifeSpan = 1000 / NOMINAL_UPDATE_INTERVAL;
+      score.shineCollision = false;
     }
     //this.score += Math.floor(this.scoreSpeed*du);
     //console.log(this.score);
+    console.log(score.lifeSpan);
 };
 
 
@@ -217,7 +225,7 @@ Kall.prototype.collidesWith = function(du){
             this.platformCollide(ent[i]);                // handle collision
             this.dashDelay = 0;                          // dash is not limited
           } else if (ent[i].getType() === "Shine") {     // collision with shine
-            this.shineCollide(ent[i]);                   // handle collision
+            this.shineCollide(ent[i], du);                   // handle collision
           }
         }
     } else {
@@ -234,6 +242,8 @@ Kall.prototype.gemCollide = function(gem){
   if (this.isDashing) {
     g_sounds.starExplosion.play();
     g_sounds.starExplosionExtra.play();
+
+    score.counter = 0;
 
     score.gemCollision = true;
     score.gotLastGem = true;
@@ -317,12 +327,25 @@ Kall.prototype.platformCollide = function(entity){
 
 // this handles collision with the shine
 // and unicorn
-Kall.prototype.shineCollide = function (shine) {
+Kall.prototype.shineCollide = function (shine, du) {
 
   //TODO LAGA ÞETTA ÞANNIG AÐ COMBO DETTI ÚT.
 
       //console.log(this.hasShineCombo);
       this.hasShineCombo = true;
+
+      var xNow = this.x;
+      var yNow = this.y;
+
+      score.counter = 0;
+
+    //if (score.shineCollision) {
+     //score.drawShineCombo(g_ctx, xNow, yNow);
+
+     score.drawGemCombo(g_ctx, xNow, yNow);
+    //score.shineCollision = false;
+  //}
+      score.lifeSpan -= du;
       
      // console.log(this.score);
     g_sounds.rainbow.play(); 
@@ -508,11 +531,11 @@ Kall.prototype.render = function(ctx) {
   score.drawScore(ctx);
 
   //console.log(score.gotLastShine);
-  if (score.shineCollision) {
-    score.drawShineCombo(ctx, this.x, this.y);
-    //score.shineCollision = false;
-  }
+
+  var xNow = camera.getPos().PosX;
+  var yNow = camera.getPos().posY;
+
    if (score.gemCollision) {
-    score.drawGemCombo(ctx, this.x, this.y);
+    score.drawGemCombo(ctx, xNow, yNow);
   }
 };

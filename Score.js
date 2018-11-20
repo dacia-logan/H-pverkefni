@@ -31,6 +31,9 @@ var score = {
     shineCollision : false,
     gemCollision : false,
 
+    // 
+    counter : 0,
+
     // Convert times from milliseconds to "nominal" time units.
     lifeSpan : 1000 / NOMINAL_UPDATE_INTERVAL,
 
@@ -83,6 +86,15 @@ var score = {
     drawShineCombo : function (ctx, xPos, yPos) {
       //console.log("komst hingað!!");
       //console.log(this.shineCombo);
+      var x;
+      var y;
+      if (this.counter === 0) {
+        x = xPos;
+        y = yPos;
+      }
+
+      this.counter++;
+
       ctx.font = "bold 30px Consolas";
       ctx.textAlign = "center";
 
@@ -116,6 +128,16 @@ var score = {
     },
 
     drawGemCombo : function (ctx, xPos, yPos) {
+
+      var x;
+      var y;
+      if (this.counter === 0) {
+        x = xPos;
+        y = yPos;
+      }
+
+      this.counter++;
+
       ctx.font = "bold 30px Consolas";
       ctx.textAlign = "center";
 
@@ -134,7 +156,7 @@ var score = {
 
       // Draw the combo text
       if (this.lifeSpan > 0) {*/
-        if (this.gemCombo===0) ctx.fillText("", xPos, yPos);
+        if (this.gemCombo === 0) ctx.fillText("", xPos, yPos);
         else ctx.fillText(this.gemCombo, xPos, yPos);
       //}
       
