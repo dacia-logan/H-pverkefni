@@ -8,6 +8,7 @@ function Kall(descr) {
     this.defVelX=5;
     this.velX=this.defVelX;
     this.velY=0;
+    this.dashAccel=0.8
 
     // width and height
     this.width = 170;
@@ -37,7 +38,7 @@ function Kall(descr) {
     this.Dashframecounter = 0;
 
     // dash delay to make a short brake between dashes
-    this.dashDelay = 0;        
+    this.dashDelay = 0;
 
     // is the unicorn exploding? true if it is, else false
     this.isExploding = false;
@@ -73,15 +74,15 @@ function Kall(descr) {
 
 
 //=============
-// ENTITY SETUP 
+// ENTITY SETUP
 //=============
 Kall.prototype = new Entity();
 
 
 //=====
-// KEYS 
+// KEYS
 //=====
-Kall.prototype.KEY_JUMP= 'W'.charCodeAt(0); // jump up 
+Kall.prototype.KEY_JUMP= 'W'.charCodeAt(0); // jump up
 Kall.prototype.KEY_DASH= 'D'.charCodeAt(0); // fast speed forward, dashing
 Kall.prototype.RESET= 'U'.charCodeAt(0);    // resets the game to starting position
 
@@ -90,11 +91,11 @@ Kall.prototype.RESET= 'U'.charCodeAt(0);    // resets the game to starting posit
 // AUDIO
 //======
 Kall.prototype.shineCatch = new Audio("sounds/rainbow.wav");
-Kall.prototype.die = new Audio("sounds/explosion2.wav"); 
+Kall.prototype.die = new Audio("sounds/explosion2.wav");
 
 
 //===============
-// UPDATE ROUTINE 
+// UPDATE ROUTINE
 //===============
 Kall.prototype.update = function(du){
 
@@ -129,7 +130,7 @@ Kall.prototype.update = function(du){
     if (explode.done(g_explosionSprite.length, this.type)) {
       //this.kill();
       this.loseLife();
-      //this.isExploding = false; 
+      //this.isExploding = false;
     }
 
     // Check for hit entity, if its hit it checks wwhich side it is on and acts accordingly,
@@ -170,13 +171,13 @@ Kall.prototype.update = function(du){
 
 
 //======
-// SPEED 
+// SPEED
 //======
 Kall.prototype.setSpeed = function(du) {
   //is the unicorn dashing and is the dashcounter not zero?
-    if (this.isDashing && this.dashCounter !== 0) {
-      this.dashCounter--;         //dash for only 15 frames
-      this.applyAccel(1,0,du) ;   //set velocity to more speed
+    if (this.isDashing && this.dashCounter > 0) {
+      this.dashCounter=this.dashCounter-1*du;         //dash for only 15 frames
+      this.applyAccel(this.dashAccel,0,du) ;   //set velocity to more speed
       this.jumpCounter=1;         //unicorn can jump once after it has dashed
       this.velY=0;                // no vertical velocity while dashing
       this.Dashframecounter+=1;
@@ -186,26 +187,28 @@ Kall.prototype.setSpeed = function(du) {
       }
     //unicorn is not dashing anymore move as usual
     } else {
+      this.dashAccel=6/this.defVelX
       this.isDashing = false;     //not dashing
       this.velX=this.defVelX;     //set velocity to normal speed
-      this.dashCounter = 15;      //reset the dashCounter to 15 again
+      this.dashCounter = 15;
+      console.log(this.dashAccel);      //reset the dashCounter to 15 again
     }
 };
 
 
 //====================
-// COLLISION FUNCTIONS 
+// COLLISION FUNCTIONS
 //====================
 
 // this is the main collision function
-// it calls other functions to handle 
+// it calls other functions to handle
 // different types of collisions
 Kall.prototype.collidesWith = function(du){
 
     if (spatialManager.isHit(this.x+65, this.y+30,
       this.width-125, this.height-40).length != 0){              //þessar tölur fengum við út með því að prófa okkur áfram í render á spatial manager
         var ent = spatialManager.isHit(this.x+65, this.y+30,     //Þær gera collideboxið hjá einhyrningnum minna, munu koma 2-3 fyrir aftur í platformcollide
-          this.width-125, this.height-40);                    
+          this.width-125, this.height-40);
 
         for(i=0 ; i < ent.length; i++){
           if(ent[i].getType() === "Gem"){                // collision with the gem
@@ -226,7 +229,7 @@ Kall.prototype.collidesWith = function(du){
 };
 
 
-// this handles when the unicorn and 
+// this handles when the unicorn and
 // the gem collide
 Kall.prototype.gemCollide = function(gem){
 
@@ -277,7 +280,7 @@ Kall.prototype.platformCollide = function(entity){
       this.isExploding = true;  // the unicorn is exploding
       g_sounds.uniExplosion.play();
       return;
-      
+
     }
 
     //TOP EDGE - character should run on platform
@@ -323,9 +326,9 @@ Kall.prototype.shineCollide = function (shine) {
 
       //console.log(this.hasShineCombo);
       this.hasShineCombo = true;
-      
+
      // console.log(this.score);
-    g_sounds.rainbow.play(); 
+    g_sounds.rainbow.play();
 
     score.shineCollision = true;
     score.gotLastShine = true;
@@ -341,7 +344,7 @@ Kall.prototype.shineCollide = function (shine) {
 // LOSE LIFE
 //==========
 Kall.prototype.loseLife = function () {
-      
+
     //this.die.play();
     //this.drawFailScreen();
     entityManager.didDie = true;
@@ -378,7 +381,7 @@ Kall.prototype.loseLife = function () {
       this.defVelX=5;
       this.y =200;
       this.x =500;
-      this.isExploding = false; 
+      this.isExploding = false;
     }
 
 };
@@ -405,20 +408,20 @@ Kall.prototype.handleKeys = function(du){
       this.velY=0;
     }
     // the dashDelay stops 'abuse' of the dash
-    // element. There is slight delay for the 
+    // element. There is slight delay for the
     // next possible dash.
     if (eatKey(this.KEY_DASH) && this.dashDelay === 0) {
       g_sounds.dash.play();
-      
+
       this.isDashing = true;      //more speed access
       this.Dashframecounter=0;
-      this.dashDelay = 70;        // the frames to wait for next dash 
+      this.dashDelay = 70;        // the frames to wait for next dash
     }
 };
 
 
 //=============
-// ACCELERATION 
+// ACCELERATION
 //=============
 Kall.prototype.applyAccel= function(accelX,accelY,du){
   // u=original velocity
@@ -458,13 +461,13 @@ Kall.prototype.drawLives = function(ctx) {
   // Draws as many "dead" unicorn as lives the player has lost, next to the ones he has left.
   for (var j = 0; j < this.deaths; j++) {
     g_sprites.dead.drawAtAndEnlarge(ctx, camera.getPos().posX+125 - livesOffset * j,
-                                      camera.getPos().posY+20, this.liveSize, this.liveSize);                                                          
+                                      camera.getPos().posY+20, this.liveSize, this.liveSize);
   }
 };
 
 
 //===============
-// RESET FUNCTION 
+// RESET FUNCTION
 //===============
 Kall.prototype.reset = function() {
   this.x=200;
@@ -481,7 +484,7 @@ Kall.prototype.getDefVelX = function(){
 
 
 //===============
-// RENDER FUCTION 
+// RENDER FUCTION
 //===============
 Kall.prototype.render = function(ctx) {
 
@@ -503,7 +506,7 @@ Kall.prototype.render = function(ctx) {
     }
 
   }
-  
+
   this.drawLives(ctx);
   score.drawScore(ctx);
 
