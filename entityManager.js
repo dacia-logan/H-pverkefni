@@ -74,11 +74,14 @@ reset : function(){
 
 
 init: function() {
-   this.generateMap();
+    this._platforms.push(new Platform(1, true, 300, 500));
+    this._dummies.push(new Kall());
 },
 
 // Platform functions \\
 platSet1:function(makeGem){
+    // xExtra is extra distance between platforms, based on unicorns vel
+    // only added to platforms that dont spawn at x1
     var xExtra = this.getMainCharacter().getDefVelX()*10;
     console.log(this.getMainCharacter().getDefVelX()*10)
     var x1 = camera.getPos().posX + g_canvas.width;
@@ -92,6 +95,8 @@ platSet1:function(makeGem){
 },
 
 platSet2:function(makeGem){
+    // xExtra is extra distance between platforms, based on unicorns vel
+    // only added to platforms that dont spawn at x1
     var xExtra = this.getMainCharacter().getDefVelX()*10;
     var x1 = camera.getPos().posX + g_canvas.width;
     var x2 = x1;
@@ -116,6 +121,8 @@ platSet3:function(makeGem){
 },
 
 platSet4:function(makeGem){
+    // xExtra is extra distance between platforms, based on unicorns vel
+    // only added to platforms that dont spawn at x1
     var xExtra = this.getMainCharacter().getDefVelX()*10;
     var x1 = camera.getPos().posX + g_canvas.width;
     var x2 = x1+800+xExtra;
@@ -131,6 +138,8 @@ platSet4:function(makeGem){
 },
 
 platSet5:function(makeGem){
+    // xExtra is extra distance between platforms, based on unicorns vel
+    // only added to platforms that dont spawn at x1
     var xExtra = this.getMainCharacter().getDefVelX()*10;
     var x1 = camera.getPos().posX + g_canvas.width;
     var x2 = x1+500+xExtra;
@@ -184,10 +193,6 @@ setPlatforms: function(){
     }
 },
 
-generateMap : function(){
-    this._platforms.push(new Platform(1, true, 300, 500));
-    this._dummies.push(new Kall());
-},
 
 getMainCharacter : function(){
   return this._dummies[0];

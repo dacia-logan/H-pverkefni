@@ -80,12 +80,7 @@ Kall.prototype = new Entity();
 Kall.prototype.KEY_JUMP= 'W'.charCodeAt(0);
 Kall.prototype.KEY_DASH= 'D'.charCodeAt(0); //fast speed forward, dashing
 Kall.prototype.RESET= 'U'.charCodeAt(0);
-
-Kall.prototype.shineCatch = new Audio("sounds/rainbow.wav");
-
-// Helga færði þetta hljóð inn í explosion þá virkar þetta fyrir gem og unicorn
-// þetta er núna spilað hér í kalli bara þegar hann fer niður fyrir canvas
-Kall.prototype.die = new Audio("sounds/explosion2.wav"); 
+ 
 
 Kall.prototype.update = function(du){
 
@@ -163,7 +158,7 @@ Kall.prototype.setSpeed = function(du) {
   //is the unicorn dashing and is the dashcounter not zero?
     if (this.isDashing && this.dashCounter !== 0) {
       this.dashCounter--;         //dash for only 15 frames
-      this.applyAccel(1,0,du) ;   //set velocity to more speed
+      this.applyAccel(1,0,du);   //set velocity to more speed
       this.jumpCounter=1;         //unicorn can jump once after it has dashed
       this.velY=0;                // no vertical velocity while dashing
       this.Dashframecounter+=1;
