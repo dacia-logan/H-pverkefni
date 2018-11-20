@@ -120,19 +120,15 @@ function processDiagnostics() {
 
     // Put the following keyhandles here for convenience
 
-    if (eatKey(KEY_PLAYON) && entityManager.getMainCharacter().getLives()!=0) {
-        Background.hasLostLife = false;
-        entityManager.didDie = false;
-    }
 
-    if (eatKey(KEY_PLAYAGAIN) && entityManager.getMainCharacter().getLives()===0) {
+   /* if (eatKey(KEY_PLAYAGAIN) && entityManager.getMainCharacter().getLives()===0) {
         console.log("heyyy");
         entityManager.gameOver=false;
         entityManager.resetGameOver();
         score.reset();
         entityManager.didDie = false;
         Background.hasLostLife = false;
-    }
+    }*/
 
 
 }
