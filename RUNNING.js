@@ -415,7 +415,13 @@ function requestImagePreloads() {
         Alive : "images/Lives/alive.png",
         Dead : "images/Lives/dead.png",
         Gameover : "images/playagain.png",
+        Stars1 : "images/stars1.png",
+        Stars2 : "images/stars2.png",
+        Stars3 : "images/stars3.png",
+        Stars4 : "images/stars4.png",
         Background : "images/background.png",
+        RainbowBG : "images/rainbowbg.png",
+        DeadUnicorn : "images/deadUni.png",
 
         // the shine image
         Shine0 : "images/Shine/shine_000.png",
@@ -473,6 +479,12 @@ function preloadDone() {
     // Images \\
 
     g_sprites.Background = new Sprite(g_images.Background);
+    g_sprites.stars1 = new Sprite(g_images.Stars1);
+    g_sprites.stars2 = new Sprite(g_images.Stars2);
+    g_sprites.stars3 = new Sprite(g_images.Stars3);
+    g_sprites.stars4 = new Sprite(g_images.Stars4);
+    g_sprites.rainbowbg = new Sprite(g_images.RainbowBG);
+    g_sprites.deaduni = new Sprite(g_images.DeadUnicorn);
     g_sprites.gameover = new Sprite(g_images.Gameover);
     g_platforms.normal1 = new Sprite(g_images.normal1);
     g_platforms.normal2 = new Sprite(g_images.normal2);
