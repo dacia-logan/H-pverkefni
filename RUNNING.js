@@ -179,156 +179,15 @@ var Background = {
 
 function renderSimulation(ctx) {
 
-    var gameOverOffset = 50;
     // If the game is over, display the game over screen
     if (Background.hasLostLife) {
+       
+        // Audio
         g_sounds.song.pause();
         g_sounds.song.currentTime=0;
         g_sounds.alwaysInstru.play();
-        //if (eatKey(KEFY_PLAYAGAIN)) return;
-        camera.reset(ctx);
-        g_sprites.gameover.drawAtAndEnlarge(ctx,0,0,g_canvas.width,g_canvas.height);
-        //font-family: 'Patrick Hand', cursive;
-        //font-family: 'Neucha', cursive;
-        ctx.font = "bold 36px Goudy Old Style";
-        ctx.fillStyle = "white";
-        ctx.shadowColor = '#333333';
-        ctx.shadowBlur = 10;
-        ctx.textAlign = "center";
-        if (!main._isGameOver) {
-            ctx.fillText("Failed! Press Z to keep playing", 500, 50);
-        } else if (main._isGameOver) {
-            ctx.fillText("Game over! Press Y to play again", 500, 50);
-        }
-        ctx.fillStyle = "#FFD1DC";
 
-        var boxExtra = 10;
-        ctx.globalAlpha = 0.6;
-
-        // Color of the shadow
-        ctx.shadowColor = '#4C4C4C';
-        ctx.shadowBlur = 15;
-
-        var boxWidth = 600;
-        var boxHeight = 55;
-
-        var boxX = 200;
-        var boxY = 80;
-        var boxOffset = 60;
-
-        ctx.font = "bold 24px Goudy Old Style";
-
-        ctx.fillRect(boxX + (boxExtra / 2), boxY + (boxExtra / 2),
-        boxWidth - boxExtra, boxHeight - boxExtra);
-
-        ctx.fillRect(boxX + (boxExtra / 2), boxY + boxOffset + (boxExtra / 2),
-        boxWidth - boxExtra, boxHeight - boxExtra);
-
-        ctx.fillRect(boxX + (boxExtra / 2), boxY + boxOffset * 2 + (boxExtra / 2),
-        boxWidth - boxExtra, boxHeight - boxExtra);
-
-        ctx.globalAlpha = 1;
-        // Make sure the shadow is only applied to the boxes.
-        ctx.shadowBlur = 0;
-        ctx.fillStyle = "white";
-        ctx.textAlign = "left";
-        ctx.shadowColor = '#A9A9A9';
-        ctx.shadowBlur = 5;
-
-        var textX = boxX + 50;
-        var textY = boxY + 35;
-        var textOffset = boxOffset;
-        var finalScore = score.allScores[0] + score.allScores[1] + score.allScores[2];
-
-        // Counter fyrir skiptin sem maður hefur spilað.
-        var counter = 0;
-
-        score.highScores[counter] = finalScore;
-
-        for (var i = 0; i < score.highScores.length; i++) {
-            if (finalScore > score.highScores[i]) {
-                var temp = finalScore;
-                finalScore = score.highScores[i];
-                score.highScores = temp;
-            }
-        }
-
-        // If the specific score is yet to be assigned, display an empty string instead of 'undefined'.
-        for (var i = 0; i < 3; i++) {
-            if (score.allScores[i] == undefined) {
-                score.allScores[i] = "";
-            }
-        }
-
-        ctx.fillText("1st try: " + score.allScores[0], textX, textY);
-        ctx.fillText("2nd try: " + score.allScores[1], textX, textY + textOffset);
-        ctx.fillText("3rd try: " + score.allScores[2], textX, textY + textOffset * 2);
-
-        if (!main._isGameOver) return;
-
-        ctx.fillStyle = "#FFD1DC";
-        // Color of the shadow
-        ctx.shadowColor = '#4C4C4C';
-        ctx.shadowBlur = 15;
-        ctx.globalAlpha = 0.6;
-
-        ctx.fillRect(boxX + (boxExtra / 2), boxY + boxOffset * 3 + (boxExtra / 2),
-        boxWidth - boxExtra, boxHeight * 1.3 - boxExtra);
-        ctx.globalAlpha = 1;
-
-        ctx.shadowBlur = 0;
-        ctx.fillStyle = "white";
-        ctx.textAlign = "left";
-        ctx.shadowColor = '#A9A9A9';
-        ctx.shadowBlur = 5;
-
-        ctx.font = "bold 30px Goudy Old Style";
-        ctx.shadowColor = '#CCCCCC';
-        ctx.shadowBlur = 10;
-        ctx.fillText("Final score: " + finalScore, textX, textY + textOffset * 3 + boxExtra);
-
-        ctx.fillStyle = "#FFFFFF";
-
-        var boxExtra = 10;
-        ctx.globalAlpha = 0.6;
-
-        // Color of the shadow
-        ctx.shadowColor = '#4C4C4C';
-        ctx.shadowBlur = 15;
-
-        ctx.fillRect(boxX + (boxExtra / 2), boxY + boxOffset * 5 - boxExtra * 2,
-        boxWidth - boxExtra, boxHeight - boxExtra);
-        ctx.globalAlpha = 1;
-        // Make sure the shadow is only applied to the boxes.
-        ctx.shadowBlur = 0;
-        ctx.fillStyle = "white";
-        ctx.textAlign = "center";
-        ctx.shadowColor = '#A9A9A9';
-        ctx.shadowBlur = 5;
-        ctx.fillText("High scores", 500, boxY + boxOffset * 5 + boxExtra * 1.5);
-        
-        ctx.fillStyle = "#FFD1DC";
-
-        ctx.globalAlpha = 0.6;
-        ctx.fillRect(boxX + (boxExtra / 2), boxY + boxOffset * 6 - boxExtra * 2,
-        boxWidth - boxExtra, boxHeight * 1 - boxExtra);
-        ctx.fillRect(boxX + (boxExtra / 2), boxY + boxOffset * 7 - boxExtra * 2,
-        boxWidth - boxExtra, boxHeight * 1 - boxExtra);
-        ctx.fillRect(boxX + (boxExtra / 2), boxY + boxOffset * 8 - boxExtra * 2,
-        boxWidth - boxExtra, boxHeight * 1 - boxExtra);
-
-        
-        ctx.globalAlpha = 1;
-        // Make sure the shadow is only applied to the boxes.
-        ctx.shadowBlur = 0;
-        ctx.fillStyle = "white";
-        ctx.shadowColor = '#A9A9A9';
-        ctx.shadowBlur = 5;
-
-        for (var i = 0; i < score.highScores.length; i++) {
-            ctx.fillText(score.highScores[i], 500, textY + textOffset * 5 + textOffset + i * textOffset - boxExtra * 2);
-        }
-
+        score.drawScoreBoard(ctx);
 
     } else {
     // Else draw the regular background
@@ -339,7 +198,7 @@ function renderSimulation(ctx) {
         
         // Audio
         g_sounds.song.play();
-        if(g_sounds.alwaysInstru.currentTime > 0){+
+        if(g_sounds.alwaysInstru.currentTime > 0){
             g_sounds.alwaysInstru.pause();
             g_sounds.alwaysInstru.currentTime=0;
         }

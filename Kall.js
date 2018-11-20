@@ -62,19 +62,10 @@ function Kall(descr) {
 Kall.prototype = new Entity();
 
 
-//=====
-// KEYS 
-//=====
-Kall.prototype.KEY_JUMP= 'W'.charCodeAt(0); // jump up 
-Kall.prototype.KEY_DASH= 'D'.charCodeAt(0); // fast speed forward, dashing
-Kall.prototype.RESET= 'U'.charCodeAt(0);    // resets the game to starting position
-
-
-//======
-// AUDIO
-//======
-Kall.prototype.shineCatch = new Audio("sounds/rainbow.wav");
-Kall.prototype.die = new Audio("sounds/explosion2.wav"); 
+Kall.prototype.KEY_JUMP= 'W'.charCodeAt(0);
+Kall.prototype.KEY_DASH= 'D'.charCodeAt(0); //fast speed forward, dashing
+Kall.prototype.RESET= 'U'.charCodeAt(0);
+ 
 
 
 //===============
@@ -93,7 +84,7 @@ Kall.prototype.update = function(du){
       this.dashDelay--;
     }
 
-    //set the xVel of the unicorn based on if
+    //set the xVel of rethe unicorn based on if
     //it is dashing or not
     this.setSpeed(du);
     this.defVelX+=0.003*du;
@@ -123,7 +114,7 @@ Kall.prototype.update = function(du){
 
      //check if out of canvas
     if (this.y > g_canvas.height) {
-      this.die.play();
+      g_sounds.uniExplosion.play();
       this.loseLife();
     }
 
@@ -157,7 +148,7 @@ Kall.prototype.setSpeed = function(du) {
   //is the unicorn dashing and is the dashcounter not zero?
     if (this.isDashing && this.dashCounter !== 0) {
       this.dashCounter--;         //dash for only 15 frames
-      this.applyAccel(1,0,du) ;   //set velocity to more speed
+      this.applyAccel(1,0,du);   //set velocity to more speed
       this.jumpCounter=1;         //unicorn can jump once after it has dashed
       this.velY=0;                // no vertical velocity while dashing
       this.Dashframecounter+=1;
@@ -272,6 +263,7 @@ Kall.prototype.platformCollide = function(entity){
           this.y--;
           var y=this.y+30;
         }
+        this.dashDelay=0;
         this.y = posY-this.height-(30-40);   //y and height difference
         this.velY=0;
         this.jumpCounter=2;
@@ -439,7 +431,12 @@ Kall.prototype.reset = function() {
   this.y=400;
 };
 
-
+Kall.prototype.resetGameOver = function() {
+  this.x=200;
+  this.y=400;
+  this.lives=3;
+  this.deaths=0;
+};
 //============
 // GET defVelX
 //============
