@@ -133,11 +133,6 @@ Kall.prototype.update = function(du){
     // Update the score
     score.updateScore(du);
 
-    // skoða þetta!!
-    if (score.gotLastShine) {
-      score.updateShine(du);
-    }
-
 };
 
 
@@ -212,8 +207,6 @@ Kall.prototype.gemCollide = function(gem){
   if (this.isDashing) {
     g_sounds.starExplosion.play();
     g_sounds.starExplosionExtra.play();
-
-    score.gemCollision = true;
     score.gotLastGem = true;
     score.calculateGemCombo();
     gem.explodes();
@@ -296,9 +289,7 @@ Kall.prototype.platformCollide = function(entity){
 // this handles collision with the shine
 // and unicorn
 Kall.prototype.shineCollide = function (shine) {
-    this.hasShineCombo = true; 
     g_sounds.rainbow.play(); 
-    score.shineCollision = true;
     score.gotLastShine = true;
     score.calculateShineCombo();
     shine.kill();
@@ -474,10 +465,7 @@ Kall.prototype.render = function(ctx) {
   this.drawLives(ctx);
   score.drawScore(ctx);
 
-  if (score.shineCollision) {
-    score.drawShineCombo(ctx, this.x, this.y);
-  }
-   if (score.gemCollision) {
-    score.drawGemCombo(ctx, this.x, this.y);
-  }
+  score.drawShineCombo(ctx, this.x, this.y);
+  score.drawGemCombo(ctx, this.x, this.y);
+
 };

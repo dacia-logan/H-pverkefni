@@ -227,9 +227,46 @@ var score = {
 
     drawScoreBoard : function(ctx){
       
-        //if (eatKey(KEFY_PLAYAGAIN)) return;
         camera.reset(ctx);
         g_sprites.gameover.drawAtAndEnlarge(ctx,0,0,g_canvas.width,g_canvas.height);
+        g_sprites.rainbowbg.drawAtAndEnlarge(ctx,0,0,g_canvas.width,g_canvas.height);
+        
+        ctx.globalAlpha = 0.5;
+        
+        // Yellow stars
+        g_sprites.stars1.drawAtAndEnlarge(ctx,5,350,100,100);
+        g_sprites.stars1.drawAtAndEnlarge(ctx,50,40,120,120);
+        g_sprites.stars1.drawAtAndEnlarge(ctx,570,250,110,110);
+        g_sprites.stars1.drawAtAndEnlarge(ctx,870,450,80,80);
+
+        // Purple stars
+        g_sprites.stars2.drawAtAndEnlarge(ctx,200,300,130,130);
+        g_sprites.stars2.drawAtAndEnlarge(ctx,350,150,130,130);
+        g_sprites.stars2.drawAtAndEnlarge(ctx,650,550,140,140);
+        g_sprites.stars2.drawAtAndEnlarge(ctx,700,350,100,100);
+
+        // Pink stars
+        g_sprites.stars3.drawAtAndEnlarge(ctx,80,220,140,140);
+        g_sprites.stars3.drawAtAndEnlarge(ctx,270,420,130,130);
+        g_sprites.stars3.drawAtAndEnlarge(ctx,385,30,130,130);
+        g_sprites.stars3.drawAtAndEnlarge(ctx,660,150,100,100);
+        g_sprites.stars3.drawAtAndEnlarge(ctx,610,500,90,90);
+        g_sprites.stars3.drawAtAndEnlarge(ctx,790,350,110,110);
+
+        // Blue stars
+        ctx.globalAlpha = 0.4;
+        g_sprites.stars4.drawAtAndEnlarge(ctx,50,150,70,70);
+        g_sprites.stars4.drawAtAndEnlarge(ctx,150,500,80,80);
+        g_sprites.stars4.drawAtAndEnlarge(ctx,200,200,80,80);
+        g_sprites.stars4.drawAtAndEnlarge(ctx,480,380,90,90);
+        g_sprites.stars4.drawAtAndEnlarge(ctx,780,80,100,100);
+
+        
+        
+        
+        ctx.globalAlpha = 1;
+        //g_sprites.stars1.drawAtAndEnlarge(ctx,100,100,300,280);
+        
         //font-family: 'Patrick Hand', cursive;
         //font-family: 'Neucha', cursive;
         ctx.font = "bold 36px Goudy Old Style";
@@ -308,6 +345,12 @@ var score = {
 
         if (!entityManager.gameOver) return;
 
+        ctx.globalAlpha = 0.5;
+        ctx.rotate(-45 * Math.PI / 180);
+        g_sprites.deaduni.drawAtAndEnlarge(ctx,90,820,400,200);
+        ctx.rotate(45 * Math.PI / 180);
+        ctx.globalAlpha = 1;
+
         ctx.fillStyle = "#FFD1DC";
         // Color of the shadow
         ctx.shadowColor = '#4C4C4C';
@@ -329,10 +372,10 @@ var score = {
         ctx.shadowBlur = 10;
         ctx.fillText("Final score: " + finalScore, textX, textY + textOffset * 3 + boxExtra);
 
-        ctx.fillStyle = "#FFFFFF";
-
+        //ctx.fillStyle = "#FFFFFF";
+        ctx.fillStyle = "#FCF4A3";
         var boxExtra = 10;
-        ctx.globalAlpha = 0.6;
+        ctx.globalAlpha = 0.7;
 
         // Color of the shadow
         ctx.shadowColor = '#4C4C4C';
@@ -347,12 +390,13 @@ var score = {
         ctx.textAlign = "center";
         ctx.shadowColor = '#A9A9A9';
         ctx.shadowBlur = 5;
-        ctx.fillText("High scores", 500, boxY + boxOffset * 5 + boxExtra * 1.5);
+        ctx.fillText("High scores", 500, boxY + boxOffset * 5 + boxExtra * 1.2);
         
         ctx.fillStyle = "#FFD1DC";
-
+        ctx.shadowColor = '#4C4C4C';
+        
         ctx.globalAlpha = 0.6;
-        ctx.fillRect(boxX + (boxExtra / 2), boxY + boxOffset * 6 - boxExtra * 2,
+        ctx.fillRect(boxX + (boxExtra / 2), boxY + boxOffset * 6 - boxExtra * 1.7,
         boxWidth - boxExtra, boxHeight * 1 - boxExtra);
         ctx.fillRect(boxX + (boxExtra / 2), boxY + boxOffset * 7 - boxExtra * 2,
         boxWidth - boxExtra, boxHeight * 1 - boxExtra);

@@ -195,16 +195,9 @@ setPlatforms: function(){
             else if(plats >=3) { this.platSet4(makeGem); }
             else{ this.platSet5(makeGem); }
 
-            //make a new gem when 'makeGem' is equal to 1
-            //if (makeGem <= 8) this._gem.push(new Gem(a));
-            //make a new butterfly when 'makeButterfly' is equal to 1
-            //if (makeButterfly === 1) {
-                //this._shine.push(new Shine(a));
-                if (Shine.isCaught) {
-                    this._combo.push(new Combo(a));
-                }
-            //}
-
+            if (Shine.isCaught) {
+                this._combo.push(new Combo(a));
+            }
         }
     }
 },
