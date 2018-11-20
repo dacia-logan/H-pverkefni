@@ -69,7 +69,7 @@ reset : function(){
   }
   Background.reset();
   this._platforms.push(new Platform(1, true, 300, 500));
-    },
+},
 
 
 

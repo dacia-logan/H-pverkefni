@@ -1,9 +1,13 @@
+//===========
+// GEM SPRITE 
+//===========
+
 function Gem(x,y,platNum) {
 
     // common inherited setup logic from Entity
     this.setup(x);
 
-    //set width of the gem
+    // set width of the gem
     this.width = 95;
 
     // set heigth of the gem
@@ -17,7 +21,7 @@ function Gem(x,y,platNum) {
     if (platNum === 5) offset = util.randRange((g_images.small.width*1.5)/2, g_images.small.width*1.5);
     if (platNum === 7) offset = ((g_images.long.width*1.3)/2)-10+(this.width/2);
 
-    // set the position of the gem
+    // set the X position of the gem
     this.x = x+offset-(this.width);                                             
 
     // set the y position of the gem
@@ -68,7 +72,7 @@ Gem.prototype.update = function(du) {
     spatialManager.unregister(this);
 
     // kill Gem if it falls out of the canvas
-    // allso has to die if the 'Kall' hits it.
+    // Gem has to die if the 'Kall' hits it.
     // and
     // If the x coords of the unicorn go further than the gem, the player has
     // failed to destroy it, and thus loses his gem combo bonus.
@@ -82,8 +86,8 @@ Gem.prototype.update = function(du) {
     // if the gem is done exploding then kill it
     if (explode.done(g_explosionSprite.length, this.type)) this.kill(); 
 
-    // re-register to spatial manager
-    // if isDead
+    // if is dead return to entityManager that this 
+    // gem is ready to die and be removed from the game
     if (this._isDeadNow) {
         return entityManager.KILL_ME_NOW;
     }
