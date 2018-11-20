@@ -92,8 +92,8 @@ var score = {
     drawShineCombo : function (ctx, xPos, yPos) {
   
       if (this.shineCounter === 0) {
-        this.shineX = xPos + 250; 
-        this.shineY = yPos - 70; 
+        this.shineX = xPos + 400; 
+        this.shineY = yPos - 60; 
       }
 
       this.shineCounter++;
@@ -130,8 +130,8 @@ var score = {
 
     drawGemCombo : function (ctx, xPos, yPos) {
       if (this.gemCounter === 0) {
-        this.gemX = xPos + 250; 
-        this.gemY = yPos - 70; 
+        this.gemX = xPos + 400; 
+        this.gemY = yPos - 60; 
       }
 
       this.gemCounter++;
