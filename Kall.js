@@ -45,7 +45,7 @@ function Kall(descr) {
     this.liveSize = 50;
     this.lives = 3;
     this.deaths = 0;
-    this.hasLostLife = false;
+    //this.hasLostLife = false;
 
     // highscore
     this.highscore = [];

@@ -27,16 +27,6 @@ var score = {
     gotLastShine : false,
     gotLastGem : false,
 
-    // TODO
-    //shineCollision : false,
-    //gemCollision : false,
-
-    // 
-    counter : 0,
-
-    // Convert times from milliseconds to "nominal" time units.
-    lifeSpan : 1000 / NOMINAL_UPDATE_INTERVAL,
-
     // controlls the position handling when we want to draw
     gemCounter : 0,      
     shineCounter : 0,
@@ -52,19 +42,6 @@ var score = {
     updateScore : function (du) {
       // Update the score
       this.currentScore += Math.floor(this.scoreSpeed * du);
-    },
-
-    updateShine : function (du) {
-      // Decrease the lifespan.
-      while (this.lifeSpan >= 0) {
-        this.lifeSpan -= du;
-      }
-
-      if (this.lifeSpan < 0) { // óþörf if-setning?
-        this.lifeSpan = 1000 / NOMINAL_UPDATE_INTERVAL;
-        return;
-      }
-      //console.log(this.lifeSpan);
     },
 
     calculateShineCombo : function () {
@@ -119,14 +96,6 @@ var score = {
       ctx.shadowColor = '#1c5e66';
       ctx.shadowBlur = 40;
 
-      //var fadeThresh = this.lifeSpan / 3;
-
-      /*
-      if (this.lifeSpan < fadeThresh) {
-          ctx.globalAlpha = this.lifeSpan / fadeThresh;
-      }
-      */
-
       // if the combo is 0 we dont want to draw 
       // else we want to draw the combo points
       if (this.shineCombo === 0) ctx.fillText("", this.shineX, this.shineY);
@@ -166,14 +135,6 @@ var score = {
       // Color of the shadow
       ctx.shadowColor = '#1c5e66';
       ctx.shadowBlur = 40;
-
-      //var fadeThresh = this.lifeSpan / 3;
-
-      /*
-      if (this.lifeSpan < fadeThresh) {
-          ctx.globalAlpha = this.lifeSpan / fadeThresh;
-      }
-      */
 
       // if the combo is 0 we dont want to draw 
       // else we want to draw the combo points
@@ -219,6 +180,7 @@ var score = {
     drawScoreBoard : function(ctx){
       
         camera.reset(ctx);
+
         g_sprites.gameover.drawAtAndEnlarge(ctx,0,0,g_canvas.width,g_canvas.height);
         g_sprites.rainbowbg.drawAtAndEnlarge(ctx,0,0,g_canvas.width,g_canvas.height);
         
@@ -252,14 +214,8 @@ var score = {
         g_sprites.stars4.drawAtAndEnlarge(ctx,480,380,90,90);
         g_sprites.stars4.drawAtAndEnlarge(ctx,780,80,100,100);
 
-        
-        
-        
         ctx.globalAlpha = 1;
-        //g_sprites.stars1.drawAtAndEnlarge(ctx,100,100,300,280);
-        
-        //font-family: 'Patrick Hand', cursive;
-        //font-family: 'Neucha', cursive;
+
         ctx.font = "bold 36px Goudy Old Style";
         ctx.fillStyle = "white";
         ctx.shadowColor = '#333333';
@@ -270,7 +226,8 @@ var score = {
         } else if (main._isGameOver) {
             ctx.fillText("Game over! Press Y to play again", 500, 60);
         }
-        ctx.fillStyle = "#FFD1DC";
+        //ctx.fillStyle = "#FFD1DC";
+        ctx.fillStyle = "#DE6FA1";
 
         var boxExtra = 10;
         ctx.globalAlpha = 0.6;
@@ -335,6 +292,8 @@ var score = {
         ctx.fillText("3rd try: " + this.allScores[2], textX, textY + textOffset * 2);
 
         if (!main._isGameOver) return;
+
+        console.log(this.highScores);
 
         ctx.globalAlpha = 0.5;
         ctx.rotate(-45 * Math.PI / 180);
@@ -405,8 +364,5 @@ var score = {
         for (var i = 0; i < score.highScores.length; i++) {
             ctx.fillText(score.highScores[i], 500, textY + textOffset * 5 + textOffset + i * textOffset - boxExtra * 2);
         }
-
     }
-
-
 }
