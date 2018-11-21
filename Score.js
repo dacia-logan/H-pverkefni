@@ -41,6 +41,7 @@ var score = {
       this.currentScore += Math.floor(this.scoreSpeed * du);
     },
 
+    /*
     // When the game is played again, reset the following variables.
     reset : function () {
         this.currentScore = 0;
@@ -59,6 +60,7 @@ var score = {
        // this.gemX = 0;
        // this.gemY = 0;
     },
+    */
 
     // Calculate the current shine combo, if the player got the last shine
     //    the combo increases, else it resets.
@@ -230,7 +232,8 @@ var score = {
         if (!entityManager.gameOver) {
             ctx.fillText("Failed! Press Z to keep playing", g_canvas.width / 2, 150);
         } else if (entityManager.gameOver) {
-            ctx.fillText("Game over! Press Y to play again", g_canvas.width / 2, 150);
+            //ctx.fillText("Game over! Press Y to play again", 500, 50);
+            ctx.fillText("Game over!", 500, 50);
         }
 
         // Color of the boxes for the score.
@@ -304,7 +307,8 @@ var score = {
         g_sprites.deaduni.drawAtAndEnlarge(ctx,70,780,400,200);
         ctx.rotate(45 * Math.PI / 180);
         ctx.globalAlpha = 1;
-/*
+
+        /*
         ctx.fillStyle = "#FFD1DC";
         // Color of the shadow
         ctx.shadowColor = '#4C4C4C';
@@ -326,6 +330,7 @@ var score = {
         ctx.shadowBlur = 10;
         ctx.fillText("Final score: " + finalScore, textX, textY + textOffset * 3 + boxExtra);
 
+        /*
         //ctx.fillStyle = "#FFFFFF";
         ctx.fillStyle = "#FCF4A3";
         var boxExtra = 10;
@@ -357,7 +362,6 @@ var score = {
         ctx.fillRect(boxX + (boxExtra / 2), boxY + boxOffset * 8 - boxExtra * 2,
         boxWidth - boxExtra, boxHeight * 1 - boxExtra);
 
-        
         ctx.globalAlpha = 1;
         // Make sure the shadow is only applied to the boxes.
         ctx.shadowBlur = 0;
@@ -368,7 +372,6 @@ var score = {
         for (var i = 0; i < score.highScores.length; i++) {
             ctx.fillText(score.highScores[i], 500, textY + textOffset * 5 + textOffset + i * textOffset - boxExtra * 2);
         }
-
         */
     }
 }
