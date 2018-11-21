@@ -148,8 +148,10 @@ var Background = {
         if(this.x+g_sprites.Background.width<camera.getPos().posX){
             this.x=this.x+g_sprites.Background.width;
         }
-        g_sprites.Background.drawAtAndEnlarge(ctx,this.x,this.y,g_sprites.Background.width, g_sprites.Background.height);
-        g_sprites.Background.drawAtAndEnlarge(ctx,this.x+g_sprites.Background.width,this.y,g_sprites.Background.width, g_sprites.Background.height);
+        g_sprites.Background.drawAtAndEnlarge(ctx,this.x,this.y,g_sprites.Background.width,
+                                                g_sprites.Background.height);
+        g_sprites.Background.drawAtAndEnlarge(ctx,this.x+g_sprites.Background.width,
+                                                    this.y,g_sprites.Background.width, g_sprites.Background.height);
     },
     
     reset : function(){
