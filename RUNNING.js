@@ -491,8 +491,12 @@ function preloadDone() {
     g_sounds.starExplosionExtra.volume = 0.9;
     g_sounds.jump.volume = 0.9;
 
-    //starting position for intro song
-    g_sounds.INTRO.currentTime=119;
+    // starting position for intro song
+    // if statement is here for InternetExplorer
+    if(!isNaN(g_sounds.INTRO.duration)) {
+        g_sounds.INTRO.currentTime=119;
+    }
+    
     // Images
 
     // background
