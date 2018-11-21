@@ -136,6 +136,10 @@ Kall.prototype.update = function(du){
 };
 
 
+Kall.prototype.getLives = function(){
+  return this.lives;
+}
+
 //======
 // SPEED 
 //======
@@ -319,9 +323,7 @@ Kall.prototype.loseLife = function () {
     score.gemsInRow = 0;
 
     if (this.lives === 0) {
-        g_sounds.gameOver.play();
-        this.kill();
-        main.gameOver();
+        entityManager.gameOver=true;
     }
 
     else {

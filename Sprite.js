@@ -28,7 +28,7 @@ Sprite.prototype.drawAt = function (ctx, x, y) {
 };
 
 
-// Makes sprite bigger
+// Makes sprite larger.
 Sprite.prototype.drawAtAndEnlarge = function (ctx, x, y, sx, sy) {
     ctx.drawImage(this.image, 
                   x, y, sx, sy);

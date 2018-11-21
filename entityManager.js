@@ -38,7 +38,7 @@ _combo : [],
 
 didDie : false,
 
-
+gameOver : false,
 // "PRIVATE" METHODS
 
 
@@ -54,7 +54,7 @@ KILL_ME_NOW : -1,
 // i.e. thing which need `this` to be defined.
 //
 deferredSetup : function () {
-    this._categories = [this._platforms, this._gem, this._dummies, this._knifes, this._shine, this._combo];
+    this._categories = [this._platforms, this._gem, this._dummies, this._shine, this._combo];
 },
 
 reset : function(){
@@ -71,6 +71,22 @@ reset : function(){
   this._platforms.push(new Platform(1, true, 300, 500));
 },
 
+resetGameOver : function(){
+    for(var Id in this._platforms){
+      this._platforms[Id].kill();
+    }
+    for(var Id in this._gem){
+      this._gem[Id].kill();
+    }
+    for(var Id in this._shine){
+      this._shine[Id].kill();
+    }
+    for(var Id in this._dummies){
+        this._dummies[Id].kill();
+      }
+    this.init();
+    Background.reset();
+  },
 
 
 init: function() {
