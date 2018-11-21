@@ -97,9 +97,7 @@ var KEY_AVE_VEL = keyCode('V');
 var KEY_SPATIAL = keyCode('X');
 var KEY_MUTE = keyCode('1');
 
-// TODO
-var KEY_PLAYON = keyCode('Z');
-//var KEY_PLAYAGAIN = keyCode('Y');
+var KEY_PLAYAGAIN = keyCode('Y');
 
 var hasGameEnded = false;
 
@@ -118,24 +116,14 @@ function processDiagnostics() {
         volumeOnOff();
     } 
 
-    // Put the following keyhandles here for convenience
-
-    if (eatKey(KEY_PLAYON) && entityManager.getMainCharacter().getLives()!=0) {
-        Background.hasLostLife = false;
-        entityManager.didDie = false;
-    }
-
-    /*
-    if (eatKey(KEY_PLAYAGAIN) && entityManager.getMainCharacter().getLives()===0) {
+   /* if (eatKey(KEY_PLAYAGAIN) && entityManager.getMainCharacter().getLives()===0) {
         console.log("heyyy");
         entityManager.gameOver=false;
         entityManager.resetGameOver();
         score.reset();
         entityManager.didDie = false;
         Background.hasLostLife = false;
-    }
-    */
-
+    }*/
 
 }
 

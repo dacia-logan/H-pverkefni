@@ -42,7 +42,7 @@ gameOver : false,
 // "PRIVATE" METHODS
 
 
-
+KEY_PLAYON : keyCode('Z'),
 // PUBLIC METHODS
 
 // A special return value, used by other objects,
@@ -101,7 +101,6 @@ platSet1:function(makeGem){
     // xExtra is extra distance between platforms, based on unicorns vel
     // only added to platforms that dont spawn at x1
     var xExtra = this.getMainCharacter().getDefVelX()*10;
-    console.log(this.getMainCharacter().getDefVelX()*10)
     var x1 = camera.getPos().posX + g_canvas.width;
     var x2 = x1 + 550 + xExtra;
     var y1 = 500;
@@ -185,10 +184,11 @@ setPlatforms: function(){
         var platX = this._platforms[entity].getPos().posX;
         var platWidth =this._platforms[entity].getWidth();
         var primary = this._platforms[entity].getPrimary();
+        
         if(primary 
            && platX + platWidth <= camera.getPos().posX+500-(this.getMainCharacter().getDefVelX()*10)
            && !this._platforms[entity].getPlatformPushed())
-           {
+           {            
             this._platforms[entity].setPlatformPushed();
 
             if(plats >= 13) { this.platSet1(makeGem); }
@@ -212,7 +212,13 @@ getMainCharacter : function(){
 update: function(du) {
 
     // TODO
-    if (this.didDie) return;
+    if (this.didDie){
+        // To go for next round
+        if (eatKey(this.KEY_PLAYON) && entityManager.getMainCharacter().getLives()!=0) {
+        Background.hasLostLife = false;
+        entityManager.didDie = false;
+        }
+     return;}
     //Range of numbers that give u different platform
     //Check if to push new platform or not
     //this.setObstacle();

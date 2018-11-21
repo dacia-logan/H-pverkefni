@@ -45,7 +45,7 @@ function Kall(descr) {
     this.liveSize = 50;
     this.lives = 3;
     this.deaths = 0;
-    this.hasLostLife = false;
+    //this.hasLostLife = false;
 
     // highscore
     this.highscore = [];
@@ -305,13 +305,11 @@ Kall.prototype.shineCollide = function (shine) {
 Kall.prototype.loseLife = function () {
     entityManager.didDie = true;
     Background.hasLostLife = true;
-    console.log(this.deaths);
 
     // Put the score the player got for the current try in the
     //  array that holds all three scores for the three tries.
     score.allScores[this.deaths] = score.currentScore;
     score.currentScore = 0;
-    console.log(score.allScores);
 
     this.lives--;
     this.deaths++;
