@@ -42,7 +42,7 @@ gameOver : false,
 // "PRIVATE" METHODS
 
 
-
+KEY_PLAYON : keyCode('Z'),
 // PUBLIC METHODS
 
 // A special return value, used by other objects,
@@ -183,10 +183,11 @@ setPlatforms: function(){
         var platX = this._platforms[entity].getPos().posX;
         var platWidth =this._platforms[entity].getWidth();
         var primary = this._platforms[entity].getPrimary();
+        
         if(primary 
            && platX + platWidth <= camera.getPos().posX+500-(this.getMainCharacter().getDefVelX()*10)
            && !this._platforms[entity].getPlatformPushed())
-           {
+           {            
             this._platforms[entity].setPlatformPushed();
 
             if(plats >= 13) { this.platSet1(makeGem); }
@@ -210,7 +211,13 @@ getMainCharacter : function(){
 update: function(du) {
 
     // TODO
-    if (this.didDie) return;
+    if (this.didDie){
+        // To go for next round
+        if (eatKey(this.KEY_PLAYON) && entityManager.getMainCharacter().getLives()!=0) {
+        Background.hasLostLife = false;
+        entityManager.didDie = false;
+        }
+     return;}
     //Range of numbers that give u different platform
     //Check if to push new platform or not
     //this.setObstacle();
