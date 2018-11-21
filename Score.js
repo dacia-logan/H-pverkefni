@@ -55,9 +55,9 @@ var score = {
         this.lifeSpan = 1000 / NOMINAL_UPDATE_INTERVAL;
         return;
       }
-      //console.log(this.lifeSpan);
     },
 
+    /*
     reset : function(){
         this.currentScore=0;
         this.scoreSpeed=2.5;
@@ -75,17 +75,14 @@ var score = {
         this.gemX=0;
         this.gemY=0;
     },
+    */
 
     calculateShineCombo : function () {
       if (this.gotLastShine) {
         this.shineInRow++;
         this.shineCombo += 10;
         this.currentScore += this.shineCombo;
-        //console.log(this.shineInRow);
-        //console.log(this.shineCombo);
       } else if (!this.gotLastShine) {
-        //this.shineInRow = 1;
-        //this.shineCombo = 0; // 10?
         this.currentScore += this.shineCombo;
       }
     },
@@ -95,11 +92,7 @@ var score = {
         this.gemsInRow++;
         this.gemCombo += 100;
         this.currentScore += this.gemCombo;
-        //console.log(this.gemsInRow);
-        //console.log(this.gemCombo);
       } else if (!this.gotLastGem) {
-       //  this.gemsInRow = 1;
-       // this.gemCombo = 0;
         this.currentScore += this.gemCombo;
       }
     },
@@ -128,14 +121,6 @@ var score = {
       ctx.shadowColor = '#1c5e66';
       ctx.shadowBlur = 40;
 
-      //var fadeThresh = this.lifeSpan / 3;
-
-      /*
-      if (this.lifeSpan < fadeThresh) {
-          ctx.globalAlpha = this.lifeSpan / fadeThresh;
-      }
-      */
-
       // if the combo is 0 we dont want to draw 
       // else we want to draw the combo points
       if (this.shineCombo === 0) ctx.fillText("", this.shineX, this.shineY);
@@ -143,12 +128,8 @@ var score = {
       
       ctx.fill();
 
-      //ctx.globalAlpha = 1;
-
       // Make sure the shadow is only applied to the combo
       ctx.shadowBlur = 0;
-      // ef það er liðin sekúnda, þá gerist þetta ->
-      //this.shineCollision = false;
     },
 
     drawGemCombo : function (ctx, xPos, yPos) {
@@ -176,14 +157,6 @@ var score = {
       ctx.shadowColor = '#1c5e66';
       ctx.shadowBlur = 40;
 
-      //var fadeThresh = this.lifeSpan / 3;
-
-      /*
-      if (this.lifeSpan < fadeThresh) {
-          ctx.globalAlpha = this.lifeSpan / fadeThresh;
-      }
-      */
-
       // if the combo is 0 we dont want to draw 
       // else we want to draw the combo points
       if (this.gemCombo === 0) ctx.fillText("", this.gemX, this.gemY);
@@ -191,12 +164,8 @@ var score = {
       
       ctx.fill();
 
-      //ctx.globalAlpha = 1;
-
       // Make sure the shadow is only applied to the combo
       ctx.shadowBlur = 0;
-
-      //this.shineCollision = false;
     },
 
     drawScore : function (ctx) {
@@ -261,11 +230,7 @@ var score = {
         g_sprites.stars4.drawAtAndEnlarge(ctx,480,380,90,90);
         g_sprites.stars4.drawAtAndEnlarge(ctx,780,80,100,100);
 
-        
-        
-        
         ctx.globalAlpha = 1;
-        //g_sprites.stars1.drawAtAndEnlarge(ctx,100,100,300,280);
         
         //font-family: 'Patrick Hand', cursive;
         //font-family: 'Neucha', cursive;
@@ -277,7 +242,8 @@ var score = {
         if (!entityManager.gameOver) {
             ctx.fillText("Failed! Press Z to keep playing", 500, 50);
         } else if (entityManager.gameOver) {
-            ctx.fillText("Game over! Press Y to play again", 500, 50);
+            //ctx.fillText("Game over! Press Y to play again", 500, 50);
+            ctx.fillText("Game over!", 500, 50);
         }
         ctx.fillStyle = "#FFD1DC";
 
@@ -372,6 +338,7 @@ var score = {
         ctx.shadowBlur = 10;
         ctx.fillText("Final score: " + finalScore, textX, textY + textOffset * 3 + boxExtra);
 
+        /*
         //ctx.fillStyle = "#FFFFFF";
         ctx.fillStyle = "#FCF4A3";
         var boxExtra = 10;
@@ -403,7 +370,6 @@ var score = {
         ctx.fillRect(boxX + (boxExtra / 2), boxY + boxOffset * 8 - boxExtra * 2,
         boxWidth - boxExtra, boxHeight * 1 - boxExtra);
 
-        
         ctx.globalAlpha = 1;
         // Make sure the shadow is only applied to the boxes.
         ctx.shadowBlur = 0;
@@ -414,6 +380,7 @@ var score = {
         for (var i = 0; i < score.highScores.length; i++) {
             ctx.fillText(score.highScores[i], 500, textY + textOffset * 5 + textOffset + i * textOffset - boxExtra * 2);
         }
+        */
 
     }
 

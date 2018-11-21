@@ -99,7 +99,7 @@ var KEY_MUTE = keyCode('1');
 
 // TODO
 var KEY_PLAYON = keyCode('Z');
-var KEY_PLAYAGAIN = keyCode('Y');
+//var KEY_PLAYAGAIN = keyCode('Y');
 
 var hasGameEnded = false;
 
@@ -125,6 +125,7 @@ function processDiagnostics() {
         entityManager.didDie = false;
     }
 
+    /*
     if (eatKey(KEY_PLAYAGAIN) && entityManager.getMainCharacter().getLives()===0) {
         console.log("heyyy");
         entityManager.gameOver=false;
@@ -133,6 +134,7 @@ function processDiagnostics() {
         entityManager.didDie = false;
         Background.hasLostLife = false;
     }
+    */
 
 
 }

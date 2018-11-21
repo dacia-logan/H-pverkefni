@@ -71,6 +71,7 @@ reset : function(){
   this._platforms.push(new Platform(1, true, 300, 500));
 },
 
+/*
 resetGameOver : function(){
     for(var Id in this._platforms){
       this._platforms[Id].kill();
@@ -87,6 +88,7 @@ resetGameOver : function(){
     this.init();
     Background.reset();
   },
+*/
 
 
 init: function() {
