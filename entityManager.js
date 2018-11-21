@@ -71,6 +71,7 @@ reset : function(){
   this._platforms.push(new Platform(1, true, 300, 500));
 },
 
+/*
 resetGameOver : function(){
     for(var Id in this._platforms){
       this._platforms[Id].kill();
@@ -87,6 +88,7 @@ resetGameOver : function(){
     this.init();
     Background.reset();
   },
+*/
 
 
 init: function() {
@@ -99,7 +101,6 @@ platSet1:function(makeGem){
     // xExtra is extra distance between platforms, based on unicorns vel
     // only added to platforms that dont spawn at x1
     var xExtra = this.getMainCharacter().getDefVelX()*10;
-    console.log(this.getMainCharacter().getDefVelX()*10)
     var x1 = camera.getPos().posX + g_canvas.width;
     var x2 = x1 + 550 + xExtra;
     var y1 = 500;

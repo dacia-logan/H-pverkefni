@@ -97,7 +97,6 @@ var KEY_AVE_VEL = keyCode('V');
 var KEY_SPATIAL = keyCode('X');
 var KEY_MUTE = keyCode('1');
 
-
 var KEY_PLAYAGAIN = keyCode('Y');
 
 var hasGameEnded = false;
@@ -129,7 +128,6 @@ function processDiagnostics() {
         entityManager.didDie = false;
         Background.hasLostLife = false;
     }*/
-
 
 }
 

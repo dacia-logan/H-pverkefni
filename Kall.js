@@ -316,13 +316,11 @@ Kall.prototype.shineCollide = function (shine) {
 Kall.prototype.loseLife = function () {
     entityManager.didDie = true;
     Background.hasLostLife = true;
-    console.log(this.deaths);
 
     // Put the score the player got for the current try in the
     //  array that holds all three scores for the three tries.
     score.allScores[this.deaths] = score.currentScore;
     score.currentScore = 0;
-    console.log(score.allScores);
 
     this.lives--;
     this.deaths++;
