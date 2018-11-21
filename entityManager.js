@@ -69,16 +69,19 @@ reset : function(){
   }
   Background.reset();
   this._platforms.push(new Platform(1, true, 300, 500));
-    },
+},
 
 
 
 init: function() {
-   this.generateMap();
+      this._platforms.push(new Platform(1, true, 300, 500));
+      this._dummies.push(new Kall());
 },
 
 // Platform functions \\
 platSet1:function(makeGem){
+    // xExtra is extra distance between platforms, based on unicorns vel
+    // only added to platforms that dont spawn at x1
     var xExtra = this.getMainCharacter().getDefVelX()*10;
     console.log(this.getMainCharacter().getDefVelX()*10)
     var x1 = camera.getPos().posX + g_canvas.width;
@@ -92,6 +95,8 @@ platSet1:function(makeGem){
 },
 
 platSet2:function(makeGem){
+    // xExtra is extra distance between platforms, based on unicorns vel
+    // only added to platforms that dont spawn at x1
     var xExtra = this.getMainCharacter().getDefVelX()*10;
     var x1 = camera.getPos().posX + g_canvas.width;
     var x2 = x1;
@@ -116,6 +121,8 @@ platSet3:function(makeGem){
 },
 
 platSet4:function(makeGem){
+    // xExtra is extra distance between platforms, based on unicorns vel
+    // only added to platforms that dont spawn at x1
     var xExtra = this.getMainCharacter().getDefVelX()*10;
     var x1 = camera.getPos().posX + g_canvas.width;
     var x2 = x1+800+xExtra;
@@ -131,6 +138,8 @@ platSet4:function(makeGem){
 },
 
 platSet5:function(makeGem){
+    // xExtra is extra distance between platforms, based on unicorns vel
+    // only added to platforms that dont spawn at x1
     var xExtra = this.getMainCharacter().getDefVelX()*10;
     var x1 = camera.getPos().posX + g_canvas.width;
     var x2 = x1+500+xExtra;
@@ -158,7 +167,7 @@ setPlatforms: function(){
         var platX = this._platforms[entity].getPos().posX;
         var platWidth =this._platforms[entity].getWidth();
         var primary = this._platforms[entity].getPrimary();
-        if(primary 
+        if(primary
            && platX + platWidth <= camera.getPos().posX+500-(this.getMainCharacter().getDefVelX()*10)
            && !this._platforms[entity].getPlatformPushed())
            {
@@ -170,24 +179,13 @@ setPlatforms: function(){
             else if(plats >=3) { this.platSet4(makeGem); }
             else{ this.platSet5(makeGem); }
 
-            //make a new gem when 'makeGem' is equal to 1
-            //if (makeGem <= 8) this._gem.push(new Gem(a));
-            //make a new butterfly when 'makeButterfly' is equal to 1
-            //if (makeButterfly === 1) {
-                //this._shine.push(new Shine(a));
-                if (Shine.isCaught) {
-                    this._combo.push(new Combo(a));
-                }
-            //}
-
+            if (Shine.isCaught) {
+                this._combo.push(new Combo(a));
+            }
         }
     }
 },
 
-generateMap : function(){
-    this._platforms.push(new Platform(1, true, 300, 500));
-    this._dummies.push(new Kall());
-},
 
 getMainCharacter : function(){
   return this._dummies[0];

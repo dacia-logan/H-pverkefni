@@ -49,7 +49,6 @@ var g_ctx = g_canvas.getContext("2d");
 function init() {
 
 
-
 }
 
 // =============
@@ -77,9 +76,10 @@ function gatherInputs() {
 // GAME-SPECIFIC UPDATE LOGIC
 
 function updateSimulation(du) {
-
     processDiagnostics();
+  if (startmenu.startGame) {
     entityManager.update(du);
+  }
 
 
 }
@@ -116,7 +116,11 @@ function processDiagnostics() {
 
     if (eatKey(KEY_MUTE)){
         volumeOnOff();
-    } 
+    }
+    if (eatKey(keyCode('A'))) {
+        startmenu.startGame=true;
+        console.log("YESSIR");
+    }
 
     if (eatKey(KEY_PLAYON)) {
         Background.hasLostLife = false;
@@ -141,7 +145,7 @@ function volumeOnOff() {
     }
 }
 
-// Mini background class gerður til þess 
+// Mini background class gerður til þess
 // að renderSimulation verði ekki dirty
 var Background = {
     x : 0,
@@ -156,179 +160,28 @@ var Background = {
         g_sprites.Background.drawAtAndEnlarge(ctx,this.x,this.y,g_sprites.Background.width, g_sprites.Background.height);
         g_sprites.Background.drawAtAndEnlarge(ctx,this.x+g_sprites.Background.width,this.y,g_sprites.Background.width, g_sprites.Background.height);
     },
-    
+
     reset : function(){
         this.x=0;
     }
-    
+
 }
 // =================
 // RENDER SIMULATION
 // =================
-
-// We take a very layered approach here...
-//
-// The primary `render` routine handles generic stuff such as
-// the diagnostic toggles (including screen-clearing).
-//
-// It then delegates the game-specific logic to `gameRender`
-
-
-// GAME-SPECIFIC RENDERING
-
-
 function renderSimulation(ctx) {
-
-    var gameOverOffset = 50;
+    startmenu.song();
+    if (!startmenu.startGame) {
+      startmenu.drawMenu(ctx);
+    }
     // If the game is over, display the game over screen
-    if (Background.hasLostLife) {
+     else if (Background.hasLostLife) {
+        // Audio
         g_sounds.song.pause();
         g_sounds.song.currentTime=0;
         g_sounds.alwaysInstru.play();
-        //if (eatKey(KEFY_PLAYAGAIN)) return;
-        camera.reset(ctx);
-        g_sprites.gameover.drawAtAndEnlarge(ctx,0,0,g_canvas.width,g_canvas.height);
-        //font-family: 'Patrick Hand', cursive;
-        //font-family: 'Neucha', cursive;
-        ctx.font = "bold 36px Goudy Old Style";
-        ctx.fillStyle = "white";
-        ctx.shadowColor = '#333333';
-        ctx.shadowBlur = 10;
-        ctx.textAlign = "center";
-        if (!main._isGameOver) {
-            ctx.fillText("Failed! Press Z to keep playing", 500, 50);
-        } else if (main._isGameOver) {
-            ctx.fillText("Game over! Press Y to play again", 500, 50);
-        }
-        ctx.fillStyle = "#FFD1DC";
 
-        var boxExtra = 10;
-        ctx.globalAlpha = 0.6;
-
-        // Color of the shadow
-        ctx.shadowColor = '#4C4C4C';
-        ctx.shadowBlur = 15;
-
-        var boxWidth = 600;
-        var boxHeight = 55;
-
-        var boxX = 200;
-        var boxY = 80;
-        var boxOffset = 60;
-
-        ctx.font = "bold 24px Goudy Old Style";
-
-        ctx.fillRect(boxX + (boxExtra / 2), boxY + (boxExtra / 2),
-        boxWidth - boxExtra, boxHeight - boxExtra);
-
-        ctx.fillRect(boxX + (boxExtra / 2), boxY + boxOffset + (boxExtra / 2),
-        boxWidth - boxExtra, boxHeight - boxExtra);
-
-        ctx.fillRect(boxX + (boxExtra / 2), boxY + boxOffset * 2 + (boxExtra / 2),
-        boxWidth - boxExtra, boxHeight - boxExtra);
-
-        ctx.globalAlpha = 1;
-        // Make sure the shadow is only applied to the boxes.
-        ctx.shadowBlur = 0;
-        ctx.fillStyle = "white";
-        ctx.textAlign = "left";
-        ctx.shadowColor = '#A9A9A9';
-        ctx.shadowBlur = 5;
-
-        var textX = boxX + 50;
-        var textY = boxY + 35;
-        var textOffset = boxOffset;
-        var finalScore = score.allScores[0] + score.allScores[1] + score.allScores[2];
-
-        // Counter fyrir skiptin sem maður hefur spilað.
-        var counter = 0;
-
-        score.highScores[counter] = finalScore;
-
-        for (var i = 0; i < score.highScores.length; i++) {
-            if (finalScore > score.highScores[i]) {
-                var temp = finalScore;
-                finalScore = score.highScores[i];
-                score.highScores = temp;
-            }
-        }
-
-        // If the specific score is yet to be assigned, display an empty string instead of 'undefined'.
-        for (var i = 0; i < 3; i++) {
-            if (score.allScores[i] == undefined) {
-                score.allScores[i] = "";
-            }
-        }
-
-        ctx.fillText("1st try: " + score.allScores[0], textX, textY);
-        ctx.fillText("2nd try: " + score.allScores[1], textX, textY + textOffset);
-        ctx.fillText("3rd try: " + score.allScores[2], textX, textY + textOffset * 2);
-
-        if (!main._isGameOver) return;
-
-        ctx.fillStyle = "#FFD1DC";
-        // Color of the shadow
-        ctx.shadowColor = '#4C4C4C';
-        ctx.shadowBlur = 15;
-        ctx.globalAlpha = 0.6;
-
-        ctx.fillRect(boxX + (boxExtra / 2), boxY + boxOffset * 3 + (boxExtra / 2),
-        boxWidth - boxExtra, boxHeight * 1.3 - boxExtra);
-        ctx.globalAlpha = 1;
-
-        ctx.shadowBlur = 0;
-        ctx.fillStyle = "white";
-        ctx.textAlign = "left";
-        ctx.shadowColor = '#A9A9A9';
-        ctx.shadowBlur = 5;
-
-        ctx.font = "bold 30px Goudy Old Style";
-        ctx.shadowColor = '#CCCCCC';
-        ctx.shadowBlur = 10;
-        ctx.fillText("Final score: " + finalScore, textX, textY + textOffset * 3 + boxExtra);
-
-        ctx.fillStyle = "#FFFFFF";
-
-        var boxExtra = 10;
-        ctx.globalAlpha = 0.6;
-
-        // Color of the shadow
-        ctx.shadowColor = '#4C4C4C';
-        ctx.shadowBlur = 15;
-
-        ctx.fillRect(boxX + (boxExtra / 2), boxY + boxOffset * 5 - boxExtra * 2,
-        boxWidth - boxExtra, boxHeight - boxExtra);
-        ctx.globalAlpha = 1;
-        // Make sure the shadow is only applied to the boxes.
-        ctx.shadowBlur = 0;
-        ctx.fillStyle = "white";
-        ctx.textAlign = "center";
-        ctx.shadowColor = '#A9A9A9';
-        ctx.shadowBlur = 5;
-        ctx.fillText("High scores", 500, boxY + boxOffset * 5 + boxExtra * 1.5);
-        
-        ctx.fillStyle = "#FFD1DC";
-
-        ctx.globalAlpha = 0.6;
-        ctx.fillRect(boxX + (boxExtra / 2), boxY + boxOffset * 6 - boxExtra * 2,
-        boxWidth - boxExtra, boxHeight * 1 - boxExtra);
-        ctx.fillRect(boxX + (boxExtra / 2), boxY + boxOffset * 7 - boxExtra * 2,
-        boxWidth - boxExtra, boxHeight * 1 - boxExtra);
-        ctx.fillRect(boxX + (boxExtra / 2), boxY + boxOffset * 8 - boxExtra * 2,
-        boxWidth - boxExtra, boxHeight * 1 - boxExtra);
-
-        
-        ctx.globalAlpha = 1;
-        // Make sure the shadow is only applied to the boxes.
-        ctx.shadowBlur = 0;
-        ctx.fillStyle = "white";
-        ctx.shadowColor = '#A9A9A9';
-        ctx.shadowBlur = 5;
-
-        for (var i = 0; i < score.highScores.length; i++) {
-            ctx.fillText(score.highScores[i], 500, textY + textOffset * 5 + textOffset + i * textOffset - boxExtra * 2);
-        }
-
+        score.drawScoreBoard(ctx);
 
     } else {
     // Else draw the regular background
@@ -336,26 +189,23 @@ function renderSimulation(ctx) {
         entityManager.render(ctx);
 
         if (g_renderSpatialDebug) spatialManager.render(ctx);
-        
+
         // Audio
         g_sounds.song.play();
-        if(g_sounds.alwaysInstru.currentTime > 0){+
+        if(g_sounds.alwaysInstru.currentTime > 0){
             g_sounds.alwaysInstru.pause();
             g_sounds.alwaysInstru.currentTime=0;
         }
-        
-
     }
-    
 }
 
- 
+
 
 // =============
 // PRELOAD STUFF
 // =============
 var requiredAudio = [
-        
+
     "sounds/always.mp3",
     "sounds/explosion2.mp3",
     "sounds/explodeExtra.mp3",
@@ -365,12 +215,13 @@ var requiredAudio = [
     "sounds/starExplosion.mp3",
     "sounds/explosion2extra.mp3",
     "sounds/jump.mp3",
-    "sounds/alwaysInstru.mp3"
+    "sounds/alwaysInstru.mp3",
+    "sounds/INTRO.mp3"
 
 ];
 
 
-    
+
 function preloadAudio(url) {
     var audio = new Audio();
     // once this file loads, it will call loadedAudio()
@@ -378,7 +229,7 @@ function preloadAudio(url) {
     audio.addEventListener('canplaythrough', loadedAudio, false);
     audio.src = url;
 }
-    
+
 var loaded = 0;
 function loadedAudio() {
     // this will be called every time an audio file is loaded
@@ -390,9 +241,9 @@ function loadedAudio() {
     	requestImagePreloads();
     }
 }
-    
 
-    
+
+
 // we start preloading all the audio files
 function audioPreload(){
     for (var i in requiredAudio) {
@@ -405,9 +256,8 @@ var g_images = {};
 function requestImagePreloads() {
 
     var requiredImages = {
-        leftPlat : "images/tundraCliffLeft.png",
-        midPlat : "images/tundraMid.png",
-        rightPlat : "images/tundraCliffRight.png",
+
+        // Sprites for when unicorn is running
         Run17 :  "images/Unicorn/run/run_000.png",
         Run16 :  "images/Unicorn/run/run_001.png",
         Run15 :  "images/Unicorn/run/run_002.png",
@@ -436,24 +286,7 @@ function requestImagePreloads() {
         Run19 :  "images/Unicorn/run/run_027.png",
         Run18 :  "images/Unicorn/run/run_028.png",
 
-        /*Run0 :  "images/Unicorn/run_1.png",
-        Run1 :  "images/Unicorn/run_2.png",
-        Run2 :  "images/Unicorn/run_3.png",
-        Run3 :  "images/Unicorn/run_4.png",
-        Run4 :  "images/Unicorn/run_5.png",
-        Run5 :  "images/Unicorn/run_6.png",
-        Run6 :  "images/Unicorn/run_7.png",
-        Run7 :  "images/Unicorn/run_8.png",
-        Run8 :  "images/Unicorn/run_9.png",
-        Run9 :  "images/Unicorn/run_10.png",
-        Run10 :  "images/Unicorn/run_11.png",
-        Run11 :  "images/Unicorn/run_12.png",
-        Run12 :  "images/Unicorn/run_13.png",
-        Run13 :  "images/Unicorn/run_14.png",
-        Run14 :  "images/Unicorn/run_15.png",
-        Run15 :  "images/Unicorn/run_16.png",
-        Run16 :  "images/Unicorn/run_17.png",
-        Run17 :  "images/Unicorn/run_18.png",*/
+        // Sprites for when unicorn is jumping
         Jump12 : "images/Unicorn/jump/jump_000.png",
         Jump11: "images/Unicorn/jump/jump_001.png",
         Jump10 : "images/Unicorn/jump/jump_002.png",
@@ -467,7 +300,8 @@ function requestImagePreloads() {
         Jump2 : "images/Unicorn/jump/jump_010.png",
         Jump1 : "images/Unicorn/jump/jump_011.png",
         Jump0 : "images/Unicorn/jump/jump_012.png",
-        // Sprites for when it's dashing
+
+        // Sprites for when unicorn is dashing
         Dash0 : "images/Unicorn/dash/dash_000.png",
         Dash1 : "images/Unicorn/dash/dash_001.png",
         Dash2 : "images/Unicorn/dash/dash_002.png",
@@ -481,7 +315,7 @@ function requestImagePreloads() {
         Dash10 : "images/Unicorn/dash/dash_010.png",
         Dash11 : "images/Unicorn/dash/dash_011.png",
 
-        // Sprites for when it's going down
+        // Sprites for when unicorn is going down
         Down0 : "images/Unicorn/down/down_000.png",
         Down1 : "images/Unicorn/down/down_001.png",
         Down2 : "images/Unicorn/down/down_002.png",
@@ -502,6 +336,7 @@ function requestImagePreloads() {
         Down17 :  "images/Unicorn/down/down_017.png",
         Down18 :  "images/Unicorn/down/down_018.png",
 
+        // Platforms
         normal1 : "images/Platforms/normalSize.png",
         normal2 : "images/Platforms/normalSize2.png",
         normal3 : "images/Platforms/normalSize3.png",
@@ -510,7 +345,7 @@ function requestImagePreloads() {
         large : "images/Platforms/largeSize.png",
         long : "images/Platforms/long.png",
 
-        // the gem
+        // Gems
         Gem0 : "images/Gem/gem_000.png",
         Gem1 : "images/Gem/gem_001.png",
         Gem2 : "images/Gem/gem_002.png",
@@ -518,7 +353,7 @@ function requestImagePreloads() {
         Gem4 : "images/Gem/gem_004.png",
         Gem5 : "images/Gem/gem_005.png",
 
-        // the explosion
+        // Explosion
         Explosion0 : "images/Explosion/tile000.png",
         Explosion1 : "images/Explosion/tile001.png",
         Explosion2 : "images/Explosion/tile002.png",
@@ -552,24 +387,67 @@ function requestImagePreloads() {
         Explosion30 : "images/Explosion/tile030.png",
         Explosion31 : "images/Explosion/tile031.png",
 
-        // Heart : "images/Lives/heart.png",
+        // Hearts/lives
         Alive : "images/Lives/alive.png",
         Dead : "images/Lives/dead.png",
+
+        // Gameover screen
         Gameover : "images/playagain.png",
+
+        // Background screen
         Background : "images/background.png",
 
-        // the shine image
+        // Shine
         Shine0 : "images/Shine/shine_000.png",
         Shine1 : "images/Shine/shine_001.png",
         Shine2 : "images/Shine/shine_002.png",
         Shine3 : "images/Shine/shine_001.png",
-        Shine4 : "images/Shine/shine_000.png"
+        Shine4 : "images/Shine/shine_000.png",
+
+        Menuframe0 : "images/fat-unicorn/frame_00_delay-0.08s.gif",
+        Menuframe1 : "images/fat-unicorn/frame_01_delay-0.08s.gif",
+        Menuframe2 : "images/fat-unicorn/frame_02_delay-0.08s.gif",
+        Menuframe3 : "images/fat-unicorn/frame_03_delay-0.08s.gif",
+        Menuframe4 : "images/fat-unicorn/frame_04_delay-0.08s.gif",
+        Menuframe5 : "images/fat-unicorn/frame_05_delay-0.08s.gif",
+        Menuframe6 : "images/fat-unicorn/frame_06_delay-0.08s.gif",
+        Menuframe7 : "images/fat-unicorn/frame_07_delay-0.08s.gif",
+        Menuframe8 : "images/fat-unicorn/frame_08_delay-0.08s.gif",
+        Menuframe9 : "images/fat-unicorn/frame_09_delay-0.08s.gif",
+        Menuframe10 : "images/fat-unicorn/frame_10_delay-0.08s.gif",
+        Menuframe11 : "images/fat-unicorn/frame_11_delay-0.08s.gif",
+        Menuframe12 : "images/fat-unicorn/frame_12_delay-0.08s.gif",
+        Menuframe13 : "images/fat-unicorn/frame_13_delay-0.08s.gif",
+        Menuframe14 : "images/fat-unicorn/frame_14_delay-0.08s.gif",
+        Menuframe15 : "images/fat-unicorn/frame_15_delay-0.08s.gif",
+        Menuframe16 : "images/fat-unicorn/frame_16_delay-0.08s.gif",
+        Menuframe17 : "images/fat-unicorn/frame_17_delay-0.08s.gif",
+        Menuframe18 : "images/fat-unicorn/frame_18_delay-0.08s.gif",
+        Menuframe19 : "images/fat-unicorn/frame_19_delay-0.08s.gif",
+        Menuframe20 : "images/fat-unicorn/frame_20_delay-0.08s.gif",
+        Menuframe21 : "images/fat-unicorn/frame_21_delay-0.08s.gif",
+        Menuframe22 : "images/fat-unicorn/frame_22_delay-0.08s.gif",
+        Menuframe23 : "images/fat-unicorn/frame_23_delay-0.08s.gif",
+        Menuframe24 : "images/fat-unicorn/frame_24_delay-0.08s.gif",
+        Menuframe25 : "images/fat-unicorn/frame_25_delay-0.08s.gif",
+        Menuframe26 : "images/fat-unicorn/frame_26_delay-0.08s.gif",
+        Menuframe27 : "images/fat-unicorn/frame_27_delay-0.08s.gif",
+        Menuframe28 : "images/fat-unicorn/frame_28_delay-0.08s.gif",
+        Menuframe29 : "images/fat-unicorn/frame_29_delay-0.08s.gif",
+        Menuframe30 : "images/fat-unicorn/frame_30_delay-0.08s.gif",
+        Menuframe31 : "images/fat-unicorn/frame_31_delay-0.08s.gif",
+        Menuframe32 : "images/fat-unicorn/frame_32_delay-0.08s.gif",
+        Menuframe33 : "images/fat-unicorn/frame_33_delay-0.08s.gif",
+        Menuframe34 : "images/fat-unicorn/frame_34_delay-0.08s.gif",
+        Menuframe35 : "images/fat-unicorn/frame_35_delay-0.08s.gif",
+        Menuframe36 : "images/fat-unicorn/frame_36_delay-0.08s.gif",
+        Menuframe37 : "images/fat-unicorn/frame_37_delay-0.08s.gif",
+        Menuframe38 : "images/fat-unicorn/frame_38_delay-0.08s.gif",
+        Menuframe39 : "images/fat-unicorn/frame_39_delay-0.08s.gif"
     };
 
-    
     imagesPreload(requiredImages, g_images, preloadDone);
-    
-    
+
 }
 
 var preloaded = 0;
@@ -584,11 +462,11 @@ var g_dashSprite=[];
 var g_gemSprites = [];      // the gem
 var g_explosionSprite=[];   // the explosion
 var g_shineSprite = [];   // the shine
+var g_menuSprite=[];
 
 function preloadDone() {
 
-    // Audio \\ 
-
+    // Audio
     g_sounds.song = new Audio(requiredAudio[0]);
     g_sounds.uniExplosion = new Audio(requiredAudio[1]);
     g_sounds.eExtra = new Audio(requiredAudio[2]);
@@ -599,33 +477,43 @@ function preloadDone() {
     g_sounds.starExplosionExtra = new Audio(requiredAudio[2]);
     g_sounds.jump = new Audio(requiredAudio[8]);
     g_sounds.alwaysInstru = new Audio(requiredAudio[9]);
-    
+    g_sounds.INTRO = new Audio(requiredAudio[10]);
+
+
     // Volume of all the non-song sounds
-    g_sounds.uniExplosion.volume = 0.5; 
-    g_sounds.eExtra.volume = 0.5; 
-    g_sounds.gameOver.volume = 0.5; 
-    g_sounds.rainbow.volume = 0.5;  
-    g_sounds.dash.volume = 0.5;  
-    g_sounds.starExplosion.volume = 0.5; 
-    g_sounds.starExplosionExtra.volume = 0.9; 
-    g_sounds.jump.volume = 0.9; 
+    g_sounds.uniExplosion.volume = 0.5;
+    g_sounds.eExtra.volume = 0.5;
+    g_sounds.gameOver.volume = 0.5;
+    g_sounds.rainbow.volume = 0.5;
+    g_sounds.dash.volume = 0.5;
+    g_sounds.starExplosion.volume = 0.5;
+    g_sounds.starExplosionExtra.volume = 0.9;
+    g_sounds.jump.volume = 0.9;
 
-    
-    // Images \\
+    //starting position for intro song
+    g_sounds.INTRO.currentTime=119;
+    // Images
 
+    // background
     g_sprites.Background = new Sprite(g_images.Background);
+
+    // game over screen
     g_sprites.gameover = new Sprite(g_images.Gameover);
+
+    // platforms
     g_platforms.normal1 = new Sprite(g_images.normal1);
     g_platforms.normal2 = new Sprite(g_images.normal2);
     g_platforms.normal3 = new Sprite(g_images.normal3);
     g_platforms.small = new Sprite(g_images.small);
     g_platforms.esmall = new Sprite(g_images.esmall);
     g_platforms.large = new Sprite(g_images.large);
-    //g_sprites.heart = new Sprite(g_images.Heart);
+
+    // lives
     g_sprites.alive = new Sprite(g_images.Alive);
     g_sprites.dead = new Sprite(g_images.Dead);
     g_platforms.long = new Sprite(g_images.long);
 
+    // unicorn related
     g_runSprite[0]=new Sprite(g_images.Run0);
     g_runSprite[1]=new Sprite(g_images.Run1);
     g_runSprite[2]=new Sprite(g_images.Run2);
@@ -700,7 +588,7 @@ function preloadDone() {
     g_dashSprite[10]=new Sprite(g_images.Dash10);
     g_dashSprite[11]=new Sprite(g_images.Dash11);
 
-    // the gem
+    // gem
     g_gemSprites[0] = new Sprite(g_images.Gem0);
     g_gemSprites[1] = new Sprite(g_images.Gem1);
     g_gemSprites[2] = new Sprite(g_images.Gem2);
@@ -708,7 +596,7 @@ function preloadDone() {
     g_gemSprites[4] = new Sprite(g_images.Gem4);
     g_gemSprites[5] = new Sprite(g_images.Gem5);
 
-    // the explosion
+    // explosion
     g_explosionSprite[0] = new Sprite(g_images.Explosion0);
     g_explosionSprite[1] = new Sprite(g_images.Explosion1);
     g_explosionSprite[2] = new Sprite(g_images.Explosion2);
@@ -742,15 +630,54 @@ function preloadDone() {
     g_explosionSprite[30] = new Sprite(g_images.Explosion30);
     g_explosionSprite[31] = new Sprite(g_images.Explosion31);
 
-    // the shine
+    // shine
     g_shineSprite[0] = new Sprite(g_images.Shine0);
     g_shineSprite[1] = new Sprite(g_images.Shine1);
     g_shineSprite[2] = new Sprite(g_images.Shine2);
 
-    entityManager.init();
-    init();
-    main.init();
-
+    g_menuSprite[0]=new Sprite(g_images.Menuframe0);
+    g_menuSprite[1]=new Sprite(g_images.Menuframe1);
+    g_menuSprite[2]=new Sprite(g_images.Menuframe2);
+    g_menuSprite[3]=new Sprite(g_images.Menuframe3);
+    g_menuSprite[4]=new Sprite(g_images.Menuframe4);
+    g_menuSprite[5]=new Sprite(g_images.Menuframe5);
+    g_menuSprite[6]=new Sprite(g_images.Menuframe6);
+    g_menuSprite[7]=new Sprite(g_images.Menuframe7);
+    g_menuSprite[8]=new Sprite(g_images.Menuframe8);
+    g_menuSprite[9]=new Sprite(g_images.Menuframe9);
+    g_menuSprite[10]=new Sprite(g_images.Menuframe10);
+    g_menuSprite[11]=new Sprite(g_images.Menuframe11);
+    g_menuSprite[12]=new Sprite(g_images.Menuframe12);
+    g_menuSprite[13]=new Sprite(g_images.Menuframe13);
+    g_menuSprite[14]=new Sprite(g_images.Menuframe14);
+    g_menuSprite[15]=new Sprite(g_images.Menuframe15);
+    g_menuSprite[16]=new Sprite(g_images.Menuframe16);
+    g_menuSprite[17]=new Sprite(g_images.Menuframe17);
+    g_menuSprite[18]=new Sprite(g_images.Menuframe18);
+    g_menuSprite[19]=new Sprite(g_images.Menuframe19);
+    g_menuSprite[20]=new Sprite(g_images.Menuframe20);
+    g_menuSprite[21]=new Sprite(g_images.Menuframe21);
+    g_menuSprite[22]=new Sprite(g_images.Menuframe22);
+    g_menuSprite[23]=new Sprite(g_images.Menuframe23);
+    g_menuSprite[24]=new Sprite(g_images.Menuframe24);
+    g_menuSprite[25]=new Sprite(g_images.Menuframe25);
+    g_menuSprite[26]=new Sprite(g_images.Menuframe26);
+    g_menuSprite[27]=new Sprite(g_images.Menuframe27);
+    g_menuSprite[28]=new Sprite(g_images.Menuframe28);
+    g_menuSprite[29]=new Sprite(g_images.Menuframe29);
+    g_menuSprite[30]=new Sprite(g_images.Menuframe30);
+    g_menuSprite[31]=new Sprite(g_images.Menuframe31);
+    g_menuSprite[32]=new Sprite(g_images.Menuframe32);
+    g_menuSprite[33]=new Sprite(g_images.Menuframe33);
+    g_menuSprite[34]=new Sprite(g_images.Menuframe34);
+    g_menuSprite[35]=new Sprite(g_images.Menuframe35);
+    g_menuSprite[36]=new Sprite(g_images.Menuframe36);
+    g_menuSprite[37]=new Sprite(g_images.Menuframe37);
+    g_menuSprite[38]=new Sprite(g_images.Menuframe38);
+    g_menuSprite[39]=new Sprite(g_images.Menuframe39);
+      entityManager.init();
+      init();
+      main.init();
 }
 
 // Kick it off

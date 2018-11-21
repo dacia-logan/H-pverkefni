@@ -24,7 +24,7 @@ function Shine(x,y,platNum) {
 
     // framecounter for explosion
     this.frameCounter = 0; 
-
+    
     // number of images to run through while exploding
     this.numberOfFrames = g_shineSprite.length;
 
