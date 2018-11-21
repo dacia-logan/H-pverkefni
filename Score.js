@@ -233,7 +233,7 @@ var score = {
             ctx.fillText("Failed! Press Z to keep playing", g_canvas.width / 2, 150);
         } else if (entityManager.gameOver) {
             //ctx.fillText("Game over! Press Y to play again", 500, 50);
-            ctx.fillText("Game over!", 500, 50);
+            ctx.fillText("Game over!", 500, 150);
         }
 
         // Color of the boxes for the score.

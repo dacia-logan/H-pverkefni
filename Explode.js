@@ -8,13 +8,13 @@
 
 var explode = {
 
-    speed : 1,                                      // the amount of frames for each pulse
-    frameCounterGem : 0,                            // starting point of the counter for gem
-    frameCounterUnicorn : 0,                        // starting point of the counter for unicorn
-    counter : 0,                                    // defines the index for the draw function
-    extraSize : 0,                                  // the pixels to add to the explosion when drawing
+    speed : 1,                            // The amount of frames for each pulse.
+    frameCounterGem : 0,                  // Starting point of the counter for gem.
+    frameCounterUnicorn : 0,              // Starting point of the counter for unicorn.
+    counter : 0,                          // Defines the index for the draw function.
+    extraSize : 0,                        // The pixels to add to the explosion when drawing.
 
-    // increases the frame on each call to the function
+    // Increases the frame on each call to the function.
     frames : function (type, numberOfFrames) {
         if (type === "Gem" && this.frameCounterGem <= numberOfFrames-this.speed) {
             this.frameCounterGem += this.speed;
@@ -24,7 +24,7 @@ var explode = {
         } 
     },
 
-    // returns if the animation for the explosion is over or not
+    // Returns if the animation for the explosion is over or not.
     done : function (numberOfFrames,type) {
         if (type === "Gem" && this.frameCounterGem >= numberOfFrames) {
             this.frameCounterGem = 0;
@@ -37,7 +37,7 @@ var explode = {
         return false;
     },
 
-    // draws the animation for the explosion
+    // Draws the animation for the explosion.
     draw : function (ctx,x,y,width,height,g_explosionSprite,type) {
         if (type === "Gem") {
             this.counter = this.frameCounterGem;
