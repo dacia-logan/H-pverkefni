@@ -38,11 +38,11 @@ _combo : [],
 
 didDie : false,
 
-
+gameOver : false,
 // "PRIVATE" METHODS
 
 
-
+KEY_PLAYON : keyCode('Z'),
 // PUBLIC METHODS
 
 // A special return value, used by other objects,
@@ -54,7 +54,7 @@ KILL_ME_NOW : -1,
 // i.e. thing which need `this` to be defined.
 //
 deferredSetup : function () {
-    this._categories = [this._platforms, this._gem, this._dummies, this._knifes, this._shine, this._combo];
+    this._categories = [this._platforms, this._gem, this._dummies, this._shine, this._combo];
 },
 
 reset : function(){
@@ -71,6 +71,22 @@ reset : function(){
   this._platforms.push(new Platform(1, true, 300, 500));
 },
 
+resetGameOver : function(){
+    for(var Id in this._platforms){
+      this._platforms[Id].kill();
+    }
+    for(var Id in this._gem){
+      this._gem[Id].kill();
+    }
+    for(var Id in this._shine){
+      this._shine[Id].kill();
+    }
+    for(var Id in this._dummies){
+        this._dummies[Id].kill();
+      }
+    this.init();
+    Background.reset();
+  },
 
 
 init: function() {
@@ -167,6 +183,7 @@ setPlatforms: function(){
         var platX = this._platforms[entity].getPos().posX;
         var platWidth =this._platforms[entity].getWidth();
         var primary = this._platforms[entity].getPrimary();
+
         if(primary
            && platX + platWidth <= camera.getPos().posX+500-(this.getMainCharacter().getDefVelX()*10)
            && !this._platforms[entity].getPlatformPushed())
@@ -194,7 +211,13 @@ getMainCharacter : function(){
 update: function(du) {
 
     // TODO
-    if (this.didDie) return;
+    if (this.didDie){
+        // To go for next round
+        if (eatKey(this.KEY_PLAYON) && entityManager.getMainCharacter().getLives()!=0) {
+        Background.hasLostLife = false;
+        entityManager.didDie = false;
+        }
+     return;}
     //Range of numbers that give u different platform
     //Check if to push new platform or not
     //this.setObstacle();

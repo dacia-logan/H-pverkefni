@@ -46,7 +46,7 @@ function Kall(descr) {
     this.liveSize = 50;
     this.lives = 3;
     this.deaths = 0;
-    this.hasLostLife = false;
+    //this.hasLostLife = false;
 
     // highscore
     this.highscore = [];
@@ -143,13 +143,12 @@ Kall.prototype.update = function(du){
     // Update the score
     score.updateScore(du);
 
-    // skoða þetta!!
-    if (score.gotLastShine) {
-      score.updateShine(du);
-    }
-
 };
 
+
+Kall.prototype.getLives = function(){
+  return this.lives;
+}
 
 //======
 // SPEED
@@ -219,8 +218,6 @@ Kall.prototype.gemCollide = function(gem){
   if (this.isDashing) {
     g_sounds.starExplosion.play();
     g_sounds.starExplosionExtra.play();
-
-    score.gemCollision = true;
     score.gotLastGem = true;
     score.calculateGemCombo();
     gem.explodes();
@@ -303,9 +300,7 @@ Kall.prototype.platformCollide = function(entity){
 // this handles collision with the shine
 // and unicorn
 Kall.prototype.shineCollide = function (shine) {
-    this.hasShineCombo = true;
     g_sounds.rainbow.play();
-    score.shineCollision = true;
     score.gotLastShine = true;
     score.calculateShineCombo();
     shine.kill();
@@ -339,9 +334,7 @@ Kall.prototype.loseLife = function () {
     score.gemsInRow = 0;
 
     if (this.lives === 0) {
-        g_sounds.gameOver.play();
-        this.kill();
-        main.gameOver();
+        entityManager.gameOver=true;
     }
 
     else {
@@ -483,10 +476,7 @@ Kall.prototype.render = function(ctx) {
   this.drawLives(ctx);
   score.drawScore(ctx);
 
-  if (score.shineCollision) {
-    score.drawShineCombo(ctx, this.x, this.y);
-  }
-   if (score.gemCollision) {
-    score.drawGemCombo(ctx, this.x, this.y);
-  }
+  score.drawShineCombo(ctx, this.x, this.y);
+  score.drawGemCombo(ctx, this.x, this.y);
+
 };

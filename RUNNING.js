@@ -97,8 +97,7 @@ var KEY_AVE_VEL = keyCode('V');
 var KEY_SPATIAL = keyCode('X');
 var KEY_MUTE = keyCode('1');
 
-// TODO
-var KEY_PLAYON = keyCode('Z');
+
 var KEY_PLAYAGAIN = keyCode('Y');
 
 var hasGameEnded = false;
@@ -122,17 +121,15 @@ function processDiagnostics() {
         console.log("YESSIR");
     }
 
-    if (eatKey(KEY_PLAYON)) {
-        Background.hasLostLife = false;
-        entityManager.didDie = false;
-    }
-
-    if (eatKey(KEY_PLAYAGAIN)) {
+   /* if (eatKey(KEY_PLAYAGAIN) && entityManager.getMainCharacter().getLives()===0) {
         console.log("heyyy");
-        Background.hasLostLife = false;
+        entityManager.gameOver=false;
+        entityManager.resetGameOver();
+        score.reset();
         entityManager.didDie = false;
-        score.highScores.length = 0;
-    }
+        Background.hasLostLife = false;
+    }*/
+
 
 }
 
@@ -393,9 +390,15 @@ function requestImagePreloads() {
 
         // Gameover screen
         Gameover : "images/playagain.png",
+        Stars1 : "images/stars1.png",
+        Stars2 : "images/stars2.png",
+        Stars3 : "images/stars3.png",
+        Stars4 : "images/stars4.png",
 
         // Background screen
         Background : "images/background.png",
+        RainbowBG : "images/rainbowbg.png",
+        DeadUnicorn : "images/deadUni.png",
 
         // Shine
         Shine0 : "images/Shine/shine_000.png",
@@ -496,8 +499,12 @@ function preloadDone() {
 
     // background
     g_sprites.Background = new Sprite(g_images.Background);
-
-    // game over screen
+    g_sprites.stars1 = new Sprite(g_images.Stars1);
+    g_sprites.stars2 = new Sprite(g_images.Stars2);
+    g_sprites.stars3 = new Sprite(g_images.Stars3);
+    g_sprites.stars4 = new Sprite(g_images.Stars4);
+    g_sprites.rainbowbg = new Sprite(g_images.RainbowBG);
+    g_sprites.deaduni = new Sprite(g_images.DeadUnicorn);
     g_sprites.gameover = new Sprite(g_images.Gameover);
 
     // platforms
