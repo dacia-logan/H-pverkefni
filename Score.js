@@ -258,7 +258,15 @@ var score = {
         ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
         ctx.fillRect(boxX, boxY + boxOffset, boxWidth, boxHeight);
         ctx.fillRect(boxX, boxY + boxOffset * 2, boxWidth, boxHeight);
-
+        if (entityManager.gameOver){
+          ctx.fillStyle = "#FFD1DC";
+          // Color of the shadow
+          ctx.shadowColor = '#4C4C4C';
+          ctx.shadowBlur = 15;
+          ctx.globalAlpha = 0.6;
+          
+          ctx.fillRect(boxX, boxY + boxOffset * 3, boxWidth, boxHeight);
+        }
         ctx.globalAlpha = 1;
 
         // Variables for the text in the boxes.
@@ -298,8 +306,12 @@ var score = {
         ctx.fillText("1st try: " + this.allScores[0], textX, textY);
         ctx.fillText("2nd try: " + this.allScores[1], textX, textY + textOffset);
         ctx.fillText("3rd try: " + this.allScores[2], textX, textY + textOffset * 2);
-
-       // if (!entityManager.gameOver) return;
+        if (entityManager.gameOver){
+          ctx.font = "bold 30px Goudy Old Style";
+          ctx.shadowColor = '#CCCCCC';
+          ctx.shadowBlur = 10;
+          ctx.fillText("Final score: " + finalScore, textX, textY + textOffset * 3);
+        }
 
        // Draw a dead unicorn.
         ctx.globalAlpha = 0.5;

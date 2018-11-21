@@ -92,8 +92,8 @@ resetGameOver : function(){
 
 
 init: function() {
-    this._platforms.push(new Platform(1, true, 300, 500));
-    this._dummies.push(new Kall());
+      this._platforms.push(new Platform(1, true, 300, 500));
+      this._dummies.push(new Kall());
 },
 
 // Platform functions \\
@@ -184,11 +184,11 @@ setPlatforms: function(){
         var platX = this._platforms[entity].getPos().posX;
         var platWidth =this._platforms[entity].getWidth();
         var primary = this._platforms[entity].getPrimary();
-        
-        if(primary 
+
+        if(primary
            && platX + platWidth <= camera.getPos().posX+500-(this.getMainCharacter().getDefVelX()*10)
            && !this._platforms[entity].getPlatformPushed())
-           {            
+           {
             this._platforms[entity].setPlatformPushed();
 
             if(plats >= 13) { this.platSet1(makeGem); }
