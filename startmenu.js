@@ -18,7 +18,7 @@ var startmenu = {
         ctx.textAlign = "center";
         ctx.fillStyle ='white';
         ctx.shadowBlur=4;
-        ctx.fillText("Press A to start your adventure",600,610);
+        ctx.fillText("Press W to start your adventure",600,610);
         this.alpha -= this.alphaChanger;
         if (this.alpha <= 0.3 || this.alpha > 1) {
           this.alphaChanger *= -1;

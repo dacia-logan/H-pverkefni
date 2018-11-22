@@ -82,9 +82,11 @@ function processDiagnostics() {
         volumeOnOff();
     }
 
-    // If 'A' is pressed, start the game!
-    if (eatKey(keyCode('A'))) {
+    // If 'W' is pressed, start the game!
+    if (!startmenu.startGame) {
+      if (eatKey(keyCode('W'))) {
         startmenu.startGame = true;
+      }
     }
 
    /* if (eatKey(KEY_PLAYAGAIN) && entityManager.getMainCharacter().getLives()===0) {
@@ -138,7 +140,7 @@ function renderSimulation(ctx) {
       startmenu.drawMenu(ctx);
     }
     // If the game is over, display the game over screen.
-     else if (Background.hasLostLife) {
+    else if (Background.hasLostLife) {
         // Audio.
         g_sounds.song.pause();
         g_sounds.song.currentTime = 0;
@@ -160,6 +162,16 @@ function renderSimulation(ctx) {
             g_sounds.alwaysInstru.currentTime=0;
         }
     }
+    // sma weird if setning, en gerir það sem þetta þarf að gera
+    if(!g_isUpdatePaused &&
+        g_sounds.song.paused &&
+        startmenu.startGame ||
+        g_sounds.song.currentTime === g_sounds.song.duration)
+        {
+             g_sounds.song.play();
+        }
+
+    else if(g_isUpdatePaused) g_sounds.song.pause();   
 }
 
 
@@ -363,7 +375,7 @@ function requestImagePreloads() {
 
         // Background screen.
         Background : "images/background.png",
-        
+
         // Shine.
         Shine0 : "images/Shine/shine_000.png",
         Shine1 : "images/Shine/shine_001.png",
@@ -460,12 +472,6 @@ function preloadDone() {
     g_sounds.starExplosionExtra.volume = 0.9;
     g_sounds.jump.volume = 0.9;
 
-    // Starting position for intro song,
-    //      if statement is here for InternetExplorer.
-    if (!isNaN(g_sounds.INTRO.duration)) {
-        g_sounds.INTRO.currentTime = 119;
-    }
-    
     // Images
 
     // Background.

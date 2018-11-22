@@ -10,10 +10,13 @@ function Kall(descr) {
     // Starting position and velocity.
     this.x = 200;
     this.y = 400;
-    this.defVelX = 5;
-    this.velX = this.defVelX;
-    this.velY = 0;
-    this.dashAccel = 0.8
+    this.defVelX=9;
+    this.velX=this.defVelX;
+    this.velY=0;
+    this.dashAccel=0.5;
+    this.accelX=0;
+    this.accelY=0;
+    this.Speedup=0.0025;
 
     // Width and height of the unicorn.
     this.width = 170;
@@ -56,6 +59,11 @@ function Kall(descr) {
     //this.nrOfTries = 0;
 
     this.type =  "Kall";
+
+
+    this.stopDashingCountUp = 0;
+    this.wasCollidingGem = false;
+    this.savePrevDefVel = 0;
 };
 
 
@@ -91,13 +99,13 @@ Kall.prototype.update = function (du) {
       this.dashDelay--;
     }
 
-    // Set the xVel of the unicorn based on if it is dashing or not.
-    this.setSpeed(du);
-    this.defVelX += 0.003 * du;
-    if (this.inAir) {
-      this.Jumpframecounter += 0.378;
-      if (this.Jumpframecounter >= 26) {
-        this.Jumpframecounter = 31.1;
+    //set the xVel of rethe unicorn based on if
+    //it is dashing or not
+    this.defVelX+=this.Speedup*du;
+    if(this.inAir){
+      this.Jumpframecounter+=0.378;
+      if (this.Jumpframecounter>=26) {
+        this.Jumpframecounter=31.1;
       }
     } else {
       this.framecounter += 1;
@@ -109,10 +117,15 @@ Kall.prototype.update = function (du) {
       this.loseLife();
     }
 
-    // Check for hit entity, if it's hit it checks which side it is on and acts
-    //    accordingly, resets or is on the platform.
-    this.handleKeys(du);
-    this.applyAccel(0,this.gravity,du);
+    if (this.wasCollidingGem === true) {
+      this.stopDashingCountUp++;
+      this.handleAfterCollisionGem(du);
+    }
+
+    // Check for hit entity, if its hit it checks wwhich side it is on and acts accordingly,
+    // resets or is on the platform.
+    this.handleDash(du);
+    this.Physics(this.accelX,this.accelY,du);
     this.collidesWith(du);
 
     // Check if out of canvas.
@@ -142,31 +155,6 @@ Kall.prototype.getLives = function () {
   return this.lives;
 }
 
-// =====
-// SPEED
-// =====
-Kall.prototype.setSpeed = function (du) {
-  // Is the unicorn dashing and is the dashcounter not zero?
-    if (this.isDashing && this.dashCounter > 0) {
-      this.dashCounter = this.dashCounter - 1 * du;      // Dash for only 15 frames.
-      this.applyAccel(this.dashAccel,0,du) ;             // Set velocity to higher speed.
-      this.jumpCounter = 1;                     // Unicorn can jump once after it has dashed.
-      this.velY = 0;                            // No vertical velocity while dashing.
-      this.Dashframecounter += 1;
-      if (this.Dashframecounter > 11) {
-        this.Dashframecounter = 11.1;
-        this.Jumpframecounter = 6;
-      }
-    // Unicorn is not dashing anymore, move as usual.
-    } else {
-      this.dashAccel = 6 / this.defVelX
-      this.isDashing = false;               // Not dashing.
-      this.velX = this.defVelX;             // Set velocity to normal speed.
-      this.dashCounter = 15;                // Reset the dashCounter to 15 again.
-    }
-};
-
-
 //====================
 // COLLISION FUNCTIONS
 //====================
@@ -178,17 +166,19 @@ Kall.prototype.collidesWith = function (du) {
   // We got these numbers that we add and subtract
   // by exploring in render() in spatialManager.
     if (spatialManager.isHit(this.x+65, this.y+30,
-      this.width-125, this.height-40).length != 0) {              
+      this.width-125, this.height-40).length != 0) {
         var ent = spatialManager.isHit(this.x+65, this.y+30,
           this.width-125, this.height-40);
 
         for (i=0 ; i < ent.length; i++) {
           if(ent[i].getType() === "Gem"){                // Collision with the gem.
             score.gemCounter = 0;                        // Controlls the position handling for the score.
+            this.wasCollidingGem = true;
             this.gemCollide(ent[i]);                     // Handle collision.
             this.jumpCounter = 1;                        // You get one more jump.
             this.dashDelay = 0;                          // Dash is not limited.
-            this.isDashing = false;                      // Stop dashing if we hit gem.
+
+            //this.isDashing = false;                      // Stop dashing if we hit gem.
           } else if (ent[i].getType() === "Platform"){   // Collision with the platform.
             this.platformCollide(ent[i]);                // Handle collision.
             this.dashDelay = 0;                          // Dash is not limited.
@@ -226,17 +216,17 @@ Kall.prototype.gemCollide = function (gem) {
 // Handles when the unicorn collides with the platforms.
 Kall.prototype.platformCollide = function (entity) {
     // Where are we colliding with platform?
-    var posX = entity.getPos().posX+20;             // Þessar tölur fengum við með þvi að 
+    var posX = entity.getPos().posX+20;             // Þessar tölur fengum við með þvi að
     var posY = entity.getPos().posY*1.035;          // nota render i spatialManager þar sem
-    var eWidth = entity.getWidth()-30;              // við gerðum collision boxið eins og við 
+    var eWidth = entity.getWidth()-30;              // við gerðum collision boxið eins og við
     var eHeight = entity.getHeight()*0.6;           // vildum hafa það.
-    var x = this.x+65;                              
+    var x = this.x+65;
     var y = this.y+30;                              // þessar lika
     var w = this.width-125;
     var h = this.height-40;
 
     // LEFT EDGE - character should explode and lose a life.
-    if (x < posX  &&  y + h >= posY + 12) { 
+    if (x < posX  &&  y + h >= posY + 12) {
       while (Math.floor(x+w) > posX) {
         this.x--;
         x = this.x + 70;
@@ -285,6 +275,28 @@ Kall.prototype.shineCollide = function (shine) {
     shine.kill();
 };
 
+
+Kall.prototype.handleAfterCollisionGem = function(du) {
+  // when 3 frames have past since we collided with the gem
+  // stop for 3 frames and on the next frame stop dashing
+  // but resume the old velocity
+
+  if (this.stopDashingCountUp === 3) {
+      this.savePrevDefVel = this.defVelX;
+      this.savePrevVelX = this.velX;
+      this.velX = 0;
+      this.defVelX = 0;
+  }
+  if (this.stopDashingCountUp === 6) {
+    this.isDashing = false;
+    this.velX = this.savePrevVelX;
+    this.defVelX = this.savePrevDefVel;
+    this.wasCollidingGem = false;
+    this.stopDashingCountUp = 0;
+  }
+};
+
+
 //========================
 // COLLISION FUNCTIONS END
 //========================
@@ -327,30 +339,28 @@ Kall.prototype.loseLife = function () {
 //=================
 // HANDLE KEY PRESS
 //=================
+Kall.prototype.handleJump = function () {
+  if (eatKey(this.KEY_JUMP)) {
+    if (this.jumpCounter!==0) {
+      if(!this.inAir) g_sounds.jump.play();
+      this.Jumpframecounter=0;
+      this.velY=0;
+      this.jumpCounter-=1;
+      this.inAir=true;
+      return this.jumpForce;
+    }
+    else return 0;
+  }
+  else return 0;
+};
+
+// Used in handle dash, plays different audio objects with the same sound
 Kall.prototype.dashSoundi=0;
 
-Kall.prototype.handleKeys = function (du) {
-
-    if (eatKey(this.KEY_JUMP)) {
-      if (this.jumpCounter !== 0) {
-        if (!this.inAir) {
-          g_sounds.jump.play();
-        }
-        this.Jumpframecounter = 0;
-        this.velY = 0;
-        this.jumpCounter -= 1;
-        this.inAir = true;
-        this.applyAccel(0,this.jumpForce, du);
-      }
-    }
-
-    if (eatKey(this.RESET) || this.y > g_canvas.height) {
-      this.x = 200;
-      this.y = 400;
-      this.velY = 0;
-    }
-    // The dashDelay stops 'abuse' of the dash element. There is
-    //    slight delay for the next possible dash.
+Kall.prototype.handleDash = function(du){
+    // the dashDelay stops 'abuse' of the dash
+    // element. There is slight delay for the
+    // next possible dash.
     if (eatKey(this.KEY_DASH) && this.dashDelay === 0) {
         
         if(this.dashSoundi===0){
@@ -373,14 +383,38 @@ Kall.prototype.handleKeys = function (du) {
       this.Dashframecounter = 0;
       this.dashDelay = 70;        // The frames to wait for next dash.
     }
+    //is the unicorn dashing and is the dashcounter not zero?
+      if (this.isDashing && this.dashCounter > 0) {
+        this.dashCounter=this.dashCounter-1*du;      //dash for only 15 frames
+        this.jumpCounter=1;                       //unicorn can jump once after it has dashed
+        this.velY=0;                          // no vertical velocity while dashing
+        this.Dashframecounter+=1;
+        this.accelX+=this.dashAccel;
+        if (this.Dashframecounter>11) {
+          this.Dashframecounter=11.1;
+        }
+        this.Jumpframecounter=6;
+      //unicorn is not dashing anymore move as usual
+      } else {
+        this.isDashing = false;     //not dashing
+        this.velX=this.defVelX;     //set velocity to normal speed
+        this.dashCounter = 15;
+        this.accelX=0;    //reset the dashCounter to 15 again
+      }
 };
 
 
 //=============
-// ACCELERATION
+// Physics
 //=============
-Kall.prototype.applyAccel = function (accelX,accelY,du) {
-  // u = Original velocity
+Kall.prototype.Physics= function(accelX,accelY,du){
+  var jumpforce=this.handleJump();
+  accelY=jumpforce+this.gravity;
+  this.applyAccel(accelX,accelY,du);
+};
+
+Kall.prototype.applyAccel= function(accelX,accelY,du){
+  // u=original velocity
 
   var oldVelY= this.velY;
   var oldVelX= this.velX;
