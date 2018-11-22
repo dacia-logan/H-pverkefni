@@ -16,7 +16,7 @@ var explode = {
 
 
     // Increases the frame on each call to the function.
-    frames : function (type, numberOfFrames) {
+    frames : function (type, numberOfFrames,du) {
         if (type === "Gem" && this.frameCounterGem <= numberOfFrames-this.speed) {
             this.frameCounterGem += this.speed;
         }
@@ -53,7 +53,7 @@ var explode = {
     },
 
     // Draws the animation for the explosion.
-    draw : function (ctx,x,y,width,height,g_explosionSprite,type) {
+    draw : function (ctx,x,y,width,height,g_explosionSprite,type,du) {
         
         if (type === "Gem") {
             this.counter = this.frameCounterGem;

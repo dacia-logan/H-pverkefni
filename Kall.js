@@ -287,11 +287,11 @@ Kall.prototype.handleAfterCollisionGem = function(du) {
       this.defVelX = 0; 
   }
   if (this.stopDashingCountUp === 6) {
-    this.isDashing = false; 
-    this.velX = this.savePrevVelX;
-    this.defVelX = this.savePrevDefVel;
-    this.wasCollidingGem = false; 
-    this.stopDashingCountUp = 0;
+      this.isDashing = false; 
+      this.velX = this.savePrevVelX;
+      this.defVelX = this.savePrevDefVel;
+      this.wasCollidingGem = false; 
+      this.stopDashingCountUp = 0;
   }
 };
    
