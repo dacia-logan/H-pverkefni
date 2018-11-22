@@ -225,10 +225,10 @@ Kall.prototype.gemCollide = function (gem) {
 // Handles when the unicorn collides with the platforms.
 Kall.prototype.platformCollide = function (entity) {
     // Where are we colliding with platform?
-    var posX = entity.getPos().posX+20;         
-    var posY = entity.getPos().posY*1.035;      
-    var eWidth = entity.getWidth()-30;    
-    var eHeight = entity.getHeight()*0.6;
+    var posX = entity.getPos().posX+20;             // Þessar tölur fengum við með þvi að 
+    var posY = entity.getPos().posY*1.035;          // nota render i spatialManager þar sem
+    var eWidth = entity.getWidth()-30;              // við gerðum collision boxið eins og við 
+    var eHeight = entity.getHeight()*0.6;           // vildum hafa það.
     var x = this.x+65;
     var y = this.y+30;
     var w = this.width-125;

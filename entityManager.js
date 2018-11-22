@@ -96,7 +96,10 @@ init: function() {
       this._dummies.push(new Kall());
 },
 
-// Platform functions
+//===============
+// Platform sets
+//===============
+
 platSet1 : function (makeGem) {
     // xExtra is extra distance between platforms, based on unicorns' velocity,
     //      only added to platforms that dont spawn at x1.
@@ -170,9 +173,10 @@ platSet5 : function (makeGem) {
     this._shine.push(new Shine(x3,y2,2));
 },
 
-
+// Fall sem ákvarðar hvaða set af platforms teiknast næst og 
+// hvenær það á að teiknast.
 setPlatforms : function () {
-    //TODO nota þetta sem viðmið hvaða platform er verið að nota.
+    
     var a = Math.floor(util.randRange(1,5));
     var plats = Math.floor(util.randRange(0,16));
     //creates a random number, when the number is 1 we create a gem and butterfly
