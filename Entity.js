@@ -75,12 +75,6 @@ Entity.prototype.kill = function () {
     this._isDeadNow = true;
 };
 
-//ÞETTA ER PRUFA TIL AÐ REYNA AÐ EIGA VIÐ COMBOIÐ
-Entity.prototype.lostCombo = function() {
-    this.hasRainbowCombo = false; 
-    this.combo = 0; 
-};
-
 Entity.prototype.findHitEntity = function () {
     
     var pos = this.getPos();

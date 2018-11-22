@@ -1,33 +1,7 @@
-// =========
-// ASTEROIDS
-// =========
+// ====================
+// ROBOT UNICORN ATTACK
+// ====================
 /*
-
-A sort-of-playable version of the classic arcade game.
-
-
-HOMEWORK INSTRUCTIONS:
-
-You have some "TODO"s to fill in again, particularly in:
-
-spatialManager.js
-
-But also, to a lesser extent, in:
-
-Rock.js
-Bullet.js
-Ship.js
-
-
-...Basically, you need to implement the core of the spatialManager,
-and modify the Rock/Bullet/Ship to register (and unregister)
-with it correctly, so that they can participate in collisions.
-
-Be sure to test the diagnostic rendering for the spatialManager,
-as toggled by the 'X' key. We rely on that for marking. My default
-implementation will work for the "obvious" approach, but you might
-need to tweak it if you do something "non-obvious" in yours.
-*/
 
 "use strict";
 
@@ -41,13 +15,7 @@ var g_ctx = g_canvas.getContext("2d");
 12345678901234567890123456789012345678901234567890123456789012345678901234567890
 */
 
-
-// ====================
-// CREATE INITIAL SHIPS
-// ====================
-
 function init() {
-
 
 }
 
@@ -80,8 +48,6 @@ function updateSimulation(du) {
   if (startmenu.startGame) {
     entityManager.update(du);
   }
-
-
 }
 
 // GAME-SPECIFIC DIAGNOSTICS
@@ -95,8 +61,8 @@ var KEY_MIXED   = keyCode('M');
 var KEY_GRAVITY = keyCode('G');
 var KEY_AVE_VEL = keyCode('V');
 var KEY_SPATIAL = keyCode('X');
-var KEY_MUTE = keyCode('1');
 
+var KEY_MUTE = keyCode('1');
 var KEY_PLAYAGAIN = keyCode('Y');
 
 var hasGameEnded = false;
@@ -115,9 +81,10 @@ function processDiagnostics() {
     if (eatKey(KEY_MUTE)){
         volumeOnOff();
     }
+
+    // If 'A' is pressed, start the game!
     if (eatKey(keyCode('A'))) {
-        startmenu.startGame=true;
-        console.log("YESSIR");
+        startmenu.startGame = true;
     }
 
    /* if (eatKey(KEY_PLAYAGAIN) && entityManager.getMainCharacter().getLives()===0) {
@@ -131,10 +98,9 @@ function processDiagnostics() {
 
 }
 
-
 function volumeOnOff() {
-    for(var i in g_sounds){
-        if(g_sounds.hasOwnProperty(i)){
+    for (var i in g_sounds) {
+        if (g_sounds.hasOwnProperty(i)) {
             g_sounds[i].muted = !g_sounds[i].muted;
         }
     }
@@ -148,8 +114,8 @@ var Background = {
 
     hasLostLife : false,
 
-    render : function(ctx){
-        if(this.x+g_sprites.Background.width<camera.getPos().posX){
+    render : function (ctx) {
+        if(this.x+g_sprites.Background.width < camera.getPos().posX){
             this.x=this.x+g_sprites.Background.width;
         }
         g_sprites.Background.drawAtAndEnlarge(ctx,this.x,this.y,g_sprites.Background.width,
@@ -158,8 +124,8 @@ var Background = {
                                                     this.y,g_sprites.Background.width, g_sprites.Background.height);
     },
 
-    reset : function(){
-        this.x=0;
+    reset : function () {
+        this.x = 0;
     }
 
 }
@@ -171,31 +137,30 @@ function renderSimulation(ctx) {
     if (!startmenu.startGame) {
       startmenu.drawMenu(ctx);
     }
-    // If the game is over, display the game over screen
+    // If the game is over, display the game over screen.
      else if (Background.hasLostLife) {
-        // Audio
+        // Audio.
         g_sounds.song.pause();
-        g_sounds.song.currentTime=0;
+        g_sounds.song.currentTime = 0;
         g_sounds.alwaysInstru.play();
 
         score.drawScoreBoard(ctx);
 
     } else {
-    // Else draw the regular background
+    // Else draw the regular background.
         Background.render(ctx);
         entityManager.render(ctx);
 
         if (g_renderSpatialDebug) spatialManager.render(ctx);
 
-        // Audio
+        // Audio.
         g_sounds.song.play();
-        if(g_sounds.alwaysInstru.currentTime > 0){
+        if (g_sounds.alwaysInstru.currentTime > 0) {
             g_sounds.alwaysInstru.pause();
             g_sounds.alwaysInstru.currentTime=0;
         }
     }
 }
-
 
 
 // =============
@@ -218,30 +183,29 @@ var requiredAudio = [
 ];
 
 
-
 function preloadAudio(url) {
     var audio = new Audio();
-    // once this file loads, it will call loadedAudio()
-    // the file will be kept by the browser as cache
+    // Once this file loads, it will call loadedAudio(),
+    //      the file will be kept by the browser as cache.
     audio.addEventListener('canplaythrough', loadedAudio, false);
     audio.src = url;
 }
 
 var loaded = 0;
 function loadedAudio() {
-    // this will be called every time an audio file is loaded
-    // we keep track of the loaded files vs the requested files
+    // This will be called every time an audio file is loaded,
+    //      we keep track of the loaded files vs the requested files.
     loaded++;
     if (loaded == requiredAudio.length){
-        // all have loaded
-        console.log("audio complete")
+        // All have loaded.
+        console.log("Audio complete")
     	requestImagePreloads();
     }
 }
 
 
 
-// we start preloading all the audio files
+// We start preloading all the audio files.
 function audioPreload(){
     for (var i in requiredAudio) {
         preloadAudio(requiredAudio[i]);
@@ -254,7 +218,7 @@ function requestImagePreloads() {
 
     var requiredImages = {
 
-        // Sprites for when unicorn is running
+        // Sprites for when unicorn is running.
         Run17 :  "images/Unicorn/run/run_000.png",
         Run16 :  "images/Unicorn/run/run_001.png",
         Run15 :  "images/Unicorn/run/run_002.png",
@@ -283,7 +247,7 @@ function requestImagePreloads() {
         Run19 : "images/Unicorn/run/run_027.png",
         Run18 : "images/Unicorn/run/run_028.png",
 
-        // Sprites for when unicorn is jumping
+        // Sprites for when unicorn is jumping.
         Jump12 : "images/Unicorn/jump/jump_000.png",
         Jump11: "images/Unicorn/jump/jump_001.png",
         Jump10 : "images/Unicorn/jump/jump_002.png",
@@ -298,7 +262,7 @@ function requestImagePreloads() {
         Jump1 : "images/Unicorn/jump/jump_011.png",
         Jump0 : "images/Unicorn/jump/jump_012.png",
 
-        // Sprites for when unicorn is dashing
+        // Sprites for when unicorn is dashing.
         Dash0 : "images/Unicorn/dash/dash_000.png",
         Dash1 : "images/Unicorn/dash/dash_001.png",
         Dash2 : "images/Unicorn/dash/dash_002.png",
@@ -312,7 +276,7 @@ function requestImagePreloads() {
         Dash10 : "images/Unicorn/dash/dash_010.png",
         Dash11 : "images/Unicorn/dash/dash_011.png",
 
-        // Sprites for when unicorn is going down
+        // Sprites for when unicorn is going down.
         Down0 : "images/Unicorn/down/down_000.png",
         Down1 : "images/Unicorn/down/down_001.png",
         Down2 : "images/Unicorn/down/down_002.png",
@@ -333,7 +297,7 @@ function requestImagePreloads() {
         Down17 :  "images/Unicorn/down/down_017.png",
         Down18 :  "images/Unicorn/down/down_018.png",
 
-        // Platforms
+        // Platforms.
         normal1 : "images/Platforms/normalSize.png",
         normal2 : "images/Platforms/normalSize2.png",
         normal3 : "images/Platforms/normalSize3.png",
@@ -342,7 +306,7 @@ function requestImagePreloads() {
         large : "images/Platforms/largeSize.png",
         long : "images/Platforms/long.png",
 
-        // Gems
+        // Gems.
         Gem0 : "images/Gem/gem_000.png",
         Gem1 : "images/Gem/gem_001.png",
         Gem2 : "images/Gem/gem_002.png",
@@ -350,7 +314,7 @@ function requestImagePreloads() {
         Gem4 : "images/Gem/gem_004.png",
         Gem5 : "images/Gem/gem_005.png",
 
-        // Explosion
+        // Explosion.
         Explosion0 : "images/Explosion/tile000.png",
         Explosion1 : "images/Explosion/tile001.png",
         Explosion2 : "images/Explosion/tile002.png",
@@ -384,29 +348,30 @@ function requestImagePreloads() {
         Explosion30 : "images/Explosion/tile030.png",
         Explosion31 : "images/Explosion/tile031.png",
 
-        // Hearts/lives
+        // Lives.
         Alive : "images/Lives/alive.png",
         Dead : "images/Lives/dead.png",
 
-        // Gameover screen
+        // Gameover screen.
         Gameover : "images/playagain.png",
-        Stars1 : "images/stars1.png",
-        Stars2 : "images/stars2.png",
-        Stars3 : "images/stars3.png",
-        Stars4 : "images/stars4.png",
-
-        // Background screen
-        Background : "images/background.png",
-        RainbowBG : "images/rainbowbg.png",
+        Stars1 : "images/Stars/stars1.png",
+        Stars2 : "images/Stars/stars2.png",
+        Stars3 : "images/Stars/stars3.png",
+        Stars4 : "images/Stars/stars4.png",
         DeadUnicorn : "images/deadUni.png",
+        RainbowBG : "images/rainbowbg.png",
 
-        // Shine
+        // Background screen.
+        Background : "images/background.png",
+        
+        // Shine.
         Shine0 : "images/Shine/shine_000.png",
         Shine1 : "images/Shine/shine_001.png",
         Shine2 : "images/Shine/shine_002.png",
         Shine3 : "images/Shine/shine_001.png",
         Shine4 : "images/Shine/shine_000.png",
 
+        // Start screen.
         Menuframe0 : "images/fat-unicorn/frame_00_delay-0.08s.gif",
         Menuframe1 : "images/fat-unicorn/frame_01_delay-0.08s.gif",
         Menuframe2 : "images/fat-unicorn/frame_02_delay-0.08s.gif",
@@ -456,20 +421,20 @@ function requestImagePreloads() {
 var preloaded = 0;
 
 var g_sounds = {};
-var g_sprites={};
+var g_sprites = {};
 var g_platforms = {};
-var g_runSprite=[];
-var g_jumpSprite=[];
-var g_downSprite=[];
-var g_dashSprite=[];
-var g_gemSprites = [];      // the gem
-var g_explosionSprite=[];   // the explosion
-var g_shineSprite = [];   // the shine
-var g_menuSprite=[];
+var g_runSprite = [];
+var g_jumpSprite = [];
+var g_downSprite = [];
+var g_dashSprite = [];
+var g_gemSprites = [];
+var g_explosionSprite = [];
+var g_shineSprite = [];
+var g_menuSprite = [];
 
 function preloadDone() {
 
-    // Audio
+    // Audio.
     g_sounds.song = new Audio(requiredAudio[0]);
     g_sounds.uniExplosion = new Audio(requiredAudio[1]);
     g_sounds.eExtra = new Audio(requiredAudio[2]);
@@ -482,8 +447,7 @@ function preloadDone() {
     g_sounds.alwaysInstru = new Audio(requiredAudio[9]);
     g_sounds.INTRO = new Audio(requiredAudio[10]);
 
-
-    // Volume of all the non-song sounds
+    // Volume of all the non-song sounds.
     g_sounds.uniExplosion.volume = 0.5;
     g_sounds.eExtra.volume = 0.5;
     g_sounds.gameOver.volume = 0.5;
@@ -493,15 +457,15 @@ function preloadDone() {
     g_sounds.starExplosionExtra.volume = 0.9;
     g_sounds.jump.volume = 0.9;
 
-    // starting position for intro song
-    // if statement is here for InternetExplorer
-    if(!isNaN(g_sounds.INTRO.duration)) {
-        g_sounds.INTRO.currentTime=119;
+    // Starting position for intro song,
+    //      if statement is here for InternetExplorer.
+    if (!isNaN(g_sounds.INTRO.duration)) {
+        g_sounds.INTRO.currentTime = 119;
     }
     
     // Images
 
-    // background
+    // Background.
     g_sprites.Background = new Sprite(g_images.Background);
     g_sprites.stars1 = new Sprite(g_images.Stars1);
     g_sprites.stars2 = new Sprite(g_images.Stars2);
@@ -511,7 +475,7 @@ function preloadDone() {
     g_sprites.deaduni = new Sprite(g_images.DeadUnicorn);
     g_sprites.gameover = new Sprite(g_images.Gameover);
 
-    // platforms
+    // Platforms.
     g_platforms.normal1 = new Sprite(g_images.normal1);
     g_platforms.normal2 = new Sprite(g_images.normal2);
     g_platforms.normal3 = new Sprite(g_images.normal3);
@@ -519,12 +483,12 @@ function preloadDone() {
     g_platforms.esmall = new Sprite(g_images.esmall);
     g_platforms.large = new Sprite(g_images.large);
 
-    // lives
+    // Lives.
     g_sprites.alive = new Sprite(g_images.Alive);
     g_sprites.dead = new Sprite(g_images.Dead);
     g_platforms.long = new Sprite(g_images.long);
 
-    // unicorn related
+    // Unicorn related.
     g_runSprite[0]=new Sprite(g_images.Run0);
     g_runSprite[1]=new Sprite(g_images.Run1);
     g_runSprite[2]=new Sprite(g_images.Run2);
@@ -599,7 +563,7 @@ function preloadDone() {
     g_dashSprite[10]=new Sprite(g_images.Dash10);
     g_dashSprite[11]=new Sprite(g_images.Dash11);
 
-    // gem
+    // Gem.
     g_gemSprites[0] = new Sprite(g_images.Gem0);
     g_gemSprites[1] = new Sprite(g_images.Gem1);
     g_gemSprites[2] = new Sprite(g_images.Gem2);
@@ -607,7 +571,7 @@ function preloadDone() {
     g_gemSprites[4] = new Sprite(g_images.Gem4);
     g_gemSprites[5] = new Sprite(g_images.Gem5);
 
-    // explosion
+    // Explosion.
     g_explosionSprite[0] = new Sprite(g_images.Explosion0);
     g_explosionSprite[1] = new Sprite(g_images.Explosion1);
     g_explosionSprite[2] = new Sprite(g_images.Explosion2);
@@ -641,11 +605,12 @@ function preloadDone() {
     g_explosionSprite[30] = new Sprite(g_images.Explosion30);
     g_explosionSprite[31] = new Sprite(g_images.Explosion31);
 
-    // shine
+    // Shine.
     g_shineSprite[0] = new Sprite(g_images.Shine0);
     g_shineSprite[1] = new Sprite(g_images.Shine1);
     g_shineSprite[2] = new Sprite(g_images.Shine2);
 
+    // Start screen.
     g_menuSprite[0]=new Sprite(g_images.Menuframe0);
     g_menuSprite[1]=new Sprite(g_images.Menuframe1);
     g_menuSprite[2]=new Sprite(g_images.Menuframe2);
