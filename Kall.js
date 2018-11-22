@@ -268,7 +268,7 @@ Kall.prototype.platformCollide = function (entity) {
         //    went too far on the last frame.
         while (Math.floor(y) < posY + eHeight) {
           this.y++;
-          var y = this.y+30;
+          y = this.y+30;
         }
         this.velY *= -0.5;
 
