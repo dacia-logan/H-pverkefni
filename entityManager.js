@@ -38,7 +38,7 @@ didDie : false,
 
 gameOver : false,
 
-KEY_PLAYON : keyCode('Z'),
+KEY_PLAYON : keyCode('D'),
 
 // "PRIVATE" METHODS
 
@@ -173,10 +173,10 @@ platSet5 : function (makeGem) {
     this._shine.push(new Shine(x3,y2,2));
 },
 
-// Fall sem ákvarðar hvaða set af platforms teiknast næst og 
+// Fall sem ákvarðar hvaða set af platforms teiknast næst og
 // hvenær það á að teiknast.
 setPlatforms : function () {
-    
+
     var a = Math.floor(util.randRange(1,5));
     var plats = Math.floor(util.randRange(0,16));
     //creates a random number, when the number is 1 we create a gem and butterfly

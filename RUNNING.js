@@ -82,9 +82,11 @@ function processDiagnostics() {
         volumeOnOff();
     }
 
-    // If 'A' is pressed, start the game!
-    if (eatKey(keyCode('A'))) {
+    // If 'W' is pressed, start the game!
+    if (!startmenu.startGame) {
+      if (eatKey(keyCode('W'))) {
         startmenu.startGame = true;
+      }
     }
 
    /* if (eatKey(KEY_PLAYAGAIN) && entityManager.getMainCharacter().getLives()===0) {
@@ -363,7 +365,7 @@ function requestImagePreloads() {
 
         // Background screen.
         Background : "images/background.png",
-        
+
         // Shine.
         Shine0 : "images/Shine/shine_000.png",
         Shine1 : "images/Shine/shine_001.png",
@@ -457,12 +459,6 @@ function preloadDone() {
     g_sounds.starExplosionExtra.volume = 0.9;
     g_sounds.jump.volume = 0.9;
 
-    // Starting position for intro song,
-    //      if statement is here for InternetExplorer.
-    if (!isNaN(g_sounds.INTRO.duration)) {
-        g_sounds.INTRO.currentTime = 119;
-    }
-    
     // Images
 
     // Background.
