@@ -71,26 +71,6 @@ reset : function () {
   this._platforms.push(new Platform(1, true, 300, 500));
 },
 
-/*
-resetGameOver : function(){
-    for(var Id in this._platforms){
-      this._platforms[Id].kill();
-    }
-    for(var Id in this._gem){
-      this._gem[Id].kill();
-    }
-    for(var Id in this._shine){
-      this._shine[Id].kill();
-    }
-    for(var Id in this._dummies){
-        this._dummies[Id].kill();
-      }
-    this.init();
-    Background.reset();
-  },
-*/
-
-
 init: function() {
       this._platforms.push(new Platform(1, true, 300, 500));
       this._dummies.push(new Kall());
@@ -220,7 +200,7 @@ getMainCharacter : function () {
 update : function (du) {
 
     // If we just died,
-    if (this.didDie){
+    if (this.didDie) {
         // go to next round.
         if (eatKey(this.KEY_PLAYON) && entityManager.getMainCharacter().getLives()!=0) {
             Background.hasLostLife = false;

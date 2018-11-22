@@ -78,14 +78,6 @@ Kall.prototype.KEY_JUMP= 'W'.charCodeAt(0); // Jump up.
 Kall.prototype.KEY_DASH= 'D'.charCodeAt(0); // Fast speed forward, dashing.
 Kall.prototype.RESET= 'U'.charCodeAt(0);    // Resets the game to starting position.
 
-
-//======
-// AUDIO
-//======
-Kall.prototype.shineCatch = new Audio("sounds/rainbow.wav");
-Kall.prototype.die = new Audio("sounds/explosion2.wav");
-
-
 //===============
 // UPDATE ROUTINE
 //===============
@@ -352,6 +344,7 @@ Kall.prototype.handleJump = function () {
   }
   else return 0;
 };
+
 Kall.prototype.handleDash = function(du){
     // the dashDelay stops 'abuse' of the dash
     // element. There is slight delay for the
