@@ -58,6 +58,11 @@ function Kall(descr) {
     //this.nrOfTries = 0;
 
     this.type =  "Kall";
+
+
+    this.stopDashingCountUp = 0; 
+    this.wasCollidingGem = false; 
+    this.savePrevDefVel = 0; 
 };
 
 
@@ -111,6 +116,11 @@ Kall.prototype.update = function (du) {
       this.loseLife();
     }
 
+    if (this.wasCollidingGem === true) {
+      this.stopDashingCountUp++;
+      this.handleAfterCollisionGem(du);
+    }
+
     // Check for hit entity, if its hit it checks wwhich side it is on and acts accordingly,
     // resets or is on the platform.
     this.handleDash(du);
@@ -162,10 +172,12 @@ Kall.prototype.collidesWith = function (du) {
         for (i=0 ; i < ent.length; i++) {
           if(ent[i].getType() === "Gem"){                // Collision with the gem.
             score.gemCounter = 0;                        // Controlls the position handling for the score.
+            this.wasCollidingGem = true;
             this.gemCollide(ent[i]);                     // Handle collision.
             this.jumpCounter = 1;                        // You get one more jump.
             this.dashDelay = 0;                          // Dash is not limited.
-            this.isDashing = false;                      // Stop dashing if we hit gem.
+            
+            //this.isDashing = false;                      // Stop dashing if we hit gem.
           } else if (ent[i].getType() === "Platform"){   // Collision with the platform.
             this.platformCollide(ent[i]);                // Handle collision.
             this.dashDelay = 0;                          // Dash is not limited.
@@ -189,7 +201,7 @@ Kall.prototype.gemCollide = function (gem) {
     score.gotLastGem = true;
     score.calculateGemCombo();
     gem.explodes();
-
+    
   // Else the unicorn is exploding and will lose life
   } else {
     this.defVelX = 0;               // "stop" the game.
@@ -261,6 +273,28 @@ Kall.prototype.shineCollide = function (shine) {
     score.calculateShineCombo();
     shine.kill();
 };
+
+
+Kall.prototype.handleAfterCollisionGem = function(du) {
+  // when 3 frames have past since we collided with the gem
+  // stop for 3 frames and on the next frame stop dashing 
+  // but resume the old velocity
+
+  if (this.stopDashingCountUp === 3) {
+      this.savePrevDefVel = this.defVelX;
+      this.savePrevVelX = this.velX;
+      this.velX = 0;
+      this.defVelX = 0; 
+  }
+  if (this.stopDashingCountUp === 6) {
+    this.isDashing = false; 
+    this.velX = this.savePrevVelX;
+    this.defVelX = this.savePrevDefVel;
+    this.wasCollidingGem = false; 
+    this.stopDashingCountUp = 0;
+  }
+};
+   
 
 //========================
 // COLLISION FUNCTIONS END
