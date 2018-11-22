@@ -3,72 +3,63 @@
 //=============
 
 function Shine(x,y,platNum) {
-    // common inherited setup logic from Entity
+    // Common inherited setup logic from Entity.
     this.setup(x);
 
-    // set width and height
+    // Set width and height.
     this.width = 150;
     this.height = 150;
 
-    // set the position of the gem
+    // Set the X and Y positions of the gem.
     this.x = x;
-
-    // set the y position of the gem
     this.y = y - this.height;
 
-    // has the Shine been caught or not?
+    // Has the shine been caught or not?
     this.isCaught = false;
 
-    // combo
-    this.combo = false; 
-
-    // framecounter for explosion
+    // Framecounter for explosion.
     this.frameCounter = 0; 
     
-    // number of images to run through while exploding
+    // Number of images to run through while exploding.
     this.numberOfFrames = g_shineSprite.length;
 
-    // the amount of pixels we want to move the shine up and down
+    // The amount of pixels we want to move the shine up and down.
     this.dist = 20; 
 
-    // the frames we are goint to spend on each distance
+    // The frames we are going to spend on each distance.
     this.moveCounter = this.dist;
 
-    // are we movint up or down?
+    // Are we moving up or down?
     this.up = true; 
     this.down = false;   
 
-    // the name of the entity 
+    // The name of the entity.
     this.type = "Shine";
 };
 
-
 Shine.prototype = new Entity();
 
-
 Shine.prototype.render = function(ctx){
-    // only draw if game is not over and the Shine has not been caught
+    // Only draw if game is not over and the shine has not been caught.
     if (!main._isGameOver && !this.isCaught) {
-        // if the Shine has not been hit draw a Shine
+        // If the Shine has not been hit, draw a shine.
         g_shineSprite[Math.floor(this.frameCounter)].drawAtAndEnlarge(
             ctx,this.x,this.y,this.width,this.height);
     }
 };
 
 Shine.prototype.update = function(du) {
-    // unregister from spatial manager
+    // Unregister from spatial manager.
     spatialManager.unregister(this);
 
-    //score.updateShine(du);
-
-    // if the unicorn has caught the Shine it should die
+    // If the unicorn has caught the shine it should die.
     if (this.isCaught) this._isDeadNow;
 
-    // kill Shine if it falls out of the canvas
+    // Kill Shine if it falls out of the canvas.
     // Shine has to die if the 'Kall' hits it.
     // and
     // If the shine goes out of the canvas, the player has failed 
-    // to collect it, and thus loses his shine combo bonus.
+    //      to collect it, and thus loses his shine combo bonus.
     if (this.x <= camera.getPos().posX - this.width) { 
         this.kill();
         score.gotLastShine = false;
@@ -76,11 +67,11 @@ Shine.prototype.update = function(du) {
         score.shineInRow = 0;
     }
 
-    // this controlls how fast we change frames on the shine
+    // This controls how fast we change frames on the shine.
     if (this.frameCounter < this.numberOfFrames-1) this.frameCounter += 0.05;
     else this.frameCounter = 0; 
 
-    // this controlls the movement of the shine
+    // This controls the movement of the shine..
     if (this.up === true && this.moveCounter >= 0) {
         this.moveCounter -= 0.5; 
         this.y++;
@@ -89,7 +80,7 @@ Shine.prototype.update = function(du) {
         this.down = true; 
     }
 
-    // and this to
+    // ..and this also.
     if (this.down === true && this.moveCounter <= this.dist) {
         this.moveCounter += 0.5;
         this.y--;
@@ -98,14 +89,13 @@ Shine.prototype.update = function(du) {
         this.up = true; 
     }
 
-    // if the shine is dead return to entityManager
-    // that it should remove it from the game
+    // If the shine is dead, return to entityManager that it
+    //      should remove it from the game.
     if (this._isDeadNow) {
         return entityManager.KILL_ME_NOW;
     }
 
-    // re-register to spatial manager if shine
-    // has not died
+    // Re-register to spatial manager if shine has not died.
     if (!this._isDeadNow) spatialManager.register(this);
 };
 

@@ -30,19 +30,18 @@ var entityManager = {
 _platforms : [],
 _dummies : [],
 _gem : [],
-_knifes :[],
 _shine : [],
 _combo : [],
 
-// TODO
-
+// Did we just die?
 didDie : false,
 
 gameOver : false,
-// "PRIVATE" METHODS
-
 
 KEY_PLAYON : keyCode('Z'),
+
+// "PRIVATE" METHODS
+
 // PUBLIC METHODS
 
 // A special return value, used by other objects,
@@ -54,10 +53,11 @@ KILL_ME_NOW : -1,
 // i.e. thing which need `this` to be defined.
 //
 deferredSetup : function () {
-    this._categories = [this._platforms, this._gem, this._dummies, this._shine, this._combo];
+    this._categories = [this._platforms, this._gem, this._dummies,
+                                        this._shine, this._combo];
 },
 
-reset : function(){
+reset : function () {
   for(var Id in this._platforms){
     this._platforms[Id].kill();
   }
@@ -96,10 +96,13 @@ init: function() {
       this._dummies.push(new Kall());
 },
 
-// Platform functions \\
-platSet1:function(makeGem){
-    // xExtra is extra distance between platforms, based on unicorns vel
-    // only added to platforms that dont spawn at x1
+//===============
+// Platform sets
+//===============
+
+platSet1 : function (makeGem) {
+    // xExtra is extra distance between platforms, based on unicorns' velocity,
+    //      only added to platforms that dont spawn at x1.
     var xExtra = this.getMainCharacter().getDefVelX()*10;
     var x1 = camera.getPos().posX + g_canvas.width;
     var x2 = x1 + 550 + xExtra;
@@ -111,9 +114,9 @@ platSet1:function(makeGem){
     this._shine.push(new Shine(x1,y1,1));
 },
 
-platSet2:function(makeGem){
-    // xExtra is extra distance between platforms, based on unicorns vel
-    // only added to platforms that dont spawn at x1
+platSet2 : function (makeGem) {
+    // xExtra is extra distance between platforms, based on unicorns' velocity,
+    //      only added to platforms that dont spawn at x1.
     var xExtra = this.getMainCharacter().getDefVelX()*10;
     var x1 = camera.getPos().posX + g_canvas.width;
     var x2 = x1;
@@ -129,7 +132,7 @@ platSet2:function(makeGem){
     this._shine.push(new Shine(x1+1000,y1,1));
 },
 
-platSet3:function(makeGem){
+platSet3 : function (makeGem) {
     var x = camera.getPos().posX + g_canvas.width;
     var mainY = 400;
     this._platforms.push(new Platform(1,true,x, mainY));
@@ -137,9 +140,9 @@ platSet3:function(makeGem){
     this._shine.push(new Shine(x,mainY,1));
 },
 
-platSet4:function(makeGem){
-    // xExtra is extra distance between platforms, based on unicorns vel
-    // only added to platforms that dont spawn at x1
+platSet4 : function (makeGem) {
+    // xExtra is extra distance between platforms, based on unicorns' velocity,
+    //      only added to platforms that dont spawn at x1.
     var xExtra = this.getMainCharacter().getDefVelX()*10;
     var x1 = camera.getPos().posX + g_canvas.width;
     var x2 = x1+800+xExtra;
@@ -154,9 +157,9 @@ platSet4:function(makeGem){
     this._shine.push(new Shine(x3,y3,3));
 },
 
-platSet5:function(makeGem){
-    // xExtra is extra distance between platforms, based on unicorns vel
-    // only added to platforms that dont spawn at x1
+platSet5 : function (makeGem) {
+    // xExtra is extra distance between platforms, based on unicorns' velocity,
+    //      only added to platforms that dont spawn at x1.
     var xExtra = this.getMainCharacter().getDefVelX()*10;
     var x1 = camera.getPos().posX + g_canvas.width;
     var x2 = x1+500+xExtra;
@@ -170,32 +173,37 @@ platSet5:function(makeGem){
     this._shine.push(new Shine(x3,y2,2));
 },
 
-
-setPlatforms: function(){
-    //TODO nota þetta sem viðmið hvaða platform er verið að nota.
+// Fall sem ákvarðar hvaða set af platforms teiknast næst og 
+// hvenær það á að teiknast.
+setPlatforms : function () {
+    
     var a = Math.floor(util.randRange(1,5));
     var plats = Math.floor(util.randRange(0,16));
     //creates a random number, when the number is 1 we create a gem and butterfly
     var makeGem =  Math.floor(util.randRange(0,10));
-    //var makeButterfly =  1;/*Math.floor(util.randRange(0,2));*/
 
-    for(var entity in this._platforms){
+    for (var entity in this._platforms) {
 
         var platX = this._platforms[entity].getPos().posX;
         var platWidth =this._platforms[entity].getWidth();
         var primary = this._platforms[entity].getPrimary();
 
-        if(primary
+        if (primary
            && platX + platWidth <= camera.getPos().posX+500-(this.getMainCharacter().getDefVelX()*10)
-           && !this._platforms[entity].getPlatformPushed())
-           {
+           && !this._platforms[entity].getPlatformPushed()) {
             this._platforms[entity].setPlatformPushed();
 
-            if(plats >= 13) { this.platSet1(makeGem); }
-            else if( plats >= 9) { this.platSet2(makeGem); }
-            else if(plats >=6) { this.platSet3(makeGem); }
-            else if(plats >=3) { this.platSet4(makeGem); }
-            else{ this.platSet5(makeGem); }
+            if (plats >= 13) {
+                this.platSet1(makeGem);
+            } else if (plats >= 9) {
+                this.platSet2(makeGem);
+            } else if (plats >= 6) {
+                this.platSet3(makeGem);
+            } else if (plats >= 3) {
+                this.platSet4(makeGem);
+            } else {
+                this.platSet5(makeGem);
+            }
 
             if (Shine.isCaught) {
                 this._combo.push(new Combo(a));
@@ -205,23 +213,24 @@ setPlatforms: function(){
 },
 
 
-getMainCharacter : function(){
+getMainCharacter : function () {
   return this._dummies[0];
 },
 
-update: function(du) {
+update : function (du) {
 
-    // TODO
+    // If we just died,
     if (this.didDie){
-        // To go for next round
+        // go to next round.
         if (eatKey(this.KEY_PLAYON) && entityManager.getMainCharacter().getLives()!=0) {
-        Background.hasLostLife = false;
-        entityManager.didDie = false;
+            Background.hasLostLife = false;
+            entityManager.didDie = false;
         }
-     return;}
-    //Range of numbers that give u different platform
-    //Check if to push new platform or not
-    //this.setObstacle();
+        return;
+    }
+
+    // Range of numbers that give you different platforms.
+    // Check if to push new platform or not.
 
     this.setPlatforms();
 
@@ -234,8 +243,8 @@ update: function(du) {
 
             var status = aCategory[i].update(du);
             if (status === this.KILL_ME_NOW) {
-                // remove the dead guy, and shuffle the others down to
-                // prevent a confusing gap from appearing in the array
+                // Remove the dead guy, and shuffle the others down to
+                //      prevent a confusing gap from appearing in the array.
                 aCategory.splice(i,1);
             }
             else {
@@ -245,7 +254,7 @@ update: function(du) {
     }
 },
 
-render: function(ctx) {
+render : function (ctx) {
 
     if (this.didDie) return;
 
@@ -268,5 +277,5 @@ render: function(ctx) {
 
 };
 
-// Some deferred setup which needs the object to have been created first
+// Some deferred setup which needs the object to have been created first.
 entityManager.deferredSetup();

@@ -1,0 +1,58 @@
+/*============
+  INSTRUCTIONS 
+  ============*/
+  
+.instructions {
+    display: inline-block;
+    margin-left: -20px;
+    width: 1000px;
+    list-style: none;
+    font-family: Goudy Old Style;
+    font-size: 24px;
+    text-align: center;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  
+    /* Chrome, Safari, Opera */
+    -webkit-animation: instructions 3s infinite; 
+  
+    /* Internet Explorer */
+    -ms-animation: instructions 3s infinite;
+  
+    /* Standar Syntax */
+    animation: instructions 3s infinite; 
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes instructions {
+  0%{color: orange;}	
+  10%{color: purple;}	
+	20%{color: red;}
+  30%{color: CadetBlue;}
+	40%{color: yellow;}
+  50%{color: coral;}
+	60%{color: green;}
+  70%{color: cyan;}
+  80%{color: DeepPink;}
+  90%{color: DodgerBlue;}
+	100%{color: orange;}
+}
+
+/* Internet Explorer */
+@-ms-keyframes instructions {
+  0%{color: orange;}	
+  10%{color: purple;}	
+	20%{color: red;}
+	40%{color: yellow;}
+	60%{color: green;}
+	100%{color: orange;}
+}
+
+/* Standar Syntax */
+@keyframes instructions {
+  0%{color: orange;}	
+  10%{color: purple;}	
+	20%{color: red;}
+	40%{color: yellow;}
+	60%{color: green;}
+	100%{color: orange;}
+}
