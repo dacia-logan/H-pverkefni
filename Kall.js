@@ -229,8 +229,8 @@ Kall.prototype.platformCollide = function (entity) {
     var posY = entity.getPos().posY*1.035;          // nota render i spatialManager þar sem
     var eWidth = entity.getWidth()-30;              // við gerðum collision boxið eins og við 
     var eHeight = entity.getHeight()*0.6;           // vildum hafa það.
-    var x = this.x+65;
-    var y = this.y+30;
+    var x = this.x+65;                              
+    var y = this.y+30;                              // þessar lika
     var w = this.width-125;
     var h = this.height-40;
 
