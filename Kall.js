@@ -269,7 +269,7 @@ Kall.prototype.platformCollide = function(entity){
         while(Math.floor(y+h) > posY+eHeight)
         {
           this.y--;
-          var y=this.y+30;
+          y=this.y+30;
         }
         this.dashDelay=0;
         this.y = posY-this.height-(30-40);   //y and height difference
