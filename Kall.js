@@ -9,7 +9,9 @@ function Kall(descr) {
     this.defVelX=5;
     this.velX=this.defVelX;
     this.velY=0;
-    this.dashAccel=0.8
+    this.dashAccel=0.5;
+    this.accelX=0;
+    this.accelY=0;
 
     // width and height
     this.width = 170;
@@ -96,7 +98,6 @@ Kall.prototype.update = function(du){
 
     //set the xVel of rethe unicorn based on if
     //it is dashing or not
-    this.setSpeed(du);
     this.defVelX+=0.003*du;
     if(this.inAir){
       this.Jumpframecounter+=0.378;
@@ -118,8 +119,8 @@ Kall.prototype.update = function(du){
 
     // Check for hit entity, if its hit it checks wwhich side it is on and acts accordingly,
     // resets or is on the platform.
-    this.handleKeys(du);
-    this.applyAccel(0,this.gravity,du);
+    this.handleDash(du);
+    this.Physics(this.accelX,this.accelY,du);
     this.collidesWith(du);
 
      //check if out of canvas
@@ -149,31 +150,6 @@ Kall.prototype.update = function(du){
 Kall.prototype.getLives = function(){
   return this.lives;
 }
-
-//======
-// SPEED
-//======
-Kall.prototype.setSpeed = function(du) {
-  //is the unicorn dashing and is the dashcounter not zero?
-    if (this.isDashing && this.dashCounter > 0) {
-      this.dashCounter=this.dashCounter-1*du;         //dash for only 15 frames
-      this.applyAccel(this.dashAccel,0,du) ;   //set velocity to more speed
-      this.jumpCounter=1;         //unicorn can jump once after it has dashed
-      this.velY=0;                // no vertical velocity while dashing
-      this.Dashframecounter+=1;
-      if (this.Dashframecounter>11) {
-        this.Dashframecounter=11.1;
-        this.Jumpframecounter=6;
-      }
-    //unicorn is not dashing anymore move as usual
-    } else {
-      this.dashAccel=6/this.defVelX
-      this.isDashing = false;     //not dashing
-      this.velX=this.defVelX;     //set velocity to normal speed
-      this.dashCounter = 15;    //reset the dashCounter to 15 again
-    }
-};
-
 
 //====================
 // COLLISION FUNCTIONS
@@ -349,23 +325,21 @@ Kall.prototype.loseLife = function () {
 //=================
 // HANDLE KEY PRESS
 //=================
-Kall.prototype.handleKeys = function(du){
-
-    if (eatKey(this.KEY_JUMP)) {
-      if (this.jumpCounter!==0) {
-        if(!this.inAir) g_sounds.jump.play();
-        this.Jumpframecounter=0;
-        this.velY=0;
-        this.jumpCounter-=1;
-        this.inAir=true;
-        this.applyAccel(0,this.jumpForce, du);
-      }
-    }
-    if (eatKey(this.RESET)||this.y>g_canvas.height) {
-      this.x=200;
-      this.y=400;
+Kall.prototype.handleJump = function () {
+  if (eatKey(this.KEY_JUMP)) {
+    if (this.jumpCounter!==0) {
+      if(!this.inAir) g_sounds.jump.play();
+      this.Jumpframecounter=0;
       this.velY=0;
+      this.jumpCounter-=1;
+      this.inAir=true;
+      return this.jumpForce;
     }
+    else return 0;
+  }
+  else return 0;
+};
+Kall.prototype.handleDash = function(du){
     // the dashDelay stops 'abuse' of the dash
     // element. There is slight delay for the
     // next possible dash.
@@ -376,12 +350,36 @@ Kall.prototype.handleKeys = function(du){
       this.Dashframecounter=0;
       this.dashDelay = 70;        // the frames to wait for next dash
     }
+    //is the unicorn dashing and is the dashcounter not zero?
+      if (this.isDashing && this.dashCounter > 0) {
+        this.dashCounter=this.dashCounter-1*du;      //dash for only 15 frames
+        this.jumpCounter=1;                       //unicorn can jump once after it has dashed
+        this.velY=0;                          // no vertical velocity while dashing
+        this.Dashframecounter+=1;
+        this.accelX+=this.dashAccel;
+        if (this.Dashframecounter>11) {
+          this.Dashframecounter=11.1;
+        }
+        this.Jumpframecounter=6;
+      //unicorn is not dashing anymore move as usual
+      } else {
+        this.isDashing = false;     //not dashing
+        this.velX=this.defVelX;     //set velocity to normal speed
+        this.dashCounter = 15;
+        this.accelX=0;    //reset the dashCounter to 15 again
+      }
 };
 
 
 //=============
-// ACCELERATION
+// Physics
 //=============
+Kall.prototype.Physics= function(accelX,accelY,du){
+  var jumpforce=this.handleJump();
+  accelY=jumpforce+this.gravity;
+  this.applyAccel(accelX,accelY,du);
+};
+
 Kall.prototype.applyAccel= function(accelX,accelY,du){
   // u=original velocity
 

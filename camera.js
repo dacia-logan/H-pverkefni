@@ -6,7 +6,7 @@ var camera = {
       ctx.translate(-entity.getPos().posX+x,-entity.getPos().posY+y);
       this.x=entity.getPos().posX-x;
       this.y=entity.getPos().posY-y;
-     
+
     },
 
     getPos : function(){
