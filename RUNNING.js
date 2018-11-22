@@ -441,6 +441,9 @@ function preloadDone() {
     g_sounds.gameOver = new Audio(requiredAudio[3]);
     g_sounds.rainbow = new Audio(requiredAudio[4]);
     g_sounds.dash = new Audio(requiredAudio[5]);
+    g_sounds.dash1 = new Audio(requiredAudio[5]);
+    g_sounds.dash2 = new Audio(requiredAudio[5]);
+    g_sounds.dash3 = new Audio(requiredAudio[5]);
     g_sounds.starExplosion = new Audio(requiredAudio[6]);
     g_sounds.starExplosionExtra = new Audio(requiredAudio[2]);
     g_sounds.jump = new Audio(requiredAudio[8]);

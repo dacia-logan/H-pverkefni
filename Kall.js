@@ -327,6 +327,8 @@ Kall.prototype.loseLife = function () {
 //=================
 // HANDLE KEY PRESS
 //=================
+Kall.prototype.dashSoundi=0;
+
 Kall.prototype.handleKeys = function (du) {
 
     if (eatKey(this.KEY_JUMP)) {
@@ -350,8 +352,23 @@ Kall.prototype.handleKeys = function (du) {
     // The dashDelay stops 'abuse' of the dash element. There is
     //    slight delay for the next possible dash.
     if (eatKey(this.KEY_DASH) && this.dashDelay === 0) {
-      g_sounds.dash.play();
-
+        
+        if(this.dashSoundi===0){
+          g_sounds.dash.play();
+        }
+        else if(this.dashSoundi===1){
+          g_sounds.dash1.play();
+        }
+        else if(this.dashSoundi===2){
+          g_sounds.dash2.play();
+        }
+        else if(this.dashSoundi===3){
+          g_sounds.dash3.play();
+        }
+        this.dashSoundi++;
+        if(this.dashSoundi===4){
+          this.dashSoundi=0;
+        }
       this.isDashing = true;      // More speed access.
       this.Dashframecounter = 0;
       this.dashDelay = 70;        // The frames to wait for next dash.
