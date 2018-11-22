@@ -27,40 +27,19 @@ var score = {
     gotLastGem : false,
 
     // Controls the position handling when we want to draw.
-    gemCounter : 0,      
+    gemCounter : 0,
     shineCounter : 0,
 
     // The positions for the scores when the counters are zero.
-    shineX : 0,   
+    shineX : 0,
     shineY : 0,
-    gemX : 0,     
-    gemY : 0,    
+    gemX : 0,
+    gemY : 0,
 
     updateScore : function (du) {
       // Update the score
       this.currentScore += Math.floor(this.scoreSpeed * du);
-    },
-
-    /*
-    // When the game is played again, reset the following variables.
-    reset : function () {
-        this.currentScore = 0;
-        this.scoreSpeed = 2.5;
-        this.allScores = [];
-        this.shineCombo = 0;
-        this.shineInRow = 0;
-        this.gemCombo = 0;
-        this.gemsInRow = 0;
-        this.gotLastShine = false;
-        this.gotLastGem = false;
-        this.gemCounter = 0;
-        this.shineCounter = 0;
-       // this.shineX = 0;
-       // this.shineY = 0;
-       // this.gemX = 0;
-       // this.gemY = 0;
-    },
-    */
+    },    
 
     // Calculate the current shine combo, if the player got the last shine
     //    the combo increases, else it resets.
@@ -91,18 +70,18 @@ var score = {
       // If the counter is 0 we want to fetch the position sent to the function,
       //    else we keep the previous position (that is 0).
       if (this.shineCounter === 0) {
-        this.shineX = xPos + 400; 
-        this.shineY = yPos - 60; 
+        this.shineX = xPos + 400;
+        this.shineY = yPos - 60;
       }
 
       // Increment the counter so that next time we dont fetch a new position.
-      this.shineCounter++; 
+      this.shineCounter++;
 
       // Font and color for the text we're drawing.
       ctx.font = "bold 30px Consolas";
       ctx.textAlign = "center";
       ctx.fillStyle = "#FFFFFF";
-    
+
       // Shadow of the text.
       ctx.shadowColor = '#1c5e66';
       ctx.shadowBlur = 40;
@@ -114,7 +93,7 @@ var score = {
       } else {
         ctx.fillText("+" + this.shineCombo, this.shineX, this.shineY);
       }
-      
+
       ctx.fill();
 
       // Make sure the shadow is only applied to the text.
@@ -126,8 +105,8 @@ var score = {
       // If the counter is 0 we want to fetch the position sent to the function,
       //    else we keep the previous position (that is 0).
       if (this.gemCounter === 0) {
-        this.gemX = xPos + 400; 
-        this.gemY = yPos - 60; 
+        this.gemX = xPos + 400;
+        this.gemY = yPos - 60;
       }
 
       // Increment the counter so that next time we dont fetch a new position.
@@ -137,7 +116,7 @@ var score = {
       ctx.font = "bold 30px Consolas";
       ctx.textAlign = "center";
       ctx.fillStyle = "#FFFFFF";
-    
+
       // Shadow of the text.
       ctx.shadowColor = '#1c5e66';
       ctx.shadowBlur = 40;
@@ -149,7 +128,7 @@ var score = {
       } else {
         ctx.fillText("+" + this.gemCombo, this.gemX, this.gemY);
       }
-      
+
       ctx.fill();
 
       // Make sure the shadow is only applied to the text.
@@ -161,34 +140,40 @@ var score = {
       ctx.font = "bold 40px Consolas";
       ctx.textAlign = "center";
       ctx.fillStyle = "#FFFFFF";
-    
+
       // Shadow of the text.
       ctx.shadowColor = '#1c5e66';
       ctx.shadowBlur = 40;
-    
+
       // Draw the score if the game is not over.
       if (!entityManager.gameOver) {
         ctx.fillText(this.currentScore, g_canvas.width / 2 + camera.getPos().posX - 20,
                                 70 + camera.getPos().posY);
       }
-    
+
       ctx.fill();
-    
+
       // Make sure the shadow is only applied to the text.
       ctx.shadowBlur = 0;
     },
 
     // Draw the scoreboard after a life is lost and when it's game over.
     drawScoreBoard : function (ctx) {
+
+        var KEY_PLAYAGAIN = keyCode('W');
+
+        if (eatKey(KEY_PLAYAGAIN) && entityManager.gameOver) {
+          location.reload();
+        }
       
         camera.reset(ctx);
 
         // Background screen and rainbow.
         g_sprites.gameover.drawAtAndEnlarge(ctx,0,0,g_canvas.width,g_canvas.height);
         g_sprites.rainbowbg.drawAtAndEnlarge(ctx,0,0,g_canvas.width,g_canvas.height);
-        
+
         ctx.globalAlpha = 0.5;
-        
+
         // Yellow stars.
         g_sprites.stars1.drawAtAndEnlarge(ctx,5,350,100,100);
         g_sprites.stars1.drawAtAndEnlarge(ctx,50,40,120,120);
@@ -227,13 +212,12 @@ var score = {
         // Shadow of the text.
         ctx.shadowColor = '#333333';
         ctx.shadowBlur = 10;
-        
+
         // Draw the text.
         if (!entityManager.gameOver) {
-            ctx.fillText("Failed! Press Z to keep playing", g_canvas.width / 2, 150);
+            ctx.fillText("Failed! Press D to keep playing", g_canvas.width / 2, 150);
         } else if (entityManager.gameOver) {
-            //ctx.fillText("Game over! Press Y to play again", 500, 50);
-            ctx.fillText("Game over!", 500, 150);
+            ctx.fillText("Game over! Press W to play again", 500, 150);
         }
 
         // Color of the boxes for the score.
@@ -264,7 +248,7 @@ var score = {
           ctx.shadowColor = '#4C4C4C';
           ctx.shadowBlur = 15;
           ctx.globalAlpha = 0.6;
-          
+
           ctx.fillRect(boxX, boxY + boxOffset * 3, boxWidth, boxHeight);
         }
         ctx.globalAlpha = 1;
@@ -362,10 +346,10 @@ var score = {
         ctx.shadowColor = '#A9A9A9';
         ctx.shadowBlur = 5;
         ctx.fillText("High scores", 500, boxY + boxOffset * 5 + boxExtra * 1.2);
-        
+
         ctx.fillStyle = "#FFD1DC";
         ctx.shadowColor = '#4C4C4C';
-        
+
         ctx.globalAlpha = 0.6;
         ctx.fillRect(boxX + (boxExtra / 2), boxY + boxOffset * 6 - boxExtra * 1.7,
         boxWidth - boxExtra, boxHeight * 1 - boxExtra);

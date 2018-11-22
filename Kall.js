@@ -10,12 +10,13 @@ function Kall(descr) {
     // Starting position and velocity.
     this.x = 200;
     this.y = 400;
-    this.defVelX=5;
+    this.defVelX=9;
     this.velX=this.defVelX;
     this.velY=0;
     this.dashAccel=0.5;
     this.accelX=0;
     this.accelY=0;
+    this.Speedup=0.0025;
 
     // Width and height of the unicorn.
     this.width = 170;
@@ -60,9 +61,9 @@ function Kall(descr) {
     this.type =  "Kall";
 
 
-    this.stopDashingCountUp = 0; 
-    this.wasCollidingGem = false; 
-    this.savePrevDefVel = 0; 
+    this.stopDashingCountUp = 0;
+    this.wasCollidingGem = false;
+    this.savePrevDefVel = 0;
 };
 
 
@@ -78,14 +79,6 @@ Kall.prototype.KEY_JUMP= 'W'.charCodeAt(0); // Jump up.
 Kall.prototype.KEY_DASH= 'D'.charCodeAt(0); // Fast speed forward, dashing.
 Kall.prototype.RESET= 'U'.charCodeAt(0);    // Resets the game to starting position.
 
-
-//======
-// AUDIO
-//======
-Kall.prototype.shineCatch = new Audio("sounds/rainbow.wav");
-Kall.prototype.die = new Audio("sounds/explosion2.wav");
-
-
 //===============
 // UPDATE ROUTINE
 //===============
@@ -100,7 +93,7 @@ Kall.prototype.update = function (du) {
 
     //set the xVel of rethe unicorn based on if
     //it is dashing or not
-    this.defVelX+=0.003*du;
+    this.defVelX+=this.Speedup*du;
     if(this.inAir){
       this.Jumpframecounter+=0.378;
       if (this.Jumpframecounter>=26) {
@@ -176,7 +169,7 @@ Kall.prototype.collidesWith = function (du) {
             this.gemCollide(ent[i]);                     // Handle collision.
             this.jumpCounter = 1;                        // You get one more jump.
             this.dashDelay = 0;                          // Dash is not limited.
-            
+
             //this.isDashing = false;                      // Stop dashing if we hit gem.
           } else if (ent[i].getType() === "Platform"){   // Collision with the platform.
             this.platformCollide(ent[i]);                // Handle collision.
@@ -201,7 +194,7 @@ Kall.prototype.gemCollide = function (gem) {
     score.gotLastGem = true;
     score.calculateGemCombo();
     gem.explodes();
-    
+
   // Else the unicorn is exploding and will lose life
   } else {
     this.defVelX = 0;               // "stop" the game.
@@ -277,14 +270,14 @@ Kall.prototype.shineCollide = function (shine) {
 
 Kall.prototype.handleAfterCollisionGem = function(du) {
   // when 3 frames have past since we collided with the gem
-  // stop for 3 frames and on the next frame stop dashing 
+  // stop for 3 frames and on the next frame stop dashing
   // but resume the old velocity
 
   if (this.stopDashingCountUp === 3) {
       this.savePrevDefVel = this.defVelX;
       this.savePrevVelX = this.velX;
       this.velX = 0;
-      this.defVelX = 0; 
+      this.defVelX = 0;
   }
   if (this.stopDashingCountUp === 6) {
       this.isDashing = false; 
@@ -294,7 +287,7 @@ Kall.prototype.handleAfterCollisionGem = function(du) {
       this.stopDashingCountUp = 0;
   }
 };
-   
+
 
 //========================
 // COLLISION FUNCTIONS END
@@ -327,7 +320,7 @@ Kall.prototype.loseLife = function () {
         entityManager.gameOver = true;
     } else {
       entityManager.reset();
-      this.defVelX = 5;
+      this.defVelX = 9;
       this.y = 200;
       this.x = 500;
       this.isExploding = false;
@@ -352,6 +345,7 @@ Kall.prototype.handleJump = function () {
   }
   else return 0;
 };
+
 Kall.prototype.handleDash = function(du){
     // the dashDelay stops 'abuse' of the dash
     // element. There is slight delay for the

@@ -63,7 +63,7 @@ var KEY_AVE_VEL = keyCode('V');
 var KEY_SPATIAL = keyCode('X');
 
 var KEY_MUTE = keyCode('1');
-var KEY_PLAYAGAIN = keyCode('Y');
+//var KEY_PLAYAGAIN = keyCode('Y');
 
 var hasGameEnded = false;
 
@@ -82,20 +82,16 @@ function processDiagnostics() {
         volumeOnOff();
     }
 
-    // If 'A' is pressed, start the game!
-    if (eatKey(keyCode('A'))) {
+    // If 'W' is pressed, start the game!
+    if (!startmenu.startGame) {
+      if (eatKey(keyCode('W'))) {
         startmenu.startGame = true;
+      }
     }
-
-   /* if (eatKey(KEY_PLAYAGAIN) && entityManager.getMainCharacter().getLives()===0) {
-        console.log("heyyy");
-        entityManager.gameOver=false;
-        entityManager.resetGameOver();
-        score.reset();
-        entityManager.didDie = false;
-        Background.hasLostLife = false;
+/*
+    if (eatKey(KEY_PLAYAGAIN)) {
+        location.reload();
     }*/
-
 }
 
 function volumeOnOff() {
@@ -129,6 +125,7 @@ var Background = {
     }
 
 }
+
 // =================
 // RENDER SIMULATION
 // =================
@@ -138,7 +135,7 @@ function renderSimulation(ctx) {
       startmenu.drawMenu(ctx);
     }
     // If the game is over, display the game over screen.
-     else if (Background.hasLostLife) {
+     else if (Background.hasLostLife && !eatKey(entityManager.KEY_PLAYAGAIN)) {
         // Audio.
         g_sounds.song.pause();
         g_sounds.song.currentTime = 0;
@@ -182,7 +179,6 @@ var requiredAudio = [
 
 ];
 
-
 function preloadAudio(url) {
     var audio = new Audio();
     // Once this file loads, it will call loadedAudio(),
@@ -202,8 +198,6 @@ function loadedAudio() {
     	requestImagePreloads();
     }
 }
-
-
 
 // We start preloading all the audio files.
 function audioPreload(){
@@ -363,7 +357,7 @@ function requestImagePreloads() {
 
         // Background screen.
         Background : "images/background.png",
-        
+
         // Shine.
         Shine0 : "images/Shine/shine_000.png",
         Shine1 : "images/Shine/shine_001.png",
@@ -457,12 +451,6 @@ function preloadDone() {
     g_sounds.starExplosionExtra.volume = 0.9;
     g_sounds.jump.volume = 0.9;
 
-    // Starting position for intro song,
-    //      if statement is here for InternetExplorer.
-    if (!isNaN(g_sounds.INTRO.duration)) {
-        g_sounds.INTRO.currentTime = 119;
-    }
-    
     // Images
 
     // Background.

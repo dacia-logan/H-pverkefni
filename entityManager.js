@@ -38,7 +38,7 @@ didDie : false,
 
 gameOver : false,
 
-KEY_PLAYON : keyCode('Z'),
+KEY_PLAYON : keyCode('D'),
 
 // "PRIVATE" METHODS
 
@@ -70,26 +70,6 @@ reset : function () {
   Background.reset();
   this._platforms.push(new Platform(1, true, 300, 500));
 },
-
-/*
-resetGameOver : function(){
-    for(var Id in this._platforms){
-      this._platforms[Id].kill();
-    }
-    for(var Id in this._gem){
-      this._gem[Id].kill();
-    }
-    for(var Id in this._shine){
-      this._shine[Id].kill();
-    }
-    for(var Id in this._dummies){
-        this._dummies[Id].kill();
-      }
-    this.init();
-    Background.reset();
-  },
-*/
-
 
 init: function() {
       this._platforms.push(new Platform(1, true, 300, 500));
@@ -173,10 +153,10 @@ platSet5 : function (makeGem) {
     this._shine.push(new Shine(x3,y2,2));
 },
 
-// Fall sem ákvarðar hvaða set af platforms teiknast næst og 
+// Fall sem ákvarðar hvaða set af platforms teiknast næst og
 // hvenær það á að teiknast.
 setPlatforms : function () {
-    
+
     var a = Math.floor(util.randRange(1,5));
     var plats = Math.floor(util.randRange(0,16));
     //creates a random number, when the number is 1 we create a gem and butterfly
@@ -220,7 +200,7 @@ getMainCharacter : function () {
 update : function (du) {
 
     // If we just died,
-    if (this.didDie){
+    if (this.didDie) {
         // go to next round.
         if (eatKey(this.KEY_PLAYON) && entityManager.getMainCharacter().getLives()!=0) {
             Background.hasLostLife = false;
