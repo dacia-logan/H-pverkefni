@@ -18,23 +18,25 @@ function Shine(x,y,platNum) {
     this.isCaught = false;
 
     // Framecounter for explosion.
-    this.frameCounter = 0; 
-    
+    this.frameCounter = 0;
+
     // Number of images to run through while exploding.
     this.numberOfFrames = g_shineSprite.length;
 
     // The amount of pixels we want to move the shine up and down.
-    this.dist = 20; 
+    this.dist = 20;
 
     // The frames we are going to spend on each distance.
     this.moveCounter = this.dist;
 
     // Are we moving up or down?
-    this.up = true; 
-    this.down = false;   
+    this.up = true;
+    this.down = false;
 
     // The name of the entity.
     this.type = "Shine";
+    // Buffer for combo counters
+    this.buffer = 150;    
 };
 
 Shine.prototype = new Entity();
@@ -58,9 +60,9 @@ Shine.prototype.update = function(du) {
     // Kill Shine if it falls out of the canvas.
     // Shine has to die if the 'Kall' hits it.
     // and
-    // If the shine goes out of the canvas, the player has failed 
+    // If the shine goes out of the canvas, the player has failed
     //      to collect it, and thus loses his shine combo bonus.
-    if (this.x <= camera.getPos().posX - this.width) { 
+    if (this.x <= camera.getPos().posX - this.width-this.buffer) {
         this.kill();
         score.gotLastShine = false;
         score.shineCombo = 0;
@@ -69,15 +71,15 @@ Shine.prototype.update = function(du) {
 
     // This controls how fast we change frames on the shine.
     if (this.frameCounter < this.numberOfFrames-1) this.frameCounter += 0.05;
-    else this.frameCounter = 0; 
+    else this.frameCounter = 0;
 
     // This controls the movement of the shine..
     if (this.up === true && this.moveCounter >= 0) {
-        this.moveCounter -= 0.5; 
+        this.moveCounter -= 0.5;
         this.y++;
     } else {
-        this.up = false; 
-        this.down = true; 
+        this.up = false;
+        this.down = true;
     }
 
     // ..and this also.
@@ -85,8 +87,8 @@ Shine.prototype.update = function(du) {
         this.moveCounter += 0.5;
         this.y--;
     } else {
-        this.down = false; 
-        this.up = true; 
+        this.down = false;
+        this.up = true;
     }
 
     // If the shine is dead, return to entityManager that it
@@ -98,4 +100,3 @@ Shine.prototype.update = function(du) {
     // Re-register to spatial manager if shine has not died.
     if (!this._isDeadNow) spatialManager.register(this);
 };
-
