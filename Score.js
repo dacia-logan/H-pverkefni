@@ -39,28 +39,7 @@ var score = {
     updateScore : function (du) {
       // Update the score
       this.currentScore += Math.floor(this.scoreSpeed * du);
-    },
-
-    /*
-    // When the game is played again, reset the following variables.
-    reset : function () {
-        this.currentScore = 0;
-        this.scoreSpeed = 2.5;
-        this.allScores = [];
-        this.shineCombo = 0;
-        this.shineInRow = 0;
-        this.gemCombo = 0;
-        this.gemsInRow = 0;
-        this.gotLastShine = false;
-        this.gotLastGem = false;
-        this.gemCounter = 0;
-        this.shineCounter = 0;
-       // this.shineX = 0;
-       // this.shineY = 0;
-       // this.gemX = 0;
-       // this.gemY = 0;
-    },
-    */
+    },    
 
     // Calculate the current shine combo, if the player got the last shine
     //    the combo increases, else it resets.
@@ -181,6 +160,12 @@ var score = {
     // Draw the scoreboard after a life is lost and when it's game over.
     drawScoreBoard : function (ctx) {
 
+        var KEY_PLAYAGAIN = keyCode('W');
+
+        if (eatKey(KEY_PLAYAGAIN) && entityManager.gameOver) {
+          location.reload();
+        }
+      
         camera.reset(ctx);
 
         // Background screen and rainbow.
@@ -232,8 +217,7 @@ var score = {
         if (!entityManager.gameOver) {
             ctx.fillText("Failed! Press D to keep playing", g_canvas.width / 2, 150);
         } else if (entityManager.gameOver) {
-            //ctx.fillText("Game over! Press Y to play again", 500, 50);
-            ctx.fillText("Game over!", 500, 150);
+            ctx.fillText("Game over! Press W to play again", 500, 150);
         }
 
         // Color of the boxes for the score.

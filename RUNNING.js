@@ -63,7 +63,7 @@ var KEY_AVE_VEL = keyCode('V');
 var KEY_SPATIAL = keyCode('X');
 
 var KEY_MUTE = keyCode('1');
-var KEY_PLAYAGAIN = keyCode('Y');
+//var KEY_PLAYAGAIN = keyCode('Y');
 
 var hasGameEnded = false;
 
@@ -88,16 +88,10 @@ function processDiagnostics() {
         startmenu.startGame = true;
       }
     }
-
-   /* if (eatKey(KEY_PLAYAGAIN) && entityManager.getMainCharacter().getLives()===0) {
-        console.log("heyyy");
-        entityManager.gameOver=false;
-        entityManager.resetGameOver();
-        score.reset();
-        entityManager.didDie = false;
-        Background.hasLostLife = false;
+/*
+    if (eatKey(KEY_PLAYAGAIN)) {
+        location.reload();
     }*/
-
 }
 
 function volumeOnOff() {
@@ -131,6 +125,7 @@ var Background = {
     }
 
 }
+
 // =================
 // RENDER SIMULATION
 // =================
@@ -140,7 +135,7 @@ function renderSimulation(ctx) {
       startmenu.drawMenu(ctx);
     }
     // If the game is over, display the game over screen.
-    else if (Background.hasLostLife) {
+     else if (Background.hasLostLife && !eatKey(entityManager.KEY_PLAYAGAIN)) {
         // Audio.
         g_sounds.song.pause();
         g_sounds.song.currentTime = 0;
@@ -194,7 +189,6 @@ var requiredAudio = [
 
 ];
 
-
 function preloadAudio(url) {
     var audio = new Audio();
     // Once this file loads, it will call loadedAudio(),
@@ -214,8 +208,6 @@ function loadedAudio() {
     	requestImagePreloads();
     }
 }
-
-
 
 // We start preloading all the audio files.
 function audioPreload(){
