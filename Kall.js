@@ -175,7 +175,8 @@ Kall.prototype.setSpeed = function (du) {
 //    to handle different types of collisions.
 Kall.prototype.collidesWith = function (du) {
 
-  // We got these numbers by trying some out in the render function in the spatial manager.
+  // We got these numbers that we add and subtract
+  // by exploring in render() in spatialManager.
     if (spatialManager.isHit(this.x+65, this.y+30,
       this.width-125, this.height-40).length != 0) {              
         var ent = spatialManager.isHit(this.x+65, this.y+30,
