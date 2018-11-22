@@ -320,7 +320,7 @@ Kall.prototype.loseLife = function () {
         entityManager.gameOver = true;
     } else {
       entityManager.reset();
-      this.defVelX = 5;
+      this.defVelX = 9;
       this.y = 200;
       this.x = 500;
       this.isExploding = false;
