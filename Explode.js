@@ -25,20 +25,6 @@ var explode = {
         } 
     },
 
-    preShake : function(ctx) {
-        ctx.save();
-  
-        var dx = Math.random()*10;
-        var dy = Math.random()*10;
-  
-        ctx.translate(dx,dy); 
-    },
-
-    postShake : function(ctx) {
-        ctx.restore();
-        
-    },
-
     // Returns if the animation for the explosion is over or not.
     done : function (numberOfFrames,type) {
         if (type === "Gem" && this.frameCounterGem >= numberOfFrames) {
@@ -64,11 +50,8 @@ var explode = {
             this.extraSize = 50;
         }
 
-        // explode.preShake(ctx); //AFKOMMENTA TIL AÐ SJÁ HRISTING Á SPRENGJU
-
         g_explosionSprite[Math.floor(this.counter)].drawAtAndEnlarge(
             ctx,x,y,width+this.extraSize,width+this.extraSize);
 
-        // explode.postShake(ctx); //AFKOMMENTA TIL AÐ SJÁ HRISTING Á SPRENGJU
     }
 }
